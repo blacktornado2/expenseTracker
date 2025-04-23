@@ -9,7 +9,7 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
-import { ADD_TRANSACTION, AMOUNT, CATEGORY, DATE, DESCRIPTION } from '../constants';
+import { ADD_TRANSACTION, AMOUNT, CATEGORY, DATE, DESCRIPTION, DESCRIPTION_PLACEHOLDER } from '../constants';
 
 type TransactionType = 'income' | 'expense';
 
@@ -51,7 +51,7 @@ const AddTransactionScreen = () => {
         <TextInput
           className='border border-gray-300 py-2 px-4 text-lg h-36 bg-white'
           multiline
-          placeholder='Add Description about the transaction'
+          placeholder={DESCRIPTION_PLACEHOLDER}
           numberOfLines={5}
         />
       </View>
