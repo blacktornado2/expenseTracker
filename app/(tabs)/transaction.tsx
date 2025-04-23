@@ -5,7 +5,6 @@ import React from 'react';
 import AddTransactionScreen from '@/screens/AddTransaction';
 
 export default function TabTwoScreen() {
-  const router = useRouter();
   return (
     <TouchableOpacity onPress={() => router.navigate('/')} style={{ paddingTop: 30 }}>
       <Text>Transaction</Text>
