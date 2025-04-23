@@ -1,5 +1,6 @@
-import { View, Text, TextInput, TouchableOpacity, Button } from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, Button, ScrollView } from 'react-native'
 import { useState } from 'react'
+import { SafeAreaView } from 'react-native-safe-area-context';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { format } from "date-fns";
 import { useRouter } from 'expo-router';
@@ -10,6 +11,8 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 import { ADD_TRANSACTION, AMOUNT, CATEGORY, DATE, DESCRIPTION } from '../constants';
 
+type TransactionType = 'income' | 'expense';
+
 // TODO: How date and time work in date-fns
 const AddTransactionScreen = () => {
 
@@ -19,9 +22,12 @@ const AddTransactionScreen = () => {
   const [amount, setAmount] = useState(0);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [date, setDate] = useState(format(new Date(), 'MMMM dd, yyyy'));
+  const [transactionType, setTransactionType] = useState<TransactionType>('income');
 
   return (
-    <View className='px-8 pt-16 bg-gray-100'>
+    <ScrollView className='px-8 pt-16 bg-gray-100'>
+      {/* TODO: Safe area view is notr working here, UI is coinciding with status bar */}
+      <SafeAreaView>
       <Text className='text-4xl pb-5 font-bold'>{ADD_TRANSACTION}</Text>
       <View className='my-3'>
         <View className='mb-2 flex flex-row'>
@@ -56,12 +62,11 @@ const AddTransactionScreen = () => {
           <Text className='text-lg mx-4'>{date}</Text>
         </TouchableOpacity>
       </View>
-      <DateTimePickerModal
-        isVisible={isDatePickerVisible}
-        mode="date"
-        onConfirm={(date) => { setDatePickerVisibility(false); setDate(format(date, 'MMMM dd, yyyy')) }}
-        onCancel={() => setDatePickerVisibility(false)}
-      />
+      <View className='my-3 flex flex-row text-center justify-center'>
+        <Button title='Income' color='green'/>
+        <Button title='Expense' color='red'/>
+      </View>
+      
       <Button
         title='Save'
         onPress={() => {
@@ -69,9 +74,15 @@ const AddTransactionScreen = () => {
           console.log('Button Clicked'); 
           router.navigate('/') 
         }}
-        color='green'
       />
-    </View>
+      <DateTimePickerModal
+        isVisible={isDatePickerVisible}
+        mode="date"
+        onConfirm={(date) => { setDatePickerVisibility(false); setDate(format(date, 'MMMM dd, yyyy')) }}
+        onCancel={() => setDatePickerVisibility(false)}
+      />
+      </SafeAreaView>
+    </ScrollView>
   )
 }
 
