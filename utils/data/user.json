@@ -1,0 +1,9 @@
+{
+    "id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+    "firstName": "Aarav",
+    "lastName": "Sharma",
+    "dob": "1990-05-15T00:00:00.000Z",
+    "gender": "male",
+    "totalIncome": 60000,
+    "totalExpense": 35000
+}

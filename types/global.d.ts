@@ -4,9 +4,13 @@ export type User = {
     lastName?: string;
     dob: Date;
     gender: "male" | "female";
-    transactions: TransactionsData[];
     totalIncome: number;
     totalExpense: number;
+}
+
+export type UserTransactions = {
+    userId: string;
+    transactions: TransactionsData[];
 }
 
 export type TransactionsData = {
