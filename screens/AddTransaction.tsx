@@ -25,9 +25,8 @@ const AddTransactionScreen = () => {
   const [transactionType, setTransactionType] = useState<TransactionType>('income');
 
   return (
-    <ScrollView className='px-8 pt-16 bg-gray-100'>
-      {/* TODO: Safe area view is notr working here, UI is coinciding with status bar */}
-      <SafeAreaView>
+    <SafeAreaView>
+      <ScrollView className='px-8 pt-16 bg-gray-100'>
         <Text className='text-4xl pb-5 font-bold'>{ADD_TRANSACTION}</Text>
         <View className='my-3'>
           <View className='mb-2 flex flex-row'>
@@ -89,8 +88,8 @@ const AddTransactionScreen = () => {
           onConfirm={(date) => { setDatePickerVisibility(false); setDate(format(date, 'MMMM dd, yyyy')) }}
           onCancel={() => setDatePickerVisibility(false)}
         />
-      </SafeAreaView>
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   )
 }
 
