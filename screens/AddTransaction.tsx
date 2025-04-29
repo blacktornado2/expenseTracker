@@ -28,59 +28,67 @@ const AddTransactionScreen = () => {
     <ScrollView className='px-8 pt-16 bg-gray-100'>
       {/* TODO: Safe area view is notr working here, UI is coinciding with status bar */}
       <SafeAreaView>
-      <Text className='text-4xl pb-5 font-bold'>{ADD_TRANSACTION}</Text>
-      <View className='my-3'>
-        <View className='mb-2 flex flex-row'>
-          <FontAwesome5 name="money-bill" size={24} color="green" />
-          <Text className='mx-2 text-xl'>{AMOUNT}</Text>
+        <Text className='text-4xl pb-5 font-bold'>{ADD_TRANSACTION}</Text>
+        <View className='my-3'>
+          <View className='mb-2 flex flex-row'>
+            <FontAwesome5 name="money-bill" size={24} color="green" />
+            <Text className='mx-2 text-xl'>{AMOUNT}</Text>
+          </View>
+          <TextInput className='border border-gray-300 py-2 px-4 text-xl flex bg-white' placeholder='&#8377; 0' placeholderTextColor={"gray"} />
         </View>
-        <TextInput className='border border-gray-300 py-2 px-4 text-xl flex bg-white' placeholder='&#8377; 0' />
-      </View>
-      <View className='my-3'>
-        <View className='mb-2 flex flex-row'>
-          <MaterialIcons name="category" size={24} color="blue" />
-          <Text className='mx-2 text-xl'>{CATEGORY}</Text>
+        <View className='my-3'>
+          <View className='mb-2 flex flex-row'>
+            <MaterialIcons name="category" size={24} color="blue" />
+            <Text className='mx-2 text-xl'>{CATEGORY}</Text>
+          </View>
+          <TextInput className='border border-gray-300 py-2 px-4 text-xl flex bg-white' placeholder='category' placeholderTextColor={"gray"} />
         </View>
-        <TextInput className='border border-gray-300 py-2 px-4 text-xl flex bg-white' placeholder='category' />
-      </View>
-      <View className='my-3'>
-        <View className='mb-2 flex flex-row'>
-          <MaterialIcons name="description" size={24} color="brown" />
-          <Text className='mx-2 text-xl'>{DESCRIPTION}</Text>
+        <View className='my-3'>
+          <View className='mb-2 flex flex-row'>
+            <MaterialIcons name="description" size={24} color="brown" />
+            <Text className='mx-2 text-xl'>{DESCRIPTION}</Text>
+          </View>
+          <TextInput
+            className='border border-gray-300 py-2 px-4 text-lg h-36 bg-white'
+            multiline
+            placeholder={DESCRIPTION_PLACEHOLDER}
+            placeholderTextColor={"gray"}
+            numberOfLines={5}
+          />
         </View>
-        <TextInput
-          className='border border-gray-300 py-2 px-4 text-lg h-36 bg-white'
-          multiline
-          placeholder={DESCRIPTION_PLACEHOLDER}
-          numberOfLines={5}
+        <View className='my-3'>
+          <Text className='text-xl mb-2'>{DATE}</Text>
+          <TouchableOpacity onPress={() => setDatePickerVisibility(!isDatePickerVisible)} className='border border-gray-300 py-2 px-4 text-lg flex flex-row items-center bg-white' >
+            <AntDesign name="calendar" size={24} color="green" />
+            <Text className='text-lg mx-4'>{date}</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View className='my-3 flex flex-row text-center justify-center gap-1'>
+          <TouchableOpacity className={`px-6 py-4 border border-gray-200 rounded-lg ${transactionType === 'income' ? 'bg-green-600' : 'white'}`}
+            onPress={() => setTransactionType('income')}>
+            <Text className={`text-lg ${transactionType === 'income' ? 'text-white' : 'text-black'}`}>Income</Text>
+          </TouchableOpacity>
+          <TouchableOpacity className={`px-6 py-4 border border-gray-200 rounded-lg ${transactionType === 'expense' ? 'bg-red-600' : 'white'}`}
+            onPress={() => setTransactionType('expense')}>
+            <Text className={`text-lg ${transactionType === 'expense' ? 'text-white' : 'text-black'}`}>Expense</Text>
+          </TouchableOpacity>
+        </View>
+
+        <Button
+          title='Save'
+          onPress={() => {
+            // TODO: Call the saveTransaction API and navigate to home 
+            console.log('Button Clicked');
+            router.navigate('/')
+          }}
         />
-      </View>
-      <View className='my-3'>
-        <Text className='text-xl mb-2'>{DATE}</Text>
-        <TouchableOpacity onPress={() => setDatePickerVisibility(!isDatePickerVisible)} className='border border-gray-300 py-2 px-4 text-lg flex flex-row items-center bg-white' >
-          <AntDesign name="calendar" size={24} color="green" />
-          <Text className='text-lg mx-4'>{date}</Text>
-        </TouchableOpacity>
-      </View>
-      <View className='my-3 flex flex-row text-center justify-center'>
-        <Button title='Income' color='green'/>
-        <Button title='Expense' color='red'/>
-      </View>
-      
-      <Button
-        title='Save'
-        onPress={() => {
-          // TODO: Call the saveTransaction API and navigate to home 
-          console.log('Button Clicked'); 
-          router.navigate('/') 
-        }}
-      />
-      <DateTimePickerModal
-        isVisible={isDatePickerVisible}
-        mode="date"
-        onConfirm={(date) => { setDatePickerVisibility(false); setDate(format(date, 'MMMM dd, yyyy')) }}
-        onCancel={() => setDatePickerVisibility(false)}
-      />
+        <DateTimePickerModal
+          isVisible={isDatePickerVisible}
+          mode="date"
+          onConfirm={(date) => { setDatePickerVisibility(false); setDate(format(date, 'MMMM dd, yyyy')) }}
+          onCancel={() => setDatePickerVisibility(false)}
+        />
       </SafeAreaView>
     </ScrollView>
   )
