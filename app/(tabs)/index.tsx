@@ -1,12 +1,14 @@
-import { TouchableOpacity, Text } from 'react-native';
+import { View } from 'react-native';
 import { useRouter } from 'expo-router';
+import React from 'react';
+import Dashboard from '@/screens/Dashboard';
 
 export default function HomeScreen() {
   const router = useRouter();
 
   return (
-    <TouchableOpacity onPress={() => router.navigate('/explore')} style={{paddingTop: 30}}>
-          <Text>Home</Text>
-      </TouchableOpacity>
+    <View className='bg-gray-50 flex-1'>
+          <Dashboard />
+      </View>
   );
 }
