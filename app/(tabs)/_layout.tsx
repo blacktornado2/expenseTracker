@@ -1,5 +1,5 @@
-import { Tabs } from 'expo-router';
 import React from 'react';
+import { Tabs } from 'expo-router';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 export default function TabLayout() {
@@ -7,7 +7,7 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: 'blue',
+        tabBarActiveTintColor: 'red',
         headerShown: false,
       }}>
       <Tabs.Screen
@@ -21,14 +21,7 @@ export default function TabLayout() {
         name="transaction"
         options={{
           title: 'Transaction',
-          tabBarIcon: () => <MaterialIcons name="payments" size={24} color="forestgreen" />
-        }}
-      />
-      <Tabs.Screen
-        name="new"
-        options={{
-          title: 'Transaction',
-          tabBarIcon: () => <MaterialIcons name="payments" size={24} color="forestgreen" />
+          tabBarIcon: () => <MaterialIcons name="payments" size={24} color="gray" />
         }}
       />
     </Tabs>

@@ -46,7 +46,7 @@ const Dashboard = () => {
       <ScrollView contentContainerStyle={{ paddingBottom: 30 }}>
         <View className='mx-6 mt-15'>
           <Text className='text-4xl text-black font-bold'>Dashboard</Text>
-          <View className='flex-row justify-between mt-6'>
+          <View className='flex-row gap-2 justify-between mt-6'>
             <ExpenseBox title='Total Income:' amount={5000} className="bg-green-400" />
             <ExpenseBox title='Total Expense:' amount={3000} className="bg-red-300" />
             <ExpenseBox title='Balance:' amount={2000} className="bg-gray-100" />
@@ -66,7 +66,7 @@ const Dashboard = () => {
                 {categoryData.map((item, index) => (
                   <View key={index} className="flex-row items-center mb-2">
                     <View style={{ backgroundColor: item.color }} className="w-4 h-4 rounded-full mr-2" />
-                    <Text className="text-base">{item.label} - {item.value}</Text>
+                    <Text className="text-base">{item.label} - {item.value} %</Text>
                   </View>
                 ))}
               </View>

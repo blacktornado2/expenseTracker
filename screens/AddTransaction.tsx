@@ -1,5 +1,5 @@
 import { View, Text, TextInput, TouchableOpacity, Button, ScrollView, StyleSheet } from 'react-native';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { format } from "date-fns";
@@ -45,7 +45,7 @@ const AddTransactionScreen = () => {
 
   return (
     <SafeAreaView>
-      <ScrollView className='px-8 pt-16 bg-gray-100'>
+      <ScrollView className='px-8 pt-5 bg-gray-100'>
         <Text className='text-4xl pb-5 font-bold'>{ADD_TRANSACTION}</Text>
         <View className='my-3'>
           <View className='mb-2 flex flex-row'>

@@ -1,14 +1,13 @@
-import { View } from 'react-native';
-import { useRouter } from 'expo-router';
 import React from 'react';
+import { View } from 'react-native';
+
 import Dashboard from '@/screens/Dashboard';
 
 export default function HomeScreen() {
-  const router = useRouter();
 
   return (
-    <View className='bg-gray-50 flex-1'>
-          <Dashboard />
-      </View>
+    <View className='pt-10 bg-gray-50 flex-1'>
+      <Dashboard />
+    </View>
   );
 }

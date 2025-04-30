@@ -13,7 +13,7 @@ const ExpenseBox = ({
   return (
     <View className={`p-4 rounded-2xl ${className} shadow-md shadow-black/20`}>
         <Text className='text-base font-semibold'>{title}</Text>
-        <Text className='text-slate-700'>${amount}</Text>
+        <Text className='text-slate-700'>&#8377;{amount}</Text>
     </View>
   )
 }
