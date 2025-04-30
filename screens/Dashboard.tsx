@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, SafeAreaView, View, ScrollView } from 'react-native';
+import { Text, SafeAreaView, View, ScrollView, TouchableOpacity } from 'react-native';
 import ExpenseBox from '@/components/ExpenseBox';
 import PieChart from 'react-native-pie-chart';
 
@@ -69,6 +69,9 @@ const Dashboard = () => {
             <TransactionRow date='Apr 21' title='Shopping' amount={300} />
             <TransactionRow date='Apr 22' title='Bank transfer' amount={1000} isLast={true} />
           </View>
+          <TouchableOpacity className='items-center'>
+            <Text className='text-green-700 font-semibold mt-5 text-xl'>View All</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
