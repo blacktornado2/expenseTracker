@@ -1,0 +1,10 @@
+export const ADD_TRANSACTION = "Add Transaction";
+export const AMOUNT = "Amount";
+export const CATEGORY = "Category";
+export const DESCRIPTION = "Description";
+export const DESCRIPTION_PLACEHOLDER = "Add Description about the transaction";
+export const DATE = "Date";
+export const INCOME = "Income";
+export const EXPENSE = "Expense";
+export const SAVE = "Save";
+export const CANCEL = "Cancel";
