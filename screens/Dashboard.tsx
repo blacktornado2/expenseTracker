@@ -52,15 +52,25 @@ const Dashboard = () => {
             <ExpenseBox title='Balance:' amount={2000} className="bg-gray-100" />
           </View>
 
-          <View className='mt-8 px-5 bg-white items-center py-8 rounded-2xl'>
-            <Text className='text-2xl font-semibold mb-4'>Category Breakdown</Text>
-            <PieChart
-              widthAndHeight={160}
-              series={categoryData}
-              sliceColor={sliceColor}
-              coverRadius={0.6}
-              coverFill={'#FFF'}
-            />
+          <View className='mt-8 px-5 bg-white py-8 rounded-2xl'>
+            <Text className='text-2xl font-semibold mb-6'>Category Breakdown</Text>
+            <View className='flex-row'>
+              <PieChart
+                widthAndHeight={160}
+                series={categoryData}
+                sliceColor={sliceColor}
+                coverRadius={0.6}
+                coverFill={'#FFF'}
+              />
+              <View className="mt-4 w-full ml-5">
+                {categoryData.map((item, index) => (
+                  <View key={index} className="flex-row items-center mb-2">
+                    <View style={{ backgroundColor: item.color }} className="w-4 h-4 rounded-full mr-2" />
+                    <Text className="text-base">{item.label} - {item.value}</Text>
+                  </View>
+                ))}
+              </View>
+            </View>
           </View>
 
           <Text className='text-2xl font-semibold mt-8 mb-4'>Recent Transactions</Text>
