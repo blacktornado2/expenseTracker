@@ -2,8 +2,11 @@ import React from 'react';
 import { Text, SafeAreaView, View, ScrollView, TouchableOpacity } from 'react-native';
 import ExpenseBox from '@/components/ExpenseBox';
 import PieChart from 'react-native-pie-chart';
+import Feather from 'react-native-vector-icons/Feather';
+import { useRouter } from 'expo-router';
 
-const Dashboard = () => {
+const Dashboard = ({navigation}: any) => {
+  const router = useRouter();
   const categoryData = [
     { label: 'Food', value: 40, color: '#FF9384' },
     { label: 'Transport', value: 30, color: '#36A2EB' },
@@ -45,7 +48,13 @@ const Dashboard = () => {
     <SafeAreaView className='flex-1 bg-gray-50'>
       <ScrollView contentContainerStyle={{ paddingBottom: 30 }}>
         <View className='mx-6 mt-15'>
-          <Text className='text-4xl text-black font-bold'>Dashboard</Text>
+          <View className="flex-row items-center justify-between mt-4">
+            <Text className='text-4xl text-black font-bold'>Dashboard</Text>
+            <TouchableOpacity className='bg-teal-600 rounded-2xl shadow-md' onPress={() => router.push('/addTransaction')}>
+              <Feather name="plus" size={27} color="#FFF" />
+            </TouchableOpacity>
+          </View>
+
           <View className='flex-row gap-2 justify-between mt-6'>
             <ExpenseBox title='Total Income:' amount={5000} className="bg-green-400" />
             <ExpenseBox title='Total Expense:' amount={3000} className="bg-red-300" />
@@ -79,7 +88,7 @@ const Dashboard = () => {
             <TransactionRow date='Apr 21' title='Shopping' amount={300} />
             <TransactionRow date='Apr 22' title='Bank transfer' amount={1000} isLast={true} />
           </View>
-          <TouchableOpacity className='items-center'>
+          <TouchableOpacity className='items-center' onPress={() => navigation.navigate()}>
             <Text className='text-green-700 font-semibold mt-5 text-xl'>View All</Text>
           </TouchableOpacity>
         </View>

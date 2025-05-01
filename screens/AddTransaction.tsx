@@ -9,6 +9,9 @@ import { Dropdown } from 'react-native-element-dropdown';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { useNavigation } from 'expo-router';
+import { useLayoutEffect } from 'react';
+import { Pressable } from 'react-native';
 
 import { ADD_TRANSACTION, AMOUNT, CATEGORY, DATE, DESCRIPTION, DESCRIPTION_PLACEHOLDER } from '../constants';
 
@@ -32,6 +35,19 @@ const AddTransactionScreen = () => {
 
   const router = useRouter();
 
+  const navigation = useNavigation();
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: 'Add Transaction',
+      headerLeft: () => (
+        <Pressable onPress={() => navigation.goBack()} style={{ marginLeft: 10 }}>
+          <AntDesign name="arrowleft" size={24} color="black" />
+        </Pressable>
+      ),
+    });
+  }, [navigation]);
+
   // TODO: make all the variables here, that are used in the form
   const [amount, setAmount] = useState(0);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -44,7 +60,6 @@ const AddTransactionScreen = () => {
   const [value, setValue] = useState(null);
 
   return (
-    <SafeAreaView>
       <ScrollView className='px-8 pt-5 bg-gray-100'>
         <Text className='text-4xl pb-5 font-bold'>{ADD_TRANSACTION}</Text>
         <View className='my-3'>
@@ -148,7 +163,6 @@ const AddTransactionScreen = () => {
           onCancel={() => setDatePickerVisibility(false)}
         />
       </ScrollView>
-    </SafeAreaView>
   )
 }
 
