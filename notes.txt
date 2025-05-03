@@ -52,3 +52,10 @@ Folder Structure
     /models
      - User.js
      - Transaction.js
+
+Backend:
+
+1. Express server (mongoDB atlas) 
+2. Create routes
+3. Data (transactions)
+4. Deploy to server after testing locally
