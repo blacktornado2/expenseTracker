@@ -5,32 +5,44 @@ import PieChart from 'react-native-pie-chart';
 import Feather from 'react-native-vector-icons/Feather';
 import { useRouter } from 'expo-router';
 
-export const TransactionRow = ({ date, title, amount, isLast }: { date: string; title: string; amount: number; isLast?: boolean; }) => {
+export const TransactionRow = ({
+  date,
+  title,
+  amount,
+  isLast,
+  type,
+}: {
+  date: string;
+  title: string;
+  amount: string;
+  isLast?: boolean;
+  type: string;
+}) => {
   const [month, day] = date.split(' ');
 
+  const amountColor = type === 'debit' ? 'text-red-500' : 'text-green-500';
+
   return (
-    <View className='px-5 py-4 bg-white rounded-2xl'>
-      <View className='flex-row justify-between items-center'>
+    <View className="px-5 py-4 bg-white rounded-2xl">
+      <View className="flex-row justify-between items-center">
         {/* Left side: Date + Title */}
-        <View className='flex-row items-center flex-1'>
-          <View className='items-center'>
-            <Text className='text-lg font-bold'>{day}</Text>
-            <Text className='text-xs text-gray-500'>{month}</Text>
+        <View className="flex-row items-center flex-1">
+          <View className="items-center">
+            <Text className="text-lg font-bold">{day}</Text>
+            <Text className="text-xs text-gray-500">{month}</Text>
           </View>
-          <Text numberOfLines={2} className='ml-8 text-lg font-semibold'>{title}</Text>
+          <Text numberOfLines={2} className="ml-8 text-lg font-medium">{title}</Text>
         </View>
 
         {/* Right side: Amount */}
-        <Text className='text-lg font-semibold'>{amount}</Text>
+        <Text className={`text-lg font-semibold ${amountColor}`}>{amount}</Text>
       </View>
 
-      {/* Divider */}
-      {!isLast && (
-        <View className='mt-4 mx-2 h-px bg-gray-200' />
-      )}
+      {!isLast && <View className="mt-4 mx-2 h-px bg-gray-200" />}
     </View>
   );
 };
+
 
 const Dashboard = ({navigation}: any) => {
   const router = useRouter();

@@ -12,7 +12,7 @@ const TransactionHistory = () => {
 
         {transactionsData.map((monthGroup) => (
           <View key={monthGroup.month} className="mb-6 mx-5">
-            <Text className="text-xl font-semibold py-2">
+            <Text className="text-xl font-bold py-2">
               {format(new Date(monthGroup.month + '-01'), 'MMMM yyyy')}
             </Text>
 
@@ -29,7 +29,7 @@ const TransactionHistory = () => {
                             title={title}
                             amount={amount}
                             isLast={true}
-                            type={type}
+                            type={txn.type}
                         />
                     </View>
                 );
