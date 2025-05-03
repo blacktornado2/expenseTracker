@@ -1,5 +1,3 @@
-import { ButtonType } from '../types/global.d.ts';
-
 import { View, Text, ScrollView, TextInput, KeyboardAvoidingView, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context';
