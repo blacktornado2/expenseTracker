@@ -1,130 +1,5 @@
 [
     {
-        "month": "2025-03",
-        "transactions": [
-            {
-                "id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
-                "userId": "f8a7b6c5-d4e3-21f0-9876-543210fedcba",
-                "type": "debit",
-                "amount": 50,
-                "date": "2025-03-05T10:00:00.000Z",
-                "category": {
-                    "name": "Groceries",
-                    "icon": "🛒"
-                },
-                "description": "Weekly groceries from the supermarket"
-            },
-            {
-                "id": "01234567-89ab-cdef-0123-456789abcdef",
-                "userId": "f8a7b6c5-d4e3-21f0-9876-543210fedcba",
-                "type": "credit",
-                "amount": 1200,
-                "date": "2025-03-10T15:30:00.000Z",
-                "category": {
-                    "name": "Salary",
-                    "icon": "💰"
-                },
-                "description": "Monthly salary deposit"
-            },
-            {
-                "id": "98765432-10fe-dcba-9876-543210fedcba",
-                "userId": "f8a7b6c5-d4e3-21f0-9876-543210fedcba",
-                "type": "debit",
-                "amount": 30,
-                "date": "2025-03-12T18:45:00.000Z",
-                "category": {
-                    "name": "Entertainment",
-                    "icon": "🎬"
-                },
-                "description": "Movie ticket"
-            },
-            {
-                "id": "defabc98-7654-3210-defa-bc9876543210",
-                "userId": "f8a7b6c5-d4e3-21f0-9876-543210fedcba",
-                "type": "credit",
-                "amount": 500,
-                "date": "2025-03-15T09:15:00.000Z",
-                "category": {
-                    "name": "Freelance",
-                    "icon": "💻"
-                },
-                "description": "Payment for web development project"
-            },
-            {
-                "id": "543210fe-dcba-9876-5432-10fedcba9876",
-                "userId": "f8a7b6c5-d4e3-21f0-9876-543210fedcba",
-                "type": "debit",
-                "amount": 75,
-                "date": "2025-03-18T12:00:00.000Z",
-                "category": {
-                    "name": "Dining",
-                    "icon": "🍽️"
-                },
-                "description": "Lunch with colleagues"
-            },
-            {
-                "id": "bcdefa01-2345-6789-abcd-efa123456789",
-                "userId": "f8a7b6c5-d4e3-21f0-9876-543210fedcba",
-                "type": "credit",
-                "amount": 250,
-                "date": "2025-03-22T17:00:00.000Z",
-                "category": {
-                    "name": "Gift",
-                    "icon": "🎁"
-                },
-                "description": "Birthday gift received"
-            },
-            {
-                "id": "10fedcba-9876-5432-10fe-dcba98765432",
-                "userId": "f8a7b6c5-d4e3-21f0-9876-543210fedcba",
-                "type": "debit",
-                "amount": 120,
-                "date": "2025-03-25T20:30:00.000Z",
-                "category": {
-                    "name": "Utilities",
-                    "icon": "💡"
-                },
-                "description": "Electricity bill payment"
-            },
-            {
-                "id": "cdefab01-2345-6789-cdef-ab0123456789",
-                "userId": "f8a7b6c5-d4e3-21f0-9876-543210fedcba",
-                "type": "credit",
-                "amount": 900,
-                "date": "2025-03-28T11:45:00.000Z",
-                "category": {
-                    "name": "Investment",
-                    "icon": "📈"
-                },
-                "description": "Stock dividend"
-            },
-            {
-                "id": "23456789-abcd-ef01-2345-6789abcdef01",
-                "userId": "f8a7b6c5-d4e3-21f0-9876-543210fedcba",
-                "type": "debit",
-                "amount": 40,
-                "date": "2025-03-30T08:00:00.000Z",
-                "category": {
-                    "name": "Transportation",
-                    "icon": "🚌"
-                },
-                "description": "Monthly bus pass"
-            },
-            {
-                "id": "abcdef01-2345-6789-abcd-ef0123456789a",
-                "userId": "f8a7b6c5-d4e3-21f0-9876-543210fedcba",
-                "type": "credit",
-                "amount": 150,
-                "date": "2025-03-31T19:00:00.000Z",
-                "category": {
-                    "name": "Refund",
-                    "icon": "↩️"
-                },
-                "description": "Returned item refund"
-            }
-        ]
-    },
-    {
         "month": "2025-04",
         "transactions": [
             {
@@ -246,6 +121,131 @@
                     "icon": "🎁"
                 },
                 "description": "Gift money received"
+            }
+        ]
+    },
+    {
+        "month": "2025-03",
+        "transactions": [
+            {
+                "id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+                "userId": "f8a7b6c5-d4e3-21f0-9876-543210fedcba",
+                "type": "debit",
+                "amount": 50,
+                "date": "2025-03-05T10:00:00.000Z",
+                "category": {
+                    "name": "Groceries",
+                    "icon": "🛒"
+                },
+                "description": "Weekly groceries from the supermarket"
+            },
+            {
+                "id": "01234567-89ab-cdef-0123-456789abcdef",
+                "userId": "f8a7b6c5-d4e3-21f0-9876-543210fedcba",
+                "type": "credit",
+                "amount": 1200,
+                "date": "2025-03-10T15:30:00.000Z",
+                "category": {
+                    "name": "Salary",
+                    "icon": "💰"
+                },
+                "description": "Monthly salary deposit"
+            },
+            {
+                "id": "98765432-10fe-dcba-9876-543210fedcba",
+                "userId": "f8a7b6c5-d4e3-21f0-9876-543210fedcba",
+                "type": "debit",
+                "amount": 30,
+                "date": "2025-03-12T18:45:00.000Z",
+                "category": {
+                    "name": "Entertainment",
+                    "icon": "🎬"
+                },
+                "description": "Movie ticket"
+            },
+            {
+                "id": "defabc98-7654-3210-defa-bc9876543210",
+                "userId": "f8a7b6c5-d4e3-21f0-9876-543210fedcba",
+                "type": "credit",
+                "amount": 500,
+                "date": "2025-03-15T09:15:00.000Z",
+                "category": {
+                    "name": "Freelance",
+                    "icon": "💻"
+                },
+                "description": "Payment for web development project"
+            },
+            {
+                "id": "543210fe-dcba-9876-5432-10fedcba9876",
+                "userId": "f8a7b6c5-d4e3-21f0-9876-543210fedcba",
+                "type": "debit",
+                "amount": 75,
+                "date": "2025-03-18T12:00:00.000Z",
+                "category": {
+                    "name": "Dining",
+                    "icon": "🍽️"
+                },
+                "description": "Lunch with colleagues"
+            },
+            {
+                "id": "bcdefa01-2345-6789-abcd-efa123456789",
+                "userId": "f8a7b6c5-d4e3-21f0-9876-543210fedcba",
+                "type": "credit",
+                "amount": 250,
+                "date": "2025-03-22T17:00:00.000Z",
+                "category": {
+                    "name": "Gift",
+                    "icon": "🎁"
+                },
+                "description": "Birthday gift received"
+            },
+            {
+                "id": "10fedcba-9876-5432-10fe-dcba98765432",
+                "userId": "f8a7b6c5-d4e3-21f0-9876-543210fedcba",
+                "type": "debit",
+                "amount": 120,
+                "date": "2025-03-25T20:30:00.000Z",
+                "category": {
+                    "name": "Utilities",
+                    "icon": "💡"
+                },
+                "description": "Electricity bill payment"
+            },
+            {
+                "id": "cdefab01-2345-6789-cdef-ab0123456789",
+                "userId": "f8a7b6c5-d4e3-21f0-9876-543210fedcba",
+                "type": "credit",
+                "amount": 900,
+                "date": "2025-03-28T11:45:00.000Z",
+                "category": {
+                    "name": "Investment",
+                    "icon": "📈"
+                },
+                "description": "Stock dividend"
+            },
+            {
+                "id": "23456789-abcd-ef01-2345-6789abcdef01",
+                "userId": "f8a7b6c5-d4e3-21f0-9876-543210fedcba",
+                "type": "debit",
+                "amount": 40,
+                "date": "2025-03-30T08:00:00.000Z",
+                "category": {
+                    "name": "Transportation",
+                    "icon": "🚌"
+                },
+                "description": "Monthly bus pass"
+            },
+            {
+                "id": "abcdef01-2345-6789-abcd-ef0123456789a",
+                "userId": "f8a7b6c5-d4e3-21f0-9876-543210fedcba",
+                "type": "credit",
+                "amount": 150,
+                "date": "2025-03-31T19:00:00.000Z",
+                "category": {
+                    "name": "Refund",
+                    "icon": "↩️"
+                },
+                "description": "Returned item refund"
             }
         ]
     }

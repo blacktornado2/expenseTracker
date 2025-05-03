@@ -18,9 +18,9 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="transaction"
+        name="transactions"
         options={{
-          title: 'Transaction',
+          title: 'Transactions',
           tabBarIcon: () => <MaterialIcons name="payments" size={24} color="gray" />
         }}
       />
