@@ -1,9 +1,8 @@
+import TransactionHistory from '@/screens/TransactionHistory';
 import React from 'react'
 
-const transactions = () => {
-  return (
-    <div>transactions</div>
-  )
-}
-
-export default transactions;
+export default function TabTwoScreen() {
+    return (
+      <TransactionHistory />
+    );
+  }
