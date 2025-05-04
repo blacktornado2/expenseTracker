@@ -4,6 +4,9 @@ import ExpenseBox from '@/components/ExpenseBox';
 import PieChart from 'react-native-pie-chart';
 import Feather from 'react-native-vector-icons/Feather';
 import { useRouter } from 'expo-router';
+import transactionsData from '../utils/data/transactions.json';
+import { getRecentTransactions } from '../utils/helpers';
+import { format } from 'date-fns';
 
 export const TransactionRow = ({
   date,
@@ -54,6 +57,7 @@ const Dashboard = ({navigation}: any) => {
   ];
 
   const sliceColor = categoryData.map(item => item.color);
+  const recentTransactions = getRecentTransactions(transactionsData);
   
 
   return (
@@ -95,12 +99,26 @@ const Dashboard = ({navigation}: any) => {
           </View>
 
           <Text className='text-2xl font-semibold mt-8 mb-4'>Recent Transactions</Text>
-          <View className='bg-white rounded-2xl'>
-            <TransactionRow date='Apr 20' title='Groceries' amount={100} />
-            <TransactionRow date='Apr 21' title='Shopping' amount={300} />
-            <TransactionRow date='Apr 22' title='Bank transfer' amount={1000} isLast={true} />
+          <View className="bg-white rounded-2xl">
+            {recentTransactions.map((txn, index) => {
+              const txnDate = format(new Date(txn.date), 'MMM dd');
+              const title = `${txn.category.icon} ${txn.description}`;
+              const amount = txn.type === 'debit' ? `-₹${txn.amount}` : `+₹${txn.amount}`;
+              const isLast = index === recentTransactions.length - 1;
+
+              return (
+                <TransactionRow
+                  key={txn.id}
+                  date={txnDate}
+                  title={title}
+                  amount={amount}
+                  isLast={isLast}
+                  type={txn.type}
+                />
+              );
+            })}
           </View>
-          <TouchableOpacity className='items-center' onPress={() => navigation.navigate()}>
+          <TouchableOpacity className='items-center' onPress={() => router.push('/transactions')}>
             <Text className='text-green-700 font-semibold mt-5 text-xl'>View All</Text>
           </TouchableOpacity>
         </View>
