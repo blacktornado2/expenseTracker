@@ -42,13 +42,16 @@ Folder Structure
   /client
     /screens
      - LoginScreen.js
-     - DashboardScreen.js
-     - AddTransactionScreen.js
-     - HistoryScreen.js
+     - SignUp.js
+     - Dashboard.js
+     - AddTransaction.js
+     - TransactionDetail.js
+     - Transactions.js
     /server
     /routes
-     - auth.js
-     - transactions.js
+     - auth.routes.ts
+     - transactions.routes.ts
+     - user.routes.ts
     /models
      - User.js
      - Transaction.js
@@ -59,3 +62,12 @@ Backend:
 2. Create routes
 3. Data (transactions)
 4. Deploy to server after testing locally
+
+
+Frontend:
+
+1. Create following screens
+  a) SignUp screen
+  b) Transaction detail screen
+  c) User profile Screen
+2. Sync up frontend and backend(data types, requests and responses)
