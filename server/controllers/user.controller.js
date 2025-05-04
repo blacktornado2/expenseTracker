@@ -59,10 +59,49 @@ module.exports = {
       return res.status(500).json({ message: "Internal server error" });
     }
   },
-  updateProfile: (req, res) => {
+  updateProfile: async (req, res) => {
     console.log("update function called");
+    const { email } = req.params;
+    try {
+      const user = await User.findOneAndUpdate(
+        { email },
+        { ...req.body },
+        { new: true, runValidators: true }
+      );
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      return res.status(200).json({
+        status: "Success",
+        message: "User updated successfully",
+        user,
+      });
+    } catch (error) {
+      console.error("Error in updateProfile function:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
   },
-  deleteProfile: (req, res) => {
+  deleteProfile: async (req, res) => {
     console.log("delete function called");
+
+    try {
+      const { email } = req.params;
+      const result = await User.deleteOne({ email });
+
+      if (result.deletedCount === 0) {
+        return res
+          .status(200)
+          .json({ status: "Success", message: "User not found" });
+      }
+
+      return res
+        .status(200)
+        .json({ status: "Success", message: "User deleted successfully" });
+    } catch (error) {
+      console.error("Error in deleteProfile function:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
   },
 };
