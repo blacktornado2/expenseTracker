@@ -5,8 +5,8 @@ const UserRouter = router();
 
 UserRouter.post("/register", UserController.register);
 UserRouter.post("/login", UserController.login);
-UserRouter.get("/profile", UserController.getProfile);
-UserRouter.put("/profile", UserController.updateProfile);
-UserRouter.delete("/profile", UserController.deleteProfile);
+UserRouter.get("/:email", UserController.getProfile);
+UserRouter.put("/:email", UserController.updateProfile);
+UserRouter.delete("/:email", UserController.deleteProfile);
 
 module.exports = UserRouter;

@@ -1,17 +1,13 @@
-const express = require("express");
+require("dotenv").config();
+const app = require("./app");
+const connectDB = require("./config/db");
 
-const UserRouter = require("./routes/user.routes");
-const TransactionRouter = require("./routes/transaction.routes");
+const MONGODB_CONNECTION_URI_STAGING = process.env.MONGODB_CONNECTION_URI_TEST;
 
-const app = express();
-
-app.use(express.json());
+connectDB(MONGODB_CONNECTION_URI_STAGING);
 
 const PORT = process.env.PORT || 3000;
 
-app.use("/user", UserRouter);
-app.use("/transaction", TransactionRouter);
-
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server running on http://localhost:${PORT}`);
 });
