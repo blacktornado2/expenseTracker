@@ -41,7 +41,7 @@ const AddTransactionScreen = () => {
     navigation.setOptions({
       title: 'Add Transaction',
       headerLeft: () => (
-        <Pressable onPress={() => navigation.goBack()} style={{ marginLeft: 10 }}>
+        <Pressable onPress={() => router.back()} style={{ marginLeft: 10 }}>
           <AntDesign name="arrowleft" size={24} color="black" />
         </Pressable>
       ),

@@ -1,15 +1,30 @@
 import { View, Text, ScrollView, TextInput, KeyboardAvoidingView, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useDispatch } from 'react-redux';
 
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
+import { loginUserRequest } from '@/redux/actions/user.actions';
+
 const Login = () => {
+    const dispatch = useDispatch();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [isLoginDisabled, setIsLoginDisabled] = useState(false);
 
-    const loginUser = () => { };
+    const resetForm = () => {
+        setEmail('');
+        setPassword('');
+    }
+
+    const loginUser = () => {
+        console.log("loginUser");
+        setIsLoginDisabled(true);
+        dispatch(loginUserRequest({ email, password }));
+        resetForm();
+    };
     const signUp = () => { };
 
     return (
@@ -30,15 +45,26 @@ const Login = () => {
                             <Text className='text-xl mb-1 rounded'>
                                 Email
                             </Text>
-                            <TextInput value={email} onChangeText={setEmail} placeholder='Enter your email' className='pt-2 pb-3 px-4 text-lg flex flex-row items-center bg-gray-100' />
+                            <TextInput value={email}
+                                onChangeText={setEmail}
+                                placeholder='Enter your email'
+                                className='pt-2 pb-3 px-4 text-lg flex flex-row items-center bg-gray-100'
+                                autoCapitalize="none"
+                                keyboardType="email-address" />
                         </View>
                         <View className='mb-8'>
                             <Text className='text-xl mb-1 rounded'>
                                 Password
                             </Text>
-                            <TextInput value={password} onChangeText={setPassword} placeholder='Enter your password' className='pt-2 pb-3 px-4 text-lg bg-gray-100' />
+                            <TextInput value={password}
+                                onChangeText={setPassword}
+                                placeholder='Enter your password'
+                                className='pt-2 pb-3 px-4 text-lg bg-gray-100'
+                                autoCapitalize="none"
+                                secureTextEntry
+                            />
                         </View>
-                        <TouchableOpacity onPress={loginUser} className='bg-green-600 flex items-center py-3 rounded-xl'>
+                        <TouchableOpacity disabled={isLoginDisabled} onPress={loginUser} className='bg-green-600 flex items-center py-3 rounded-xl'>
                             <Text className='text-white text-lg  tracking-wide font-bold'>Login</Text>
                         </TouchableOpacity>
                         <Text className='text-center text-lg font-bold mt-2'>

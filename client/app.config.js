@@ -1,28 +1,30 @@
-{
+import 'dotenv/config';
+
+export default {
   "expo": {
-    "name": "expenseTracker",
-    "slug": "expense-tracker",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
-    "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
-    "ios": {
+    name: "expenseTracker",
+    slug: "expense-tracker",
+    version: "1.0.0",
+    orientation: "portrait",
+    icon: "./assets/images/icon.png",
+    scheme: "myapp",
+    userInterfaceStyle: "automatic",
+    newArchEnabled: true,
+    ios: {
       "supportsTablet": true
     },
-    "android": {
+    android: {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       }
     },
-    "web": {
+    web: {
       "bundler": "metro",
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
-    "plugins": [
+    plugins: [
       "expo-router",
       [
         "expo-splash-screen",
@@ -34,8 +36,11 @@
         }
       ]
     ],
-    "experiments": {
+    experiments: {
       "typedRoutes": true
-    }
+    },
+    extra: {
+      BASE_URL: process.env.BASE_URL_LOCALHOST, // 👈 Expose .env variable here
+    },
   }
 }

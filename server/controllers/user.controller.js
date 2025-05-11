@@ -42,10 +42,10 @@ module.exports = {
   login: async (req, res) => {
     console.log("login function called");
     const { email, password } = req.body;
-
+    
     try {
       // 1. Check if user exists
-      let user = await User.findOne({ email });
+      let user = await User.findOne({ email: email.toLowerCase() });
       if (!user) {
         return res
           .status(400)

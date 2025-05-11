@@ -1,4 +1,4 @@
-import { User } from "../../types/global";
+import { User, TokenType } from "../../types/global";
 
 import {
   FETCH_USER_REQUEST,
@@ -10,9 +10,30 @@ import {
   DELETE_USER_REQUEST,
   DELETE_USER_SUCCESS,
   DELETE_USER_FAILURE,
+  LOGIN_USER_REQUEST,
+  LOGIN_USER_FAILURE,
 } from "./action.types";
 
 // Action creators
+
+export const loginUserRequest = ({email, password}: {email: string, password: string}) => ({
+  type: LOGIN_USER_REQUEST,
+  payload: {
+    email, password
+  }
+});
+
+export const loginUserSuccess = (email: string, token: TokenType,) => ({
+  type: LOGIN_USER_REQUEST,
+  payload: {
+    email, token
+  }
+});
+
+export const loginUserFailure = (error: Error) => ({
+  type: LOGIN_USER_FAILURE,
+  payload: error
+});
 
 export const fetchUserRequest = (email: string) => ({
   type: FETCH_USER_REQUEST,
@@ -58,3 +79,4 @@ export const deleteUserFailure = (error: Error) => ({
   type: DELETE_USER_FAILURE,
   payload: error,
 });
+
