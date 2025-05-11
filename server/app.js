@@ -7,7 +7,12 @@ const app = express();
 
 app.use(express.json());
 
-app.use("/user", UserRouter);
-app.use("/transaction", TransactionRouter);
+app.use("/api/user", UserRouter);
+app.use("/api/transaction", TransactionRouter);
+
+app.use((err, req, res, next) => {
+  console.error(err.message);
+  return res.status(404).send("Route not found!!!");
+});
 
 module.exports = app;
