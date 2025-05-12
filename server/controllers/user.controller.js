@@ -85,6 +85,7 @@ module.exports = {
               // Optionally send some user details back
               id: user._id,
               email: user.email,
+              firstName: user.firstName,
             },
           });
         }

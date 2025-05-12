@@ -1,4 +1,7 @@
 import {
+  LOGIN_USER_REQUEST,
+  LOGIN_USER_SUCCESS,
+  LOGIN_USER_FAILURE,
   FETCH_USER_REQUEST,
   FETCH_USER_SUCCESS,
   FETCH_USER_FAILURE,
@@ -23,7 +26,12 @@ const userReducer = (state = initialState, action: any) => {
       return { ...state, user: action.payload, isLoading: false };
     case FETCH_USER_FAILURE:
     case UPDATE_USER_FAILURE:
+    case LOGIN_USER_FAILURE:
       return { ...state, error: action.payload, isLoading: false };
+    case LOGIN_USER_REQUEST:
+      return {...state, isLoading: true}
+    case LOGIN_USER_SUCCESS:
+        return {...state, user: action.payload}
     default:
       return state;
   }

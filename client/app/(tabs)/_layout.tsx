@@ -18,13 +18,6 @@ export default function TabLayout() {
           tabBarIcon: () => <MaterialIcons name="dashboard" size={24} color="grey" />
         }}
       />
-       <Tabs.Screen
-        name="login"
-        options={{
-          title: 'Login',
-          tabBarIcon: () => <MaterialIcons name="login" size={24} color="grey" />
-        }}
-      />
       <Tabs.Screen
         name="transactions"
         options={{

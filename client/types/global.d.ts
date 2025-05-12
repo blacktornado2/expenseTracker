@@ -37,3 +37,9 @@ export type TokenType = {
     id: string;
     email: string;
 }
+
+export type UserStateType = {
+    user: User | null;
+    isLoading: boolean;
+    error: Error | null;
+}

@@ -12,6 +12,7 @@ app.use("/api/transaction", TransactionRouter);
 
 app.use((err, req, res, next) => {
   console.error(err.message);
+  console.log(req.url);
   return res.status(404).send("Route not found!!!");
 });
 

@@ -1,14 +1,17 @@
 import { View, Text, ScrollView, TextInput, KeyboardAvoidingView, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
 import { loginUserRequest } from '@/redux/actions/user.actions';
+import { userSelector } from '@/redux/store/selectors';
 
 const Login = () => {
     const dispatch = useDispatch();
+
+    const {user} = useSelector(userSelector);
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -20,11 +23,11 @@ const Login = () => {
     }
 
     const loginUser = () => {
-        console.log("loginUser");
         setIsLoginDisabled(true);
         dispatch(loginUserRequest({ email, password }));
         resetForm();
     };
+
     const signUp = () => { };
 
     return (

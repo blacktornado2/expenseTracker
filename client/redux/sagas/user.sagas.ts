@@ -1,8 +1,9 @@
 import { call, put, takeLatest } from "redux-saga/effects";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { loginUserService } from "../services/user.service";
 import { fetchUser } from "../../utils/api/requests";
-import { fetchUserSuccess, fetchUserFailure, loginUserSuccess } from "../actions/user.actions";
+import { fetchUserSuccess, fetchUserFailure, loginUserSuccess, loginUserFailure } from "../actions/user.actions";
 
 import { FETCH_USER_REQUEST, LOGIN_USER_REQUEST } from "../actions/action.types";
 
@@ -16,15 +17,19 @@ type LoginAction = {
   payload: LoginPayload;
 };
 
+const setLoginToken = async (token: string) => {
+  await AsyncStorage.setItem('JWT_TOKEN', token);
+}
 
 function* loginUserSaga(action: LoginAction) {
   try {
     const { email, password } = action.payload;
     const { token, user } = yield loginUserService({ email, password });
-    // TODO: Save token to localStorage
+    yield setLoginToken(token);
     yield put(loginUserSuccess(user));
-  } catch (error) {
+  } catch (error: Error) {
     console.log("error: ", error);
+    yield put(loginUserFailure(error));
   }
 }
 

@@ -12,22 +12,21 @@ import {
   DELETE_USER_FAILURE,
   LOGIN_USER_REQUEST,
   LOGIN_USER_FAILURE,
+  LOGIN_USER_SUCCESS,
 } from "./action.types";
 
 // Action creators
 
-export const loginUserRequest = ({email, password}: {email: string, password: string}) => ({
+export const loginUserRequest = ({ email, password }: { email: string, password: string }) => ({
   type: LOGIN_USER_REQUEST,
   payload: {
     email, password
   }
 });
 
-export const loginUserSuccess = (email: string, token: TokenType,) => ({
-  type: LOGIN_USER_REQUEST,
-  payload: {
-    email, token
-  }
+export const loginUserSuccess = (user: User) => ({
+  type: LOGIN_USER_SUCCESS,
+  payload: user
 });
 
 export const loginUserFailure = (error: Error) => ({
