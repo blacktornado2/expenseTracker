@@ -1,10 +1,12 @@
 import React from 'react';
-import { SafeAreaView, ScrollView, Text, View } from 'react-native';
+import { SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import transactionsData from '../utils/data/transactions.json'; // assuming JSON is saved as transactions.json
 import { format } from 'date-fns';
 import { TransactionRow } from './Dashboard';
+import { useRouter } from 'expo-router';
 
 const TransactionHistory = () => {
+  const router = useRouter();
   return (
     <SafeAreaView className="flex-1 bg-gray">
       <ScrollView>
@@ -23,18 +25,24 @@ const TransactionHistory = () => {
                 const amount = txn.type === 'debit' ? `-₹${txn.amount}` : `+₹${txn.amount}`;
 
                 return (
-                    <View key={txn.id} className="mb-1.5 rounded-full">
-                        <TransactionRow
-                            date={txnDate}
-                            title={title}
-                            amount={amount}
-                            isLast={true}
-                            type={txn.type}
-                        />
-                    </View>
+                  <TouchableOpacity
+                    key={txn.id}
+                    className="mb-1.5 rounded-full"
+                    onPress={() => router.push({
+                      pathname: '/transactionDetail',
+                      params: { txn: JSON.stringify(txn) },
+                    })}
+                  >
+                    <TransactionRow
+                        date={txnDate}
+                        title={title}
+                        amount={amount}
+                        isLast={true}
+                        type={txn.type}
+                    />
+                  </TouchableOpacity>
                 );
             })}
-
           </View>
         ))}
       </ScrollView>
