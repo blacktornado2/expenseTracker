@@ -1,4 +1,4 @@
-import { User } from "../../types/global";
+import { User, TokenType } from "../../types/global";
 
 import {
   FETCH_USER_REQUEST,
@@ -10,9 +10,45 @@ import {
   DELETE_USER_REQUEST,
   DELETE_USER_SUCCESS,
   DELETE_USER_FAILURE,
+  LOGIN_USER_REQUEST,
+  LOGIN_USER_FAILURE,
+  LOGIN_USER_SUCCESS,
+  REGISTER_USER_REQUEST,
+  REGISTER_USER_SUCCESS,
+  LOGOUT_USER_REQUEST,
+  LOGOUT_USER_SUCCESS,
 } from "./action.types";
 
 // Action creators
+
+export const loginUserRequest = ({ email, password }: { email: string, password: string }) => ({
+  type: LOGIN_USER_REQUEST,
+  payload: {
+    email, password
+  }
+});
+
+export const loginUserSuccess = (user: User) => ({
+  type: LOGIN_USER_SUCCESS,
+  payload: user
+});
+
+export const loginUserFailure = (error: Error) => ({
+  type: LOGIN_USER_FAILURE,
+  payload: error
+});
+
+export const registerUserRequest = ({ email, password, name }: { email: string, password: string, name: string }) => ({
+  type: REGISTER_USER_REQUEST,
+  payload: {
+    email, password, name
+  }
+});
+
+export const registerUserSuccess = (message: string) => ({
+  type: REGISTER_USER_SUCCESS,
+  payload: message
+})
 
 export const fetchUserRequest = (email: string) => ({
   type: FETCH_USER_REQUEST,
@@ -57,4 +93,13 @@ export const deleteUserSuccess = (email: string) => ({
 export const deleteUserFailure = (error: Error) => ({
   type: DELETE_USER_FAILURE,
   payload: error,
+});
+
+
+export const logoutUserRequest = () => ({
+  type: LOGOUT_USER_REQUEST,
+});
+
+export const logoutUserSuccess = () => ({
+  type: LOGOUT_USER_SUCCESS,
 });

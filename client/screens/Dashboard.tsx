@@ -3,10 +3,14 @@ import { Text, SafeAreaView, View, ScrollView, TouchableOpacity } from 'react-na
 import ExpenseBox from '@/components/ExpenseBox';
 import PieChart from 'react-native-pie-chart';
 import Feather from 'react-native-vector-icons/Feather';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useRouter } from 'expo-router';
 import transactionsData from '../utils/data/transactions.json';
 import { getRecentTransactions } from '../utils/helpers';
 import { format } from 'date-fns';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { logoutUserRequest, logoutUserSuccess } from '@/redux/actions/user.actions';
+import { useDispatch } from 'react-redux';
 
 export const TransactionRow = ({
   date,
@@ -49,6 +53,15 @@ export const TransactionRow = ({
 
 const Dashboard = ({navigation}: any) => {
   const router = useRouter();
+  const dispatch = useDispatch();
+
+  const handleLogout = async () => {
+    dispatch(logoutUserRequest());
+    await AsyncStorage.removeItem('JWT_TOKEN');
+    dispatch(logoutUserSuccess());
+    router.replace('/login');
+  }
+
   const categoryData = [
     { label: 'Food', value: 40, color: '#FF9384' },
     { label: 'Transport', value: 30, color: '#36A2EB' },
@@ -66,8 +79,11 @@ const Dashboard = ({navigation}: any) => {
         <View className='mx-6 mt-15'>
           <View className="flex-row items-center justify-between mt-4">
             <Text className='text-4xl text-black font-bold'>Dashboard</Text>
-            <TouchableOpacity className='bg-teal-600 rounded-2xl shadow-md' onPress={() => router.push('/addTransaction')}>
-              <Feather name="plus" size={30} color="#FFF" />
+            <TouchableOpacity className='bg-teal-600 rounded-3xl shadow-md p-2' onPress={() => router.push('/addTransaction')}>
+              <Feather name="plus" size={24} color="#FFF" />
+            </TouchableOpacity>
+            <TouchableOpacity className='bg-black rounded-xl shadow-md p-2' onPress={handleLogout}>
+              <MaterialIcons name="logout" size={24} color="white" />
             </TouchableOpacity>
           </View>
 

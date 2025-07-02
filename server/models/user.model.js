@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema({
   profilePicture: {
@@ -7,20 +8,20 @@ const userSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    required: true,
+    required: [true, "Email is required"],
     unique: true,
-    match: /.+\@.+\..+/, // basic regex email validation
+    match: [/.+\@.+\..+/, "Please enter a valid email address"], // basic regex email validation
     trim: true,
   },
   password: {
     type: String,
-    required: true,
+    required: [true, "Password is required"],
     minLength: 6,
     maxLength: 20,
   },
   firstName: {
     type: String,
-    required: true,
+    required: [true, "First name is required"],
     minLength: 3,
     maxLength: 30,
     trim: true,
@@ -42,6 +43,25 @@ const userSchema = new mongoose.Schema({
     enum: ["male", "female"],
   },
 });
+
+// Hash password before saving
+userSchema.pre("save", async function (next) {
+  // If the password is not modified, skip hashing
+  // This is important to avoid hashing the password again if the user updates other fields
+  if (!this.isModified("password")) {
+    return next();
+  }
+
+  // Generate a salt and hash the password
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+  next();
+});
+
+// Method to compare entered password with hashed password
+userSchema.methods.comparePassword = async function (enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password);
+};
 
 const User = mongoose.model("User", userSchema);
 

@@ -32,3 +32,18 @@ export type Category = {
     name: string;
     icon: string;
 }
+
+export type TokenType = {
+    id: string;
+    email: string;
+}
+
+export type UserStateType = {
+    user: User | null;
+    isLoading: boolean;
+    error: Error | null;
+    registerUser: {
+        success: string | null;
+        error: null;
+    } | null;
+}

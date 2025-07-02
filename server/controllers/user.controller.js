@@ -1,4 +1,5 @@
 const User = require("./../models/user.model");
+const jwt = require("jsonwebtoken");
 
 module.exports = {
   register: async (req, res) => {
@@ -38,8 +39,61 @@ module.exports = {
       return res.status(500).json({ message: "Internal server error" });
     }
   },
-  login: (req, res) => {
+  login: async (req, res) => {
     console.log("login function called");
+    const { email, password } = req.body;
+    
+    try {
+      // 1. Check if user exists
+      let user = await User.findOne({ email: email.toLowerCase() });
+      if (!user) {
+        return res
+          .status(400)
+          .json({ errors: [{ msg: "Invalid credentials" }] });
+      }
+
+      // 2. Compare password
+      const isMatch = await user.comparePassword(password);
+      if (!isMatch) {
+        return res
+          .status(400)
+          .json({ errors: [{ msg: "Invalid credentials" }] }); // Use generic message for security
+      }
+
+      // 3. User matched, create JWT Payload(will be used to create token)
+      const payload = {
+        user: {
+          id: user._id, // or user._id depending on your preference
+          email: user.email,
+          // Add any other user data you want in the token
+          // Be mindful of token size and sensitive information
+        },
+      };
+
+      // 4. Sign the token
+      jwt.sign(
+        payload,
+        process.env.JWT_SECRET,
+        { expiresIn: process.env.JWT_EXPIRES_IN || "1h" },
+        (err, token) => {
+          if (err) throw err;
+          return res.status(200).json({
+            status: "Success",
+            message: "Login successful!",
+            token: token, // Send the token to the client
+            user: {
+              // Optionally send some user details back
+              id: user._id,
+              email: user.email,
+              firstName: user.firstName,
+            },
+          });
+        }
+      );
+    } catch (error) {
+      console.error("Error in login function:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
   },
   getProfile: async (req, res) => {
     console.log("getProfile function called");

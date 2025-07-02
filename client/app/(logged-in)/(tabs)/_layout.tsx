@@ -4,7 +4,6 @@ import { Tabs } from 'expo-router';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 export default function TabLayout() {
-
   return (
     <Tabs
       screenOptions={{
@@ -15,14 +14,7 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Home',
-          tabBarIcon: () => <MaterialIcons name="dashboard" size={24} color="grey" />
-        }}
-      />
-       <Tabs.Screen
-        name="login"
-        options={{
-          title: 'Login',
-          tabBarIcon: () => <MaterialIcons name="login" size={24} color="grey" />
+          tabBarIcon: () => <MaterialIcons name="dashboard" size={24} color="green" />
         }}
       />
       <Tabs.Screen
