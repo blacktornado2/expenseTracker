@@ -10,6 +10,8 @@ import {
   UPDATE_USER_FAILURE,
   REGISTER_USER_SUCCESS,
   REGISTER_USER_REQUEST,
+  LOGOUT_USER_REQUEST,
+  LOGOUT_USER_SUCCESS,
 } from "../actions//action.types";
 
 const initialState = {
@@ -39,6 +41,10 @@ const userReducer = (state = initialState, action: any) => {
       return { ...state, isLoading: true, error: null, registerUser: null };
     case REGISTER_USER_SUCCESS:
       return { ...state, isLoading: false, error: null, registerUser: { success: action.payload } };
+    case LOGOUT_USER_REQUEST: 
+      return { ...state, isLoading: true };
+    case LOGOUT_USER_SUCCESS:
+      return {...initialState};
     default:
       return state;
   }

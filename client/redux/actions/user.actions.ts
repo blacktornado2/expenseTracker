@@ -15,6 +15,8 @@ import {
   LOGIN_USER_SUCCESS,
   REGISTER_USER_REQUEST,
   REGISTER_USER_SUCCESS,
+  LOGOUT_USER_REQUEST,
+  LOGOUT_USER_SUCCESS,
 } from "./action.types";
 
 // Action creators
@@ -93,3 +95,11 @@ export const deleteUserFailure = (error: Error) => ({
   payload: error,
 });
 
+
+export const logoutUserRequest = () => ({
+  type: LOGOUT_USER_REQUEST,
+});
+
+export const logoutUserSuccess = () => ({
+  type: LOGOUT_USER_SUCCESS,
+});

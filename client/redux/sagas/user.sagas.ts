@@ -39,7 +39,6 @@ function* loginUserSaga(action: LoginAction) {
     yield setLoginToken(token);
     yield put(loginUserSuccess(user));
   } catch (error: any) {
-    console.log("error: ", error);
     yield put(loginUserFailure(error));
   }
 }

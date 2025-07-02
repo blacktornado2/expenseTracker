@@ -11,7 +11,6 @@ export const loginUserService = async ({ email, password }: { email: string, pas
         });
         return data;
     } catch (error: any) {
-        console.log("999")
         console.log(error.message);
     }
 }

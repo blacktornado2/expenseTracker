@@ -4,7 +4,6 @@ import { Tabs } from 'expo-router';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 export default function TabLayout() {
-  console.log("000")
   return (
     <Tabs
       screenOptions={{

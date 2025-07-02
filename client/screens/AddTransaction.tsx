@@ -150,7 +150,6 @@ const AddTransactionScreen = () => {
           title='Save'
           onPress={() => {
             // TODO: Call the saveTransaction API and navigate to home 
-            console.log('Button Clicked');
             router.navigate('/')
           }}
         />
