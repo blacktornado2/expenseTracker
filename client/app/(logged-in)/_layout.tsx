@@ -1,13 +1,18 @@
 import { Redirect, Stack } from 'expo-router';
-import { useSelector } from 'react-redux';
-import { userSelector } from '@/redux/store/selectors';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useEffect } from 'react';
 
 export default function AuthLayout() {
-    const { user } = useSelector(userSelector);
 
-    if (!user) {
-        return <Redirect href="/login" />;
-    }
+    useEffect(() => {
+        const checkAuth = async () => {
+            const token = await AsyncStorage.getItem('JWT_TOKEN');
+            if (token) {
+                return <Redirect href="/login" />;
+            }
+        }
+        checkAuth();
+    }, []);
 
-    return <Stack screenOptions={{headerShown: false}}/>;
+    return <Stack screenOptions={{ headerShown: false }} />;
 }
