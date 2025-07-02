@@ -22,47 +22,20 @@ export default function RootLayout() {
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
 
-  const [token, setToken] = useState(null);
-  const [authChecked, setAuthChecked] = useState(false);
-
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const storedToken = await AsyncStorage.getItem('token');
-        console.log("storedToken: ", storedToken);
-        if (storedToken) {
-          setToken(storedToken);
-        }
-      } catch (e) {
-        console.error("Error checking token", e);
-      } finally {
-        setAuthChecked(true);
-      }
-    };
-
-    checkAuth();
-  }, []);
-
-  useEffect(() => {
-    if (loaded && authChecked) {
+    if (loaded) {
       SplashScreen.hideAsync();
     }
-  }, [loaded, authChecked]);
+  }, [loaded]);
 
-  if (!loaded || !authChecked) {
+  if (!loaded) {
     return null; // still loading
   }
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Provider store={store}>
-        <Stack>
-        {token ? (
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          ) : (
-            <Stack.Screen name="login" options={{ headerShown: false }} />
-          )}
-        </Stack>
+        <Stack screenOptions={{ headerShown: false }} />
       </Provider>
       <StatusBar style="auto" />
     </ThemeProvider>

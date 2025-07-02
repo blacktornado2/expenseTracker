@@ -71,3 +71,12 @@ Frontend:
   b) Transaction detail screen
   c) User profile Screen
 2. Sync up frontend and backend(data types, requests and responses)
+
+/
+(tabs)
+ - index : /
+ - transactions : /transactions
+ - _layout : 
+
+login
+ - /login

@@ -40,7 +40,7 @@ export default {
       "typedRoutes": true
     },
     extra: {
-      BASE_URL: process.env.BASE_URL_LOCALHOST, // 👈 Expose .env variable here
+      API_BASE_URL: process.env.API_BASE_URL_LOCALHOST, // 👈 Expose .env variable here
     },
   }
 }

@@ -42,4 +42,8 @@ export type UserStateType = {
     user: User | null;
     isLoading: boolean;
     error: Error | null;
+    registerUser: {
+        success: string | null;
+        error: null;
+    } | null;
 }
