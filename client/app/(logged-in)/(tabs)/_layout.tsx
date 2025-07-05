@@ -24,6 +24,13 @@ export default function TabLayout() {
           tabBarIcon: () => <MaterialIcons name="payments" size={24} color="gray" />
         }}
       />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: 'Profile',
+          tabBarIcon: () => <MaterialIcons name="person" size={24} color="gray" />
+        }}
+      />
     </Tabs>
   );
 }
