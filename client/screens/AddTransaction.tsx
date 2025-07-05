@@ -40,6 +40,7 @@ const AddTransactionScreen = () => {
   useLayoutEffect(() => {
     navigation.setOptions({
       title: 'Add Transaction',
+      headerShown: true,
       headerLeft: () => (
         <Pressable onPress={() => router.back()} style={{ marginLeft: 10 }}>
           <AntDesign name="arrowleft" size={24} color="black" />
