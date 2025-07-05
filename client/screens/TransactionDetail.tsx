@@ -12,6 +12,7 @@ const TransactionDetail = () => {
   useLayoutEffect(() => {
     navigation.setOptions({
       title: 'Transaction Details',
+      headerShown: true,
       headerLeft: () => (
         <Pressable onPress={() => navigation.goBack()} style={{ marginLeft: 10 }}>
           <AntDesign name="arrowleft" size={24} color="black" />
