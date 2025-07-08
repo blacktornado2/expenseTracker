@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { Text, TextInput, TouchableOpacity, View, KeyboardAvoidingView } from 'react-native'
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import Toast from 'react-native-toast-message';
 import { useRouter } from 'expo-router';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { registerUserRequest } from '@/redux/actions/user.actions';
 import { userSelector } from '@/redux/store/selectors';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const SignUp = () => {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const {registerUser} = useSelector(userSelector)
+  const { registerUser } = useSelector(userSelector)
 
   const [name, setName] = useState("")
   const [email, setEmail] = useState("");
@@ -26,20 +27,23 @@ const SignUp = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!name || !email || !password) {
-      alert("Please fill all the fields");
-      return;
+      return Toast.show({
+        type: 'error',
+        text1: 'Error!',
+        text2: 'Please fill in all fields.',
+        visibilityTime: 3000
+      })
     }
 
     dispatch(registerUserRequest({ name, email, password }));
   }
 
   return (
-    <View className='flex-1 justify-center items-center bg-gray-100'>
-      <Text className='text-2xl font-bold'>Sign Up Screen</Text>
-      <KeyboardAvoidingView>
+    <SafeAreaView className='flex-1 bg-gray-100'>
+      <KeyboardAvoidingView className='flex-1 w-full'>
+        <Text className='text-2xl font-bold'>Sign Up Screen</Text>
 
-        {/* Sign-Up Form */}
-        <View className='flex flex-col bg-white justify-center mt-10 mx-6 px-5 py-5'>
+        <View className='h-[500px] bg-white justify-center mt-10 mx-6 px-5'>
           <View className='mb-5'>
             <Text className='text-xl mb-1 rounded'>
               Name
@@ -80,12 +84,12 @@ const SignUp = () => {
           <Text className='text-center text-lg font-bold mt-2'>
             OR
           </Text>
-          <TouchableOpacity onPress={() => { router.replace('/login')}} className='mt-2 bg-blue-600 flex items-center py-3 rounded-xl'>
+          <TouchableOpacity onPress={() => { router.replace('/login') }} className='mt-2 bg-blue-600 flex items-center py-3 rounded-xl'>
             <Text className='text-white text-lg tracking-wide font-bold'>Login</Text>
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
-    </View>
+    </SafeAreaView>
   )
 }
 
