@@ -7,22 +7,33 @@ import {
   SafeAreaView,
   ScrollView,
 } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import { logoutUserRequest, logoutUserSuccess } from '@/redux/actions/user.actions';
+
+const user = {
+  name: 'John Doe',
+  gender: 'Male',
+  age: 29,
+  email: 'johndoe@example.com',
+  phone: '+1 234 567 890',
+  location: 'San Francisco, CA',
+  joined: '2020-05-15',
+  image: require('@/assets/images/no_user.png'),
+};
 
 const Profile = () => {
-  const user = {
-    name: 'John Doe',
-    gender: 'Male',
-    age: 29,
-    email: 'johndoe@example.com',
-    phone: '+1 234 567 890',
-    location: 'San Francisco, CA',
-    joined: '2020-05-15',
-    image: 'https://i.pravatar.cc/300',
-  };
+  const dispatch = useDispatch();
+  const router = useRouter();
 
-  const handleLogout = () => {
-    alert('Logged out!');
-  };
+  const handleLogout = async () => {
+    dispatch(logoutUserRequest());
+    await AsyncStorage.removeItem('JWT_TOKEN');
+    dispatch(logoutUserSuccess());
+    router.replace('/login');
+  }
 
   const joinedDate = new Date(user.joined).toLocaleDateString();
 
@@ -47,11 +58,11 @@ const Profile = () => {
           {/* Profile Picture and Name */}
           <View className="items-center mb-6">
             <Image
-              source={{ uri: user.image }}
-              className="w-32 h-32 rounded-full mb-4"
+              source={user.image}
+              className="w-36 h-36 rounded-full mb-4"
               style={{
                 borderWidth: 3,
-                borderColor: '#f3f4f6',
+                borderColor: 'lightblue',
                 shadowColor: '#000',
                 shadowOpacity: 0.1,
                 shadowRadius: 6,
@@ -76,7 +87,7 @@ const Profile = () => {
             onPress={handleLogout}
             className="bg-red-600 py-4 rounded-full shadow-md"
           >
-            <Text className="text-white text-center text-lg font-semibold tracking-wide">
+            <Text className="text-white font-bold text-center text-lg font-extrabold tracking-wide">
               Logout
             </Text>
           </TouchableOpacity>
