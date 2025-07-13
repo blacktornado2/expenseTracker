@@ -28,9 +28,10 @@ export const loginUserRequest = ({ email, password }: { email: string, password:
   }
 });
 
-export const loginUserSuccess = (user: User) => ({
+export const loginUserSuccess = (user: User, token: string) => ({
   type: LOGIN_USER_SUCCESS,
-  payload: user
+  payload: user,
+  token,
 });
 
 export const loginUserFailure = (error: Error) => ({

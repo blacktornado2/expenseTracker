@@ -1,18 +1,19 @@
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Text, SafeAreaView, View, ScrollView, TouchableOpacity } from 'react-native';
 import ExpenseBox from '@/components/ExpenseBox';
 import PieChart from 'react-native-pie-chart';
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { useRouter } from 'expo-router';
-import transactionsData from '../utils/data/transactions.json';
-import { getRecentTransactions } from '../utils/helpers';
+import { useFocusEffect, useRouter } from 'expo-router';
 import { format } from 'date-fns';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { logoutUserRequest, logoutUserSuccess } from '@/redux/actions/user.actions';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import {transactionSelector} from '@/redux/store/selectors';
+import { getAllTransactions } from '@/redux/actions/transaction.actions';
 
 export const TransactionRow = ({
+  key,
   date,
   title,
   amount,
@@ -30,7 +31,7 @@ export const TransactionRow = ({
   const amountColor = type === 'debit' ? 'text-red-500' : 'text-green-500';
 
   return (
-    <View className="px-5 py-4 bg-white rounded-2xl">
+    <View className="px-5 py-4 bg-white rounded-2xl" key={key}>
       <View className="flex-row justify-between items-center">
         {/* Left side: Date + Title */}
         <View className="flex-row items-center flex-1">
@@ -54,6 +55,13 @@ export const TransactionRow = ({
 const Dashboard = ({navigation}: any) => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const {transactions} = useSelector(transactionSelector);
+
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(getAllTransactions());
+    }, [dispatch])
+  );
 
   const handleLogout = async () => {
     dispatch(logoutUserRequest());
@@ -70,7 +78,11 @@ const Dashboard = ({navigation}: any) => {
   ];
 
   const sliceColor = categoryData.map(item => item.color);
-  const recentTransactions = getRecentTransactions(transactionsData);
+  const recentTransactions = Array.isArray(transactions)
+  ? [...transactions]
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      .slice(0, 3)
+  : [];
   
 
   return (
@@ -118,8 +130,8 @@ const Dashboard = ({navigation}: any) => {
           <View className="bg-white rounded-2xl">
             {recentTransactions.map((txn, index) => {
               const txnDate = format(new Date(txn.date), 'MMM dd');
-              const title = `${txn.category.icon} ${txn.description}`;
-              const amount = txn.type === 'debit' ? `-₹${txn.amount}` : `+₹${txn.amount}`;
+              const title = `${txn.category}`;
+              const amount = txn.transactionType === 'debit' ? `-₹${txn.amount}` : `+₹${txn.amount}`;
               const isLast = index === recentTransactions.length - 1;
 
               return (
@@ -128,8 +140,8 @@ const Dashboard = ({navigation}: any) => {
                   date={txnDate}
                   title={title}
                   amount={amount}
+                  type={txn.transactionType}
                   isLast={isLast}
-                  type={txn.type}
                 />
               );
             })}

@@ -19,6 +19,7 @@ const initialState = {
   isLoading: false,
   error: null,
   registerUser: null,
+  token: null,
 };
 
 const userReducer = (state = initialState, action: any) => {
@@ -36,7 +37,7 @@ const userReducer = (state = initialState, action: any) => {
     case LOGIN_USER_REQUEST:
       return { ...state, isLoading: true }
     case LOGIN_USER_SUCCESS:
-      return { ...state, user: action.payload }
+      return { ...state, user: action.payload, token: action.token }
     case REGISTER_USER_REQUEST:
       return { ...state, isLoading: true, error: null, registerUser: null };
     case REGISTER_USER_SUCCESS:
