@@ -79,3 +79,11 @@ Frontend:
 2. Store token in redux
 3. Send token with every request
 4. Sync backend data with frontend
+
+
+8/7/2025 - 
+1. check token expiry while fetching from local on frontend - AB
+2. profile data Sync, logout feat movement - AB
+3. Sync backend data with frontend - RY
+4. UI Improvements - 
+5. Tabs active text/icon Improvements

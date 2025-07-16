@@ -16,10 +16,9 @@ module.exports = {
     }
   },
   getTransactionByUser: async (req, res) => {
-    console.log("getTransactionById function called");
+    console.log("getTransactionByUser function called");
     try {
-      const { email } = req.params;
-      const transactions = await Transaction.find({email});
+      const transactions = await Transaction.find({user: req.user.id});
       if (!transactions.length) {
         return res.status(404).json({});
       }

@@ -37,7 +37,7 @@ function* loginUserSaga(action: LoginAction) {
     const { email, password } = action.payload;
     const { token, user } = yield loginUserService({ email, password });
     yield setLoginToken(token);
-    yield put(loginUserSuccess(user));
+    yield put(loginUserSuccess(user, token));
   } catch (error: any) {
     yield put(loginUserFailure(error));
   }

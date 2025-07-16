@@ -15,6 +15,7 @@ const protect = async (req, res, next) => {
       // Verify token
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
+
       // User has properties: id and email
       req.user = decoded.user;
 
@@ -24,7 +25,7 @@ const protect = async (req, res, next) => {
           .json({ msg: "User not found, authorization denied" });
       }
 
-      next(); // Move to the next middleware or route handler
+      return next(); // Move to the next middleware or route handler
     } catch (err) {
       console.error("Token verification failed:", err.message);
       if (err.name === "TokenExpiredError") {
