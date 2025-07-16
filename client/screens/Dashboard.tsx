@@ -3,14 +3,15 @@ import { Text, SafeAreaView, View, ScrollView, TouchableOpacity } from 'react-na
 import ExpenseBox from '@/components/ExpenseBox';
 import PieChart from 'react-native-pie-chart';
 import Feather from 'react-native-vector-icons/Feather';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useFocusEffect, useRouter } from 'expo-router';
-import { format } from 'date-fns';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { logoutUserRequest, logoutUserSuccess } from '@/redux/actions/user.actions';
 import { useDispatch, useSelector } from 'react-redux';
 import {transactionSelector} from '@/redux/store/selectors';
 import { getAllTransactions } from '@/redux/actions/transaction.actions';
+import transactionsData from '../utils/data/transactions.json';
+import { getRecentTransactions } from '../utils/helpers';
+import { format } from 'date-fns';
 
 export const TransactionRow = ({
   key,
@@ -52,7 +53,7 @@ export const TransactionRow = ({
 };
 
 
-const Dashboard = ({navigation}: any) => {
+const Dashboard = ({ navigation }: any) => {
   const router = useRouter();
   const dispatch = useDispatch();
   const {transactions} = useSelector(transactionSelector);
@@ -78,24 +79,16 @@ const Dashboard = ({navigation}: any) => {
   ];
 
   const sliceColor = categoryData.map(item => item.color);
-  const recentTransactions = Array.isArray(transactions)
-  ? [...transactions]
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-      .slice(0, 3)
-  : [];
-  
+  const recentTransactions = getRecentTransactions(transactionsData);
 
   return (
     <SafeAreaView className='flex-1 bg-gray-50'>
       <ScrollView contentContainerStyle={{ paddingBottom: 30 }}>
         <View className='mx-6 mt-15'>
           <View className="flex-row items-center justify-between mt-4">
-            <Text className='text-4xl text-black font-bold'>Dashboard</Text>
-            <TouchableOpacity className='bg-teal-600 rounded-3xl shadow-md p-2' onPress={() => router.push('/addTransaction')}>
+            <Text className='text-4xl text-black font-bold pl-5'>Dashboard</Text>
+            <TouchableOpacity className='bg-green-600 rounded-3xl shadow-md p-2' onPress={() => router.push('/addTransaction')}>
               <Feather name="plus" size={24} color="#FFF" />
-            </TouchableOpacity>
-            <TouchableOpacity className='bg-black rounded-xl shadow-md p-2' onPress={handleLogout}>
-              <MaterialIcons name="logout" size={24} color="white" />
             </TouchableOpacity>
           </View>
 
