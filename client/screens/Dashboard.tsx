@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
 import { Text, SafeAreaView, View, ScrollView, TouchableOpacity } from 'react-native';
-import ExpenseBox from '@/components/ExpenseBox';
 import PieChart from 'react-native-pie-chart';
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
@@ -100,9 +99,18 @@ const Dashboard = ({navigation}: any) => {
           </View>
 
           <View className='flex-row gap-2 justify-between mt-6'>
-            <ExpenseBox title='Total Income:' amount={5000} className="bg-green-400" />
-            <ExpenseBox title='Total Expense:' amount={3000} className="bg-red-300" />
-            <ExpenseBox title='Balance:' amount={2000} className="bg-gray-100" />
+            <View className="flex-1 p-4 rounded-2xl bg-cat-income-soft">
+              <Text className="text-tx-primary dark:text-tx-primary-dark text-base font-semibold">Total Income:</Text>
+              <Text className="text-income-green font-semibold">₹5000</Text>
+            </View>
+            <View className="flex-1 p-4 rounded-2xl bg-bg-subtle dark:bg-bg-subtle-dark">
+              <Text className="text-tx-primary dark:text-tx-primary-dark text-base font-semibold">Total Expense:</Text>
+              <Text className="text-brand-red font-semibold">₹3000</Text>
+            </View>
+            <View className="flex-1 p-4 rounded-2xl bg-bg-card dark:bg-bg-card-dark">
+              <Text className="text-tx-primary dark:text-tx-primary-dark text-base font-semibold">Balance:</Text>
+              <Text className="text-tx-secondary dark:text-tx-secondary-dark font-semibold">₹2000</Text>
+            </View>
           </View>
 
           <View className='mt-8 px-5 bg-white py-8 rounded-2xl'>
