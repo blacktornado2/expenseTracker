@@ -162,9 +162,23 @@ export default function Dashboard() {
             return (
               <TouchableOpacity
                 key={txn._id ?? txn.id}
-                onPress={() =>
-                  router.push({ pathname: '/transactionDetail', params: { txn: JSON.stringify(txn) } })
-                }
+                onPress={() => {
+                  const normalizedTxn = {
+                    id: txn._id,
+                    userId: txn.user,
+                    type: txn.transactionType,
+                    amount: txn.amount,
+                    date: txn.date,
+                    category: {
+                      name: txn.category,
+                    },
+                    description: txn.description || txn.category,
+                  };
+                  router.push({
+                    pathname: '/transactionDetail',
+                    params: { txn: JSON.stringify(normalizedTxn) },
+                  });
+                }}
               >
                 <TransactionRow
                   name={txn.description || txn.category}
