@@ -1,60 +1,56 @@
-import React, { useCallback, useEffect } from 'react';
-import { Text, SafeAreaView, View, ScrollView, TouchableOpacity } from 'react-native';
-import PieChart from 'react-native-pie-chart';
-import Feather from 'react-native-vector-icons/Feather';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import React, { useCallback } from 'react';
+import { SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { useFocusEffect, useRouter } from 'expo-router';
-import { format } from 'date-fns';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { logoutUserRequest, logoutUserSuccess } from '@/redux/actions/user.actions';
 import { useDispatch, useSelector } from 'react-redux';
-import {transactionSelector} from '@/redux/store/selectors';
+import { format } from 'date-fns';
+import { Moon, Sun, Sunset, ArrowUpRight, PiggyBank } from 'lucide-react-native';
+
+import Card from '@/components/Card';
+import IconTile from '@/components/IconTile';
+import Avatar from '@/components/Avatar';
+import TransactionRow from '@/components/TransactionRow';
+import HeroCard from '@/components/HeroCard';
+import SpendBreakdownCard from '@/components/SpendBreakdownCard';
+import { getCategoryMeta } from '@/constants/categoryMeta';
 import { getAllTransactions } from '@/redux/actions/transaction.actions';
+import {
+  transactionSelector,
+  userSelector,
+  selectMonthSpent,
+  selectMonthIncome,
+  selectSpendByCategory,
+} from '@/redux/store/selectors';
 
-export const TransactionRow = ({
-  key,
-  date,
-  title,
-  amount,
-  isLast,
-  type,
-}: {
-  date: string;
-  title: string;
-  amount: string;
-  isLast?: boolean;
-  type: string;
-}) => {
-  const [month, day] = date.split(' ');
+const DEFAULT_MONTHLY_BUDGET = 50000;
 
-  const amountColor = type === 'debit' ? 'text-red-500' : 'text-green-500';
-
-  return (
-    <View className="px-5 py-4 bg-white rounded-2xl" key={key}>
-      <View className="flex-row justify-between items-center">
-        {/* Left side: Date + Title */}
-        <View className="flex-row items-center flex-1">
-          <View className="items-center">
-            <Text className="text-lg font-bold">{day}</Text>
-            <Text className="text-xs text-gray-500">{month}</Text>
-          </View>
-          <Text numberOfLines={2} className="ml-8 text-lg font-medium">{title}</Text>
-        </View>
-
-        {/* Right side: Amount */}
-        <Text className={`text-lg font-semibold ${amountColor}`}>{amount}</Text>
-      </View>
-
-      {!isLast && <View className="mt-4 mx-2 h-px bg-gray-200" />}
-    </View>
-  );
+type Greeting = {
+  text: string;
+  Icon: typeof Sun;
+  color: string;
+  pillBg: string;
 };
 
+function getGreeting(hour: number): Greeting {
+  if (hour >= 5 && hour < 12) {
+    return { text: 'Good morning', Icon: Sun, color: '#F59E0B', pillBg: '#FFFBEB' };
+  }
+  if (hour >= 12 && hour < 17) {
+    return { text: 'Good afternoon', Icon: Sun, color: '#F97316', pillBg: '#FFF7ED' };
+  }
+  if (hour >= 17 && hour < 21) {
+    return { text: 'Good evening', Icon: Sunset, color: '#E8703A', pillBg: '#FFF1E6' };
+  }
+  return { text: 'Good night', Icon: Moon, color: '#7C5CFC', pillBg: '#EFEAFE' };
+}
 
-const Dashboard = ({navigation}: any) => {
+export default function Dashboard() {
   const router = useRouter();
   const dispatch = useDispatch();
-  const {transactions} = useSelector(transactionSelector);
+  const { transactions } = useSelector(transactionSelector);
+  const { user } = useSelector(userSelector);
+  const monthSpent = useSelector(selectMonthSpent);
+  const monthIncome = useSelector(selectMonthIncome);
+  const spendByCategory = useSelector(selectSpendByCategory);
 
   useFocusEffect(
     useCallback(() => {
@@ -62,105 +58,128 @@ const Dashboard = ({navigation}: any) => {
     }, [dispatch])
   );
 
-  const handleLogout = async () => {
-    dispatch(logoutUserRequest());
-    await AsyncStorage.removeItem('JWT_TOKEN');
-    dispatch(logoutUserSuccess());
-    router.replace('/login');
-  }
+  const now = new Date();
+  const greeting = getGreeting(now.getHours());
+  const monthLabel = format(now, 'MMMM');
+  const saved = monthIncome - monthSpent;
+  const budgetLeft = Math.max(0, DEFAULT_MONTHLY_BUDGET - monthSpent);
+  const spentPct = DEFAULT_MONTHLY_BUDGET > 0 ? (monthSpent / DEFAULT_MONTHLY_BUDGET) * 100 : 0;
 
-  const categoryData = [
-    { label: 'Food', value: 40, color: '#FF9384' },
-    { label: 'Transport', value: 30, color: '#36A2EB' },
-    { label: 'Shopping', value: 20, color: '#FFCE56' },
-    { label: 'Other', value: 10, color: '#4BC0C0' },
-  ];
+  const chartData = spendByCategory.map((entry) => ({
+    label: entry.label,
+    value: entry.value,
+    color: getCategoryMeta(entry.label).color,
+  }));
 
-  const sliceColor = categoryData.map(item => item.color);
   const recentTransactions = Array.isArray(transactions)
-  ? [...transactions]
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-      .slice(0, 3)
-  : [];
-  
+    ? [...transactions].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 5)
+    : [];
 
   return (
-    <SafeAreaView className='flex-1 bg-gray-50'>
-      <ScrollView contentContainerStyle={{ paddingBottom: 30 }}>
-        <View className='mx-6 mt-15'>
-          <View className="flex-row items-center justify-between mt-4">
-            <Text className='text-4xl text-black font-bold'>Dashboard</Text>
-            <TouchableOpacity className='bg-teal-600 rounded-3xl shadow-md p-2' onPress={() => router.push('/addTransaction')}>
-              <Feather name="plus" size={24} color="#FFF" />
-            </TouchableOpacity>
-            <TouchableOpacity className='bg-black rounded-xl shadow-md p-2' onPress={handleLogout}>
-              <MaterialIcons name="logout" size={24} color="white" />
-            </TouchableOpacity>
-          </View>
-
-          <View className='flex-row gap-2 justify-between mt-6'>
-            <View className="flex-1 p-4 rounded-2xl bg-cat-income-soft">
-              <Text className="text-tx-primary dark:text-tx-primary-dark text-base font-semibold">Total Income:</Text>
-              <Text className="text-income-green font-semibold">₹5000</Text>
+    <SafeAreaView className="flex-1 bg-bg-app dark:bg-bg-app-dark">
+      <ScrollView contentContainerStyle={{ paddingTop: 54, paddingHorizontal: 18, paddingBottom: 26 }}>
+        <View className="flex-row items-center justify-between mb-5">
+          <View className="flex-row items-center" style={{ gap: 10 }}>
+            <View
+              style={{
+                width: 26,
+                height: 26,
+                borderRadius: 9,
+                backgroundColor: greeting.pillBg,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <greeting.Icon size={15} color={greeting.color} />
             </View>
-            <View className="flex-1 p-4 rounded-2xl bg-bg-subtle dark:bg-bg-subtle-dark">
-              <Text className="text-tx-primary dark:text-tx-primary-dark text-base font-semibold">Total Expense:</Text>
-              <Text className="text-brand-red font-semibold">₹3000</Text>
-            </View>
-            <View className="flex-1 p-4 rounded-2xl bg-bg-card dark:bg-bg-card-dark">
-              <Text className="text-tx-primary dark:text-tx-primary-dark text-base font-semibold">Balance:</Text>
-              <Text className="text-tx-secondary dark:text-tx-secondary-dark font-semibold">₹2000</Text>
+            <View>
+              <Text className="text-tx-tertiary dark:text-tx-tertiary-dark text-xs font-semibold">
+                {greeting.text}
+              </Text>
+              <Text className="text-tx-primary dark:text-tx-primary-dark text-base font-extrabold">
+                {monthLabel} overview
+              </Text>
             </View>
           </View>
-
-          <View className='mt-8 px-5 bg-white py-8 rounded-2xl'>
-            <Text className='text-2xl font-semibold mb-6'>Category Breakdown</Text>
-            <View className='flex-row'>
-              <PieChart
-                widthAndHeight={160}
-                series={categoryData}
-                sliceColor={sliceColor}
-                coverRadius={0.6}
-                coverFill={'#FFF'}
-              />
-              <View className="mt-4 w-full ml-5">
-                {categoryData.map((item, index) => (
-                  <View key={index} className="flex-row items-center mb-2">
-                    <View style={{ backgroundColor: item.color }} className="w-4 h-4 rounded-full mr-2" />
-                    <Text className="text-base">{item.label} - {item.value} %</Text>
-                  </View>
-                ))}
-              </View>
-            </View>
-          </View>
-
-          <Text className='text-2xl font-semibold mt-8 mb-4'>Recent Transactions</Text>
-          <View className="bg-white rounded-2xl">
-            {recentTransactions.map((txn, index) => {
-              const txnDate = format(new Date(txn.date), 'MMM dd');
-              const title = `${txn.category}`;
-              const amount = txn.transactionType === 'debit' ? `-₹${txn.amount}` : `+₹${txn.amount}`;
-              const isLast = index === recentTransactions.length - 1;
-
-              return (
-                <TransactionRow
-                  key={txn.id}
-                  date={txnDate}
-                  title={title}
-                  amount={amount}
-                  type={txn.transactionType}
-                  isLast={isLast}
-                />
-              );
-            })}
-          </View>
-          <TouchableOpacity className='items-center' onPress={() => router.push('/transactions')}>
-            <Text className='text-green-700 font-semibold mt-5 text-xl'>View All</Text>
+          <TouchableOpacity onPress={() => router.push('/profile')}>
+            <Avatar initial={user?.firstName?.[0] ?? 'A'} />
           </TouchableOpacity>
         </View>
+
+        <HeroCard
+          label={user?.firstName ?? 'You'}
+          subtitle="Spent this month"
+          amount={monthSpent}
+          progressPct={spentPct}
+          footerLeft={`₹${budgetLeft.toLocaleString('en-IN')} left`}
+          footerRight={`of ₹${DEFAULT_MONTHLY_BUDGET.toLocaleString('en-IN')}`}
+        />
+
+        <View className="flex-row mt-4" style={{ gap: 12 }}>
+          <Card radius={22} className="flex-1 p-4">
+            <IconTile backgroundColor="#E6F6EC">
+              <ArrowUpRight size={18} color="#16A34A" />
+            </IconTile>
+            <Text className="text-tx-tertiary dark:text-tx-tertiary-dark text-xs font-semibold mt-3">
+              Income
+            </Text>
+            <Text className="text-tx-primary dark:text-tx-primary-dark text-lg font-extrabold">
+              ₹{monthIncome.toLocaleString('en-IN')}
+            </Text>
+          </Card>
+          <Card radius={22} className="flex-1 p-4">
+            <IconTile backgroundColor="#EFEAFE">
+              <PiggyBank size={18} color="#7C5CFC" />
+            </IconTile>
+            <Text className="text-tx-tertiary dark:text-tx-tertiary-dark text-xs font-semibold mt-3">
+              Saved
+            </Text>
+            <Text className="text-tx-primary dark:text-tx-primary-dark text-lg font-extrabold">
+              ₹{saved.toLocaleString('en-IN')}
+            </Text>
+          </Card>
+        </View>
+
+        <SpendBreakdownCard data={chartData} />
+
+        <View className="flex-row items-center justify-between mt-6 mb-3">
+          <Text className="text-tx-primary dark:text-tx-primary-dark text-base font-extrabold">Recent</Text>
+          <TouchableOpacity onPress={() => router.push('/transactions')}>
+            <Text style={{ color: '#0FB46B' }} className="font-bold text-sm">
+              See all
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {recentTransactions.length === 0 ? (
+          <Text className="text-tx-tertiary dark:text-tx-tertiary-dark text-sm text-center mt-4">
+            No transactions yet
+          </Text>
+        ) : (
+          recentTransactions.map((txn: any) => {
+            const meta = getCategoryMeta(txn.category);
+            const type = txn.transactionType === 'credit' ? 'income' : 'expense';
+            return (
+              <TouchableOpacity
+                key={txn._id ?? txn.id}
+                onPress={() =>
+                  router.push({ pathname: '/transactionDetail', params: { txn: JSON.stringify(txn) } })
+                }
+              >
+                <TransactionRow
+                  name={txn.description || txn.category}
+                  category={txn.category}
+                  date={new Date(txn.date)}
+                  amount={txn.amount}
+                  type={type}
+                  iconColor={meta.color}
+                  icon={<meta.Icon size={20} color="#FFFFFF" />}
+                />
+              </TouchableOpacity>
+            );
+          })
+        )}
       </ScrollView>
     </SafeAreaView>
   );
-};
-
-export default Dashboard;
+}
