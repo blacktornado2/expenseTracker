@@ -1,0 +1,1487 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; }
+  ::-webkit-scrollbar { width: 0; height: 0; }
+  :root {
+    --bg-app:#FBFAF7; --bg-card:#fff; --bg-subtle:#ECEBE6; --bg-close:#F0EFE8;
+    --tx-primary:#16201A; --tx-secondary:#8E948C; --tx-tertiary:#9AA096; --tx-chip:#6B7066; --tx-inactive:#B4B9B0;
+    --border-row:#F3F2EB; --border-input:#F0EFE8; --border-chip:#ECEBE6;
+    --shadow-card:0 8px 22px rgba(22,32,26,.05); --shadow-tx:0 6px 18px rgba(22,32,26,.04);
+    --shadow-tab:0 -4px 24px rgba(22,32,26,.07); --shadow-key:0 3px 10px rgba(22,32,26,.05);
+  }
+  [data-dark="true"] {
+    --bg-app:#111810; --bg-card:#192218; --bg-subtle:#202C1E; --bg-close:#1E2A1C;
+    --tx-primary:#E2E9E0; --tx-secondary:#9EAE9C; --tx-tertiary:#7E8E7C; --tx-chip:#9AAA98; --tx-inactive:#607060;
+    --border-row:#252E23; --border-input:#263024; --border-chip:#263024;
+    --shadow-card:none; --shadow-tx:none; --shadow-tab:0 -4px 24px rgba(0,0,0,.5); --shadow-key:0 2px 6px rgba(0,0,0,.28);
+  }
+</style>
+<script src="./image-slot.js"></script>
+</helmet>
+
+<div style="min-height:100vh;box-sizing:border-box;padding:48px;background:#eef0ec;display:flex;justify-content:center;align-items:flex-start;font-family:'Plus Jakarta Sans',system-ui,sans-serif;">
+  <div style="flex:none;width:402px;">
+
+    <x-import component="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+      <div data-dark="{{ darkMode }}" style="height:100%;display:flex;flex-direction:column;background:var(--bg-app);font-family:'Plus Jakarta Sans',sans-serif;position:relative;">
+        <div style="flex:1;overflow:auto;">
+
+          <!-- HOME -->
+          <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+          <div style="padding:54px 18px 26px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+              <div>
+                <div style="display:flex;align-items:center;gap:7px;">
+                  <div style="width:26px;height:26px;border-radius:9px;background:{{ greetingIconBg }};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="{{ greetingIconColor }}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="{{ greetingIconPath }}"></path></svg>
+                  </div>
+                  <div style="font-size:13px;color:var(--tx-secondary);font-weight:700;">{{ greeting }}</div>
+                </div>
+                <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:22px;font-weight:800;color:var(--tx-primary);">March overview</div>
+              </div>
+              <div onClick="{{ goProfile }}" style="cursor:pointer;width:46px;height:46px;border-radius:16px;background:#16201A;display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:17px;">A</div>
+            </div>
+
+            <div style="border-radius:30px;padding:24px;background:linear-gradient(140deg,#13C076,#0A9E5E);box-shadow:0 18px 38px rgba(15,180,107,.32);color:#fff;margin-bottom:16px;position:relative;overflow:hidden;">
+              <div style="position:absolute;right:-30px;top:-30px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,.12);"></div>
+              <div style="position:absolute;right:30px;bottom:-44px;width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,.10);"></div>
+              <div style="font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;opacity:.8;position:relative;margin-bottom:10px;">{{ fullNameUpper }}</div>
+              <div style="font-size:13.5px;font-weight:700;opacity:.9;position:relative;">Spent this month</div>
+              <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:44px;font-weight:800;margin:4px 0 16px;font-variant-numeric:tabular-nums;position:relative;">{{ monthSpentStr }}</div>
+              <div style="height:10px;border-radius:6px;background:rgba(255,255,255,.28);overflow:hidden;margin-bottom:10px;position:relative;">
+                <div style="height:100%;width:{{ spentBarW }};background:var(--bg-card);border-radius:6px;"></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:12.5px;font-weight:700;opacity:.95;position:relative;"><span>{{ remainStr }}</span><span>of {{ monthBudgetStr }}</span></div>
+            </div>
+
+            <div style="display:flex;gap:12px;margin-bottom:18px;">
+              <div onClick="{{ goIncomeList }}" style="cursor:pointer;flex:1;background:var(--bg-card);border-radius:22px;padding:16px;box-shadow:var(--shadow-card);">
+                <div style="width:34px;height:34px;border-radius:11px;background:#E6F6EC;display:flex;align-items:center;justify-content:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H9M17 7v8"></path></svg></div>
+                <div style="font-size:12px;color:var(--tx-secondary);font-weight:700;margin-top:10px;">Income</div>
+                <div style="font-size:18px;font-weight:800;color:var(--tx-primary);font-variant-numeric:tabular-nums;">₹4,200</div>
+              </div>
+              <div onClick="{{ goSavings }}" style="cursor:pointer;flex:1;background:var(--bg-card);border-radius:22px;padding:16px;box-shadow:var(--shadow-card);">
+                <div style="width:34px;height:34px;border-radius:11px;background:#EFEAFE;display:flex;align-items:center;justify-content:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7C5CFC" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6M12 8c-3 0-5 1.5-5 4s2 4 5 4 5 1.5 5 4-2 4-5 4M7 4h10"></path></svg></div>
+                <div style="font-size:12px;color:var(--tx-secondary);font-weight:700;margin-top:10px;">Saved</div>
+                <div style="font-size:18px;font-weight:800;color:var(--tx-primary);font-variant-numeric:tabular-nums;">{{ savedAmtDashStr }}</div>
+              </div>
+            </div>
+
+            <div style="background:var(--bg-card);border-radius:26px;padding:20px;box-shadow:var(--shadow-card);margin-bottom:22px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+                <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:16px;font-weight:700;color:var(--tx-primary);">Where it goes</div>
+                <div style="display:flex;gap:2px;padding:3px;background:var(--bg-close);border-radius:11px;">
+                  <div onClick="{{ setBarChart }}" style="padding:5px 10px;border-radius:8px;cursor:pointer;background:{{ chartBarBg }};box-shadow:{{ chartBarShadow }};">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="{{ chartBarFg }}" stroke-width="2.3" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"></path></svg>
+                  </div>
+                  <div onClick="{{ setPieChart }}" style="padding:5px 10px;border-radius:8px;cursor:pointer;background:{{ chartPieBg }};box-shadow:{{ chartPieShadow }};">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="{{ chartPieFg }}" stroke-width="2.3" stroke-linecap="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83M22 12A10 10 0 0 0 12 2v10z"></path></svg>
+                  </div>
+                </div>
+              </div>
+              <sc-if value="{{ isBarChart }}" hint-placeholder-val="{{ true }}">
+                <div style="display:flex;height:14px;gap:3px;">
+                  <sc-for list="{{ stack }}" as="s" hint-placeholder-count="6">
+                    <div style="width:{{ s.w }};background:{{ s.color }};border-radius:5px;"></div>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <sc-if value="{{ isPieChart }}">
+                <div style="display:flex;justify-content:center;margin:2px 0 4px;">
+                  <svg viewBox="0 0 140 140" width="128" height="128">
+                    <sc-for list="{{ pieSlices }}" as="s" hint-placeholder-count="6">
+                      <path d="{{ s.d }}" fill="{{ s.color }}"></path>
+                    </sc-for>
+                    <circle cx="70" cy="70" r="36" fill="#fff"></circle>
+                  </svg>
+                </div>
+              </sc-if>
+              <div style="display:flex;flex-wrap:wrap;gap:9px 16px;margin-top:{{ legendMarginTop }};">
+                <sc-for list="{{ stack }}" as="s" hint-placeholder-count="6">
+                  <div style="display:flex;align-items:center;gap:6px;"><div style="width:9px;height:9px;border-radius:3px;background:{{ s.color }};"></div><span style="font-size:12px;font-weight:700;color:var(--tx-chip);">{{ s.cat }}</span></div>
+                </sc-for>
+              </div>
+            </div>
+
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding:0 2px;">
+              <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:19px;font-weight:800;color:var(--tx-primary);">Recent</div>
+              <div onClick="{{ go.tx }}" style="font-size:13px;font-weight:800;color:#0FB46B;cursor:pointer;">See all</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              <sc-for list="{{ transactions }}" as="t" hint-placeholder-count="4">
+                <div onClick="{{ t.onEdit }}" style="cursor:pointer;display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--bg-card);border-radius:20px;box-shadow:var(--shadow-tx);">
+                  <div style="width:46px;height:46px;border-radius:15px;background:{{ t.color }};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="{{ t.path }}"></path></svg>
+                  </div>
+                  <div style="flex:1;min-width:0;">
+                    <div style="font-size:15px;font-weight:800;color:var(--tx-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ t.name }}</div>
+                    <div style="font-size:12.5px;color:var(--tx-tertiary);font-weight:600;">{{ t.category }} · {{ t.date }}</div>
+                  </div>
+                  <div style="font-size:15px;font-weight:800;font-variant-numeric:tabular-nums;color:{{ t.amtColor }};">{{ t.amountStr }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          </sc-if>
+
+          <!-- SAVINGS -->
+          <sc-if value="{{ isSavings }}">
+          <div style="background:var(--bg-app);min-height:100%;padding-bottom:36px;">
+
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:52px 20px 16px;">
+              <div onClick="{{ go.home }}" style="cursor:pointer;display:flex;align-items:center;gap:5px;color:#0FB46B;">
+                <svg width="9" height="16" viewBox="0 0 9 16" fill="none"><path d="M8 1L1 8l7 7" stroke="#0FB46B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                <span style="font-size:15px;font-weight:700;">Home</span>
+              </div>
+              <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:17px;font-weight:800;color:var(--tx-primary);">Savings</div>
+              <div style="width:60px;"></div>
+            </div>
+
+            <!-- Hero -->
+            <div style="margin:0 18px 14px;border-radius:28px;padding:24px;background:linear-gradient(140deg,#13C076,#0A9E5E);box-shadow:0 18px 36px rgba(15,180,107,.28);color:#fff;position:relative;overflow:hidden;">
+              <div style="position:absolute;right:-28px;top:-28px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.10);pointer-events:none;"></div>
+              <div style="position:absolute;right:24px;bottom:-40px;width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,.08);pointer-events:none;"></div>
+              <div style="font-size:11px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;opacity:.8;margin-bottom:8px;position:relative;">March 2026</div>
+              <div style="font-size:13px;font-weight:700;opacity:.85;position:relative;">Saved this month</div>
+              <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:44px;font-weight:800;margin:4px 0 14px;font-variant-numeric:tabular-nums;position:relative;">{{ savedAmtStr }}</div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;position:relative;">
+                <div style="padding:5px 12px;border-radius:20px;background:rgba(255,255,255,.20);font-size:12px;font-weight:800;">{{ savingsRateStr }} of income</div>
+                <div style="padding:5px 12px;border-radius:20px;background:rgba(255,255,255,.20);font-size:12px;font-weight:800;">{{ savingsTrend }}</div>
+              </div>
+            </div>
+
+            <!-- Income vs Spent -->
+            <div style="margin:0 18px 14px;background:var(--bg-card);border-radius:24px;padding:18px 20px;box-shadow:var(--shadow-card);">
+              <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:16px;font-weight:700;color:var(--tx-primary);margin-bottom:16px;">This month</div>
+              <div style="display:flex;flex-direction:column;gap:13px;margin-bottom:16px;">
+                <div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;">
+                    <div style="display:flex;align-items:center;gap:7px;"><div style="width:8px;height:8px;border-radius:50%;background:#0FB46B;"></div><span style="font-size:13px;font-weight:700;color:var(--tx-secondary);">Income</span></div>
+                    <span style="font-size:13.5px;font-weight:800;color:var(--tx-primary);font-variant-numeric:tabular-nums;">{{ totalIncomeSaved }}</span>
+                  </div>
+                  <div style="height:7px;border-radius:5px;background:var(--bg-close);overflow:hidden;"><div style="height:100%;width:100%;background:#0FB46B;border-radius:5px;"></div></div>
+                </div>
+                <div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;">
+                    <div style="display:flex;align-items:center;gap:7px;"><div style="width:8px;height:8px;border-radius:50%;background:#E8322A;"></div><span style="font-size:13px;font-weight:700;color:var(--tx-secondary);">Expenses</span></div>
+                    <span style="font-size:13.5px;font-weight:800;color:var(--tx-primary);font-variant-numeric:tabular-nums;">{{ totalExpensesSaved }}</span>
+                  </div>
+                  <div style="height:7px;border-radius:5px;background:var(--bg-close);overflow:hidden;"><div style="height:100%;width:{{ expenseBarW }};background:#E8322A;border-radius:5px;"></div></div>
+                </div>
+              </div>
+              <div style="padding-top:14px;border-top:1.5px solid var(--border-row);display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:13px;font-weight:700;color:var(--tx-secondary);">Net saved</span>
+                <span style="font-size:18px;font-weight:800;color:#0FB46B;font-variant-numeric:tabular-nums;">+{{ savedAmtStr }}</span>
+              </div>
+            </div>
+
+            <!-- 6-month trend -->
+            <div style="margin:0 18px 14px;background:var(--bg-card);border-radius:24px;padding:18px 20px;box-shadow:var(--shadow-card);">
+              <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:16px;font-weight:700;color:var(--tx-primary);margin-bottom:18px;">6-month trend</div>
+              <div style="display:flex;align-items:flex-end;gap:6px;height:76px;">
+                <sc-for list="{{ savingsHistory }}" as="h" hint-placeholder-count="6">
+                  <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;">
+                    <div style="width:100%;border-radius:6px 6px 3px 3px;background:{{ h.barColor }};height:{{ h.barH }};min-height:4px;"></div>
+                    <span style="font-size:10.5px;font-weight:800;color:{{ h.labelColor }};">{{ h.month }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+
+            <!-- Monthly goal -->
+            <div style="margin:0 18px;background:var(--bg-card);border-radius:24px;padding:18px 20px;box-shadow:var(--shadow-card);">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+                <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:16px;font-weight:700;color:var(--tx-primary);">Monthly goal</div>
+                <div onClick="{{ toggleGoalEdit }}" style="cursor:pointer;padding:6px 14px;border-radius:10px;background:{{ goalEditBtnBg }};color:{{ goalEditBtnFg }};font-size:12px;font-weight:800;">{{ goalEditBtnLabel }}</div>
+              </div>
+              <sc-if value="{{ showGoalInput }}">
+                <div style="display:flex;align-items:center;gap:8px;padding:12px 14px;background:var(--bg-subtle);border-radius:14px;margin-bottom:16px;border:1.5px solid #0FB46B;">
+                  <span style="font-size:15px;font-weight:800;color:var(--tx-tertiary);">₹</span>
+                  <input type="number" placeholder="Goal amount" value="{{ goalDraft }}" onChange="{{ onGoalDraftChange }}" style="border:none;outline:none;font-size:15px;font-weight:800;color:var(--tx-primary);background:transparent;flex:1;font-family:'Plus Jakarta Sans',sans-serif;" />
+                  <div onClick="{{ saveGoal }}" style="cursor:pointer;padding:7px 14px;border-radius:10px;background:#0FB46B;color:#fff;font-size:12px;font-weight:800;white-space:nowrap;">Set</div>
+                </div>
+              </sc-if>
+              <div style="display:flex;align-items:center;gap:18px;">
+                <div style="flex-shrink:0;">
+                  <svg viewBox="0 0 88 88" width="88" height="88">
+                    <circle cx="44" cy="44" r="36" fill="none" stroke="var(--bg-close)" stroke-width="8"></circle>
+                    <circle cx="44" cy="44" r="36" fill="none" stroke="#0FB46B" stroke-width="8" stroke-linecap="round" stroke-dasharray="{{ goalDashArray }}" transform="rotate(-90 44 44)"></circle>
+                    <text x="44" y="44" text-anchor="middle" dominant-baseline="middle" font-family="Bricolage Grotesque,sans-serif" font-size="13" font-weight="800" fill="{{ goalRingTextColor }}">{{ goalPctStr }}</text>
+                  </svg>
+                </div>
+                <div style="flex:1;">
+                  <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:26px;font-weight:800;color:var(--tx-primary);font-variant-numeric:tabular-nums;">{{ savedAmtStr }}</div>
+                  <div style="font-size:13px;color:var(--tx-tertiary);font-weight:600;margin-top:2px;">of {{ savingsGoalStr }} goal</div>
+                  <div style="margin-top:10px;height:6px;border-radius:4px;background:var(--bg-close);overflow:hidden;"><div style="height:100%;width:{{ goalBarW }};background:#0FB46B;border-radius:4px;"></div></div>
+                  <div style="font-size:12.5px;color:var(--tx-secondary);font-weight:700;margin-top:7px;">{{ goalRemStr }}</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          </sc-if>
+
+          <!-- TRANSACTIONS -->
+          <sc-if value="{{ isTx }}">
+          <div style="padding:54px 18px 26px;">
+            <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:30px;font-weight:800;color:var(--tx-primary);margin-bottom:16px;">Activity</div>
+            <div style="position:relative;margin-bottom:12px;">
+              <div style="position:absolute;left:14px;top:50%;transform:translateY(-50%);pointer-events:none;display:flex;align-items:center;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--tx-tertiary)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.35-4.35"></path></svg>
+              </div>
+              <input type="text" placeholder="Search transactions…" value="{{ searchQuery }}" onChange="{{ onSearchChange }}" style="width:100%;box-sizing:border-box;padding:12px 40px 12px 40px;border-radius:16px;background:var(--bg-card);border:1.5px solid var(--border-input);font-size:14px;font-weight:600;color:var(--tx-primary);font-family:'Plus Jakarta Sans',sans-serif;outline:none;" />
+              <sc-if value="{{ hasSearch }}">
+                <div onClick="{{ clearSearch }}" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;width:22px;height:22px;border-radius:50%;background:var(--bg-close);display:flex;align-items:center;justify-content:center;">
+                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 2l6 6M8 2l-6 6" stroke="var(--tx-secondary)" stroke-width="1.8" stroke-linecap="round"></path></svg>
+                </div>
+              </sc-if>
+            </div>
+            <div style="display:flex;gap:8px;margin-bottom:20px;">
+              <sc-for list="{{ filters }}" as="f" hint-placeholder-count="3">
+                <div onClick="{{ f.onPick }}" style="padding:9px 18px;border-radius:13px;font-size:13px;cursor:pointer;background:{{ f.bg }};color:{{ f.fg }};font-weight:{{ f.weight }};box-shadow:{{ f.shadow }};">{{ f.label }}</div>
+              </sc-for>
+            </div>
+            <sc-if value="{{ noTxResults }}">
+              <div style="text-align:center;padding:40px 0;">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--tx-tertiary)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:10px;display:block;margin-left:auto;margin-right:auto;"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.35-4.35"></path></svg>
+                <div style="font-size:14px;font-weight:700;color:var(--tx-secondary);">No transactions found</div>
+                <div style="font-size:12px;font-weight:600;color:var(--tx-tertiary);margin-top:4px;">Try a different search or filter</div>
+              </div>
+            </sc-if>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              <sc-for list="{{ filteredTx }}" as="t" hint-placeholder-count="6">
+                <div onClick="{{ t.onEdit }}" style="cursor:pointer;display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--bg-card);border-radius:20px;box-shadow:var(--shadow-tx);">
+                  <div style="width:46px;height:46px;border-radius:15px;background:{{ t.color }};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="{{ t.path }}"></path></svg>
+                  </div>
+                  <div style="flex:1;min-width:0;">
+                    <div style="font-size:15px;font-weight:800;color:var(--tx-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ t.name }}</div>
+                    <div style="font-size:12.5px;color:var(--tx-tertiary);font-weight:600;">{{ t.category }} · {{ t.date }}</div>
+                  </div>
+                  <div style="font-size:15px;font-weight:800;font-variant-numeric:tabular-nums;color:{{ t.amtColor }};">{{ t.amountStr }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          </sc-if>
+
+          <!-- BUDGETS -->
+          <sc-if value="{{ isBudgets }}">
+          <div style="padding:54px 18px 26px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+              <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:30px;font-weight:800;color:var(--tx-primary);">Budgets</div>
+              <div onClick="{{ openAddBudget }}" style="cursor:pointer;width:38px;height:38px;border-radius:13px;background:linear-gradient(135deg,#13C076,#0A9E5E);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(15,180,107,.32);">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+              </div>
+            </div>
+            <div style="background:var(--bg-card);border-radius:24px;padding:18px 18px 16px;box-shadow:var(--shadow-card);margin:8px 0 18px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+                <div style="font-size:13px;font-weight:700;color:var(--tx-secondary);">Total consumed</div>
+                <div style="font-size:13px;font-weight:800;color:var(--tx-primary);font-variant-numeric:tabular-nums;">{{ totalBudgetSpentStr }} <span style="color:var(--tx-tertiary);font-weight:600;">/ {{ totalBudgetLimitStr }}</span></div>
+              </div>
+              <div style="height:12px;border-radius:8px;background:var(--bg-close);overflow:hidden;display:flex;gap:2px;margin-bottom:12px;">
+                <sc-for list="{{ budgetProgressStack }}" as="s" hint-placeholder-count="4">
+                  <div style="height:100%;width:{{ s.w }};background:{{ s.color }};border-radius:4px;flex-shrink:0;"></div>
+                </sc-for>
+              </div>
+              <div style="display:flex;flex-wrap:wrap;gap:8px 14px;">
+                <sc-for list="{{ budgetProgressStack }}" as="s" hint-placeholder-count="4">
+                  <div style="display:flex;align-items:center;gap:5px;">
+                    <div style="width:8px;height:8px;border-radius:2px;background:{{ s.color }};"></div>
+                    <span style="font-size:11.5px;font-weight:700;color:var(--tx-chip);">{{ s.cat }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:13px;">
+              <sc-for list="{{ budgets }}" as="bg" hint-placeholder-count="6">
+                <div onClick="{{ bg.onEdit }}" style="cursor:pointer;background:var(--bg-card);border-radius:24px;padding:18px 16px;box-shadow:var(--shadow-card);text-align:center;">
+                  <div style="width:66px;height:66px;border-radius:50%;background:conic-gradient({{ bg.barColor }} {{ bg.ringDeg }}, {{ bg.soft }} 0);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;">
+                    <div style="width:50px;height:50px;border-radius:50%;background:var(--bg-card);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--tx-primary);">{{ bg.pctStr }}</div>
+                  </div>
+                  <div style="font-size:14px;font-weight:800;color:var(--tx-primary);">{{ bg.cat }}</div>
+                  <div style="font-size:12px;font-weight:700;color:var(--tx-tertiary);margin-top:3px;font-variant-numeric:tabular-nums;">{{ bg.spent }} / {{ bg.limit }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          </sc-if>
+
+          <!-- INSIGHTS -->
+          <sc-if value="{{ isInsights }}">
+          <div style="padding:54px 18px 26px;">
+
+            <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:30px;font-weight:800;color:var(--tx-primary);margin-bottom:18px;">Insights</div>
+
+            <!-- Month pills -->
+            <div style="display:flex;gap:7px;overflow-x:auto;margin-bottom:16px;padding-bottom:2px;">
+              <sc-for list="{{ monthPills }}" as="mp" hint-placeholder-count="6">
+                <div onClick="{{ mp.onPick }}" style="flex-shrink:0;padding:8px 14px;border-radius:20px;font-size:12.5px;font-weight:800;cursor:pointer;background:{{ mp.bg }};color:{{ mp.fg }};">{{ mp.label }}</div>
+              </sc-for>
+            </div>
+
+            <!-- Summary card -->
+            <div style="border-radius:26px;padding:22px;background:linear-gradient(140deg,#13C076,#0A9E5E);box-shadow:0 16px 32px rgba(15,180,107,.28);color:#fff;margin-bottom:14px;position:relative;overflow:hidden;">
+              <div style="position:absolute;right:-20px;top:-20px;width:110px;height:110px;border-radius:50%;background:rgba(255,255,255,.09);pointer-events:none;"></div>
+              <div style="font-size:11px;font-weight:800;letter-spacing:1.3px;text-transform:uppercase;opacity:.8;margin-bottom:10px;position:relative;">{{ selectedMonthLabel }}</div>
+              <div style="position:relative;margin-bottom:16px;">
+                <div style="font-size:12px;font-weight:700;opacity:.75;margin-bottom:5px;">Total spent</div>
+                <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:40px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-1px;">{{ insightsSpentStr }}</div>
+              </div>
+              <div style="display:flex;padding-top:14px;border-top:1px solid rgba(255,255,255,.22);position:relative;">
+                <div style="flex:1;">
+                  <div style="font-size:11px;font-weight:700;opacity:.75;margin-bottom:4px;">Income</div>
+                  <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:18px;font-weight:800;font-variant-numeric:tabular-nums;">{{ insightsIncomeStr }}</div>
+                </div>
+                <div style="flex:1;">
+                  <div style="font-size:11px;font-weight:700;opacity:.75;margin-bottom:4px;">Saved</div>
+                  <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:18px;font-weight:800;font-variant-numeric:tabular-nums;">{{ insightsSavedStr }}</div>
+                </div>
+              </div>
+              <sc-if value="{{ insightsHasTrend }}">
+                <div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.24);position:relative;">
+                  <span style="font-size:12.5px;font-weight:800;opacity:.95;">{{ insightsTrendLabel }}</span>
+                </div>
+              </sc-if>
+            </div>
+
+            <!-- Spending trend chart -->
+            <div style="background:var(--bg-card);border-radius:24px;padding:18px 20px;box-shadow:var(--shadow-card);margin-bottom:14px;">
+              <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:16px;font-weight:700;color:var(--tx-primary);margin-bottom:18px;">Spending trend</div>
+              <div style="display:flex;align-items:flex-end;gap:6px;height:80px;">
+                <sc-for list="{{ insightsTrendBars }}" as="b" hint-placeholder-count="6">
+                  <div onClick="{{ b.onPick }}" style="cursor:pointer;flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;">
+                    <div style="width:100%;border-radius:6px 6px 3px 3px;background:{{ b.barColor }};height:{{ b.barH }};min-height:4px;"></div>
+                    <span style="font-size:10px;font-weight:800;color:{{ b.labelColor }};">{{ b.month }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+
+            <!-- Category breakdown -->
+            <div style="background:var(--bg-card);border-radius:24px;padding:18px 20px;box-shadow:var(--shadow-card);">
+              <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:16px;font-weight:700;color:var(--tx-primary);margin-bottom:16px;">Where it went</div>
+              <sc-if value="{{ insightsCatsEmpty }}">
+                <div style="text-align:center;padding:24px 0;font-size:14px;font-weight:700;color:var(--tx-tertiary);">No expenses recorded</div>
+              </sc-if>
+              <div style="display:flex;flex-direction:column;gap:14px;">
+                <sc-for list="{{ insightsCats }}" as="c" hint-placeholder-count="5">
+                  <div style="display:flex;align-items:center;gap:12px;">
+                    <div style="width:36px;height:36px;border-radius:11px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:{{ c.soft }};">
+                      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="{{ c.color }}" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="{{ c.path }}"></path></svg>
+                    </div>
+                    <div style="flex:1;min-width:0;">
+                      <div style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                        <span style="font-size:13.5px;font-weight:700;color:var(--tx-primary);">{{ c.cat }}</span>
+                        <span style="font-size:13.5px;font-weight:800;color:var(--tx-primary);font-variant-numeric:tabular-nums;">{{ c.spentStr }}</span>
+                      </div>
+                      <div style="height:5px;border-radius:3px;background:var(--bg-close);overflow:hidden;"><div style="height:100%;width:{{ c.barW }};background:{{ c.color }};border-radius:3px;opacity:.75;"></div></div>
+                      <div style="font-size:11px;font-weight:700;color:var(--tx-tertiary);margin-top:3px;">{{ c.pctStr }} of total</div>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+
+          </div>
+          </sc-if>
+
+          <!-- SETTINGS -->
+          <sc-if value="{{ isSettings }}">
+          <div style="padding:54px 18px 26px;">
+            <div onClick="{{ goProfile }}" style="cursor:pointer;border-radius:26px;padding:24px;background:linear-gradient(140deg,#13C076,#0A9E5E);box-shadow:0 16px 34px rgba(15,180,107,.3);color:#fff;display:flex;align-items:center;gap:16px;margin-bottom:22px;">
+              <div style="width:58px;height:58px;border-radius:18px;background:rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:24px;">A</div>
+              <div style="flex:1;">
+                <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:20px;font-weight:800;">{{ fullName }}</div>
+                <div style="font-size:13px;font-weight:600;opacity:.9;">Premium plan</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:11px;">
+              <div style="display:flex;align-items:center;gap:14px;padding:15px 18px;background:var(--bg-card);border-radius:18px;box-shadow:var(--shadow-tx);"><div style="width:36px;height:36px;border-radius:11px;background:#E6F4FF;display:flex;align-items:center;justify-content:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2BB3FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="3"></rect><path d="M2 10h20"></path></svg></div><div style="flex:1;font-size:15px;font-weight:700;color:var(--tx-primary);">Linked accounts</div><span style="font-size:13px;color:var(--tx-tertiary);font-weight:700;">2</span></div>
+              <div style="display:flex;align-items:center;gap:14px;padding:15px 18px;background:var(--bg-card);border-radius:18px;box-shadow:var(--shadow-tx);"><div style="width:36px;height:36px;border-radius:11px;background:#FFEDEA;display:flex;align-items:center;justify-content:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF6B5E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"></path></svg></div><div style="flex:1;font-size:15px;font-weight:700;color:var(--tx-primary);">Notifications</div></div>
+              <div style="display:flex;align-items:center;gap:14px;padding:15px 18px;background:var(--bg-card);border-radius:18px;box-shadow:var(--shadow-tx);"><div style="width:36px;height:36px;border-radius:11px;background:#FEF2DE;display:flex;align-items:center;justify-content:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F5A623" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></div><div style="flex:1;font-size:15px;font-weight:700;color:var(--tx-primary);">Currency &amp; format</div><span style="font-size:13px;color:var(--tx-tertiary);font-weight:700;">INR</span></div>
+              <div style="display:flex;align-items:center;gap:14px;padding:15px 18px;background:var(--bg-card);border-radius:18px;box-shadow:var(--shadow-tx);"><div style="flex:1;font-size:15px;font-weight:800;color:#E25555;">Sign out</div></div>
+              <div onClick="{{ toggleDarkMode }}" style="cursor:pointer;display:flex;align-items:center;gap:14px;padding:15px 18px;background:var(--bg-card);border-radius:18px;box-shadow:var(--shadow-tx);">
+                <div style="width:36px;height:36px;border-radius:11px;background:#1C1433;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                </div>
+                <div style="flex:1;font-size:15px;font-weight:700;color:var(--tx-primary);">Dark mode</div>
+                <div style="width:46px;height:26px;border-radius:13px;background:{{ darkModePillBg }};display:flex;align-items:center;padding:0 3px;">
+                  <div style="width:20px;height:20px;border-radius:50%;background:#fff;transform:{{ darkModePillThumb }};box-shadow:0 1px 4px rgba(0,0,0,.2);"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          </sc-if>
+
+          <!-- PROFILE -->
+          <sc-if value="{{ isProfile }}">
+          <div style="background:var(--bg-app);min-height:100%;padding-bottom:26px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:58px 20px 16px;">
+              <div onClick="{{ goSettings }}" style="cursor:pointer;display:flex;align-items:center;gap:5px;color:#0FB46B;">
+                <svg width="9" height="16" viewBox="0 0 9 16" fill="none"><path d="M8 1L1 8l7 7" stroke="#0FB46B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                <span style="font-size:15px;font-weight:700;">Settings</span>
+              </div>
+              <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:17px;font-weight:800;color:var(--tx-primary);">Profile</div>
+              <div onClick="{{ toggleEdit }}" style="cursor:pointer;padding:8px 16px;border-radius:12px;background:#0FB46B;color:#fff;font-size:13px;font-weight:800;">{{ profileEditLabel }}</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;padding:6px 0 22px;">
+              <image-slot id="profile-avatar" style="width:88px;height:88px;border-radius:50%;background:#13C076;" shape="circle" placeholder="Photo"></image-slot>
+              <div style="margin-top:14px;font-family:'Bricolage Grotesque',sans-serif;font-size:20px;font-weight:800;color:var(--tx-primary);">{{ fullName }}</div>
+              <div style="font-size:13px;color:var(--tx-tertiary);font-weight:600;margin-top:3px;">{{ profile.email }}</div>
+            </div>
+            <div style="margin:0 18px 14px;">
+              <div style="font-size:11px;font-weight:800;color:var(--tx-tertiary);letter-spacing:0.8px;text-transform:uppercase;padding:0 6px 8px;">Personal</div>
+              <div style="background:var(--bg-card);border-radius:22px;overflow:hidden;box-shadow:var(--shadow-card);">
+                <div style="display:flex;align-items:center;gap:13px;padding:13px 16px;border-bottom:1px solid var(--border-row);">
+                  <div style="width:34px;height:34px;border-radius:11px;background:#E6F6EC;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"></path></svg></div>
+                  <div style="flex:1;min-width:0;">
+                    <div style="font-size:11px;color:var(--tx-tertiary);font-weight:700;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:2px;">First name</div>
+                    <sc-if value="{{ profileEditing }}"><input type="text" value="{{ profile.firstName }}" onChange="{{ onFirstNameChange }}" style="border:none;outline:none;font-size:15px;font-weight:700;color:var(--tx-primary);background:transparent;width:100%;font-family:inherit;" /></sc-if>
+                    <sc-if value="{{ profileNotEditing }}"><div style="font-size:15px;font-weight:700;color:var(--tx-primary);">{{ profile.firstName }}</div></sc-if>
+                  </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:13px;padding:13px 16px;border-bottom:1px solid var(--border-row);">
+                  <div style="width:34px;height:34px;border-radius:11px;background:#E6F6EC;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"></path></svg></div>
+                  <div style="flex:1;min-width:0;">
+                    <div style="font-size:11px;color:var(--tx-tertiary);font-weight:700;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:2px;">Last name</div>
+                    <sc-if value="{{ profileEditing }}"><input type="text" value="{{ profile.lastName }}" onChange="{{ onLastNameChange }}" style="border:none;outline:none;font-size:15px;font-weight:700;color:var(--tx-primary);background:transparent;width:100%;font-family:inherit;" /></sc-if>
+                    <sc-if value="{{ profileNotEditing }}"><div style="font-size:15px;font-weight:700;color:var(--tx-primary);">{{ profile.lastName }}</div></sc-if>
+                  </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:13px;padding:13px 16px;border-bottom:1px solid var(--border-row);">
+                  <div style="width:34px;height:34px;border-radius:11px;background:#E6F4FF;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#2BB3FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"></rect><path d="M16 2v4M8 2v4M3 10h18"></path></svg></div>
+                  <div style="flex:1;min-width:0;">
+                    <div style="font-size:11px;color:var(--tx-tertiary);font-weight:700;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:2px;">Date of birth · Age {{ profileAge }}</div>
+                    <sc-if value="{{ profileEditing }}"><input type="date" value="{{ profile.dob }}" onChange="{{ onDobChange }}" style="border:none;outline:none;font-size:15px;font-weight:700;color:var(--tx-primary);background:transparent;width:100%;font-family:inherit;" /></sc-if>
+                    <sc-if value="{{ profileNotEditing }}"><div style="font-size:15px;font-weight:700;color:var(--tx-primary);">{{ dobDisplay }}</div></sc-if>
+                  </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:13px;padding:13px 16px;border-bottom:1px solid var(--border-row);">
+                  <div style="width:34px;height:34px;border-radius:11px;background:#FFEAF3;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#FF5CA8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="3"></rect><path d="M12 18h.01"></path></svg></div>
+                  <div style="flex:1;min-width:0;">
+                    <div style="font-size:11px;color:var(--tx-tertiary);font-weight:700;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:2px;">Mobile</div>
+                    <sc-if value="{{ profileEditing }}"><input type="tel" value="{{ profile.mobile }}" onChange="{{ onMobileChange }}" style="border:none;outline:none;font-size:15px;font-weight:700;color:var(--tx-primary);background:transparent;width:100%;font-family:inherit;" /></sc-if>
+                    <sc-if value="{{ profileNotEditing }}"><div style="font-size:15px;font-weight:700;color:var(--tx-primary);">{{ profile.mobile }}</div></sc-if>
+                  </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:13px;padding:13px 16px;">
+                  <div style="width:34px;height:34px;border-radius:11px;background:#FFEDEA;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#FF6B5E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="M2 8l10 6 10-6"></path></svg></div>
+                  <div style="flex:1;min-width:0;">
+                    <div style="font-size:11px;color:var(--tx-tertiary);font-weight:700;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:2px;">Email</div>
+                    <sc-if value="{{ profileEditing }}"><input type="email" value="{{ profile.email }}" onChange="{{ onEmailChange }}" style="border:none;outline:none;font-size:15px;font-weight:700;color:var(--tx-primary);background:transparent;width:100%;font-family:inherit;" /></sc-if>
+                    <sc-if value="{{ profileNotEditing }}"><div style="font-size:15px;font-weight:700;color:var(--tx-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ profile.email }}</div></sc-if>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div style="margin:0 18px;">
+              <div style="font-size:11px;font-weight:800;color:var(--tx-tertiary);letter-spacing:0.8px;text-transform:uppercase;padding:0 6px 8px;">Financial</div>
+              <div style="background:var(--bg-card);border-radius:22px;overflow:hidden;box-shadow:var(--shadow-card);">
+                <div style="display:flex;align-items:center;gap:13px;padding:13px 16px;border-bottom:1px solid var(--border-row);">
+                  <div style="width:34px;height:34px;border-radius:11px;background:#E6F6EC;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></div>
+                  <div style="flex:1;min-width:0;">
+                    <div style="font-size:11px;color:var(--tx-tertiary);font-weight:700;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:2px;">Monthly income</div>
+                    <sc-if value="{{ profileEditing }}"><input type="number" value="{{ profile.monthlyIncome }}" onChange="{{ onMonthlyIncomeChange }}" style="border:none;outline:none;font-size:15px;font-weight:700;color:var(--tx-primary);background:transparent;width:100%;font-family:inherit;" /></sc-if>
+                    <sc-if value="{{ profileNotEditing }}"><div style="font-size:15px;font-weight:700;color:var(--tx-primary);">{{ monthlyIncomeDisplay }}</div></sc-if>
+                  </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:13px;padding:13px 16px;border-bottom:1px solid var(--border-row);">
+                  <div style="width:34px;height:34px;border-radius:11px;background:#FEF2DE;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#F5A623" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v10M9 9.5h4.5a2 2 0 0 1 0 4H9v1.5h5.5"></path></svg></div>
+                  <div style="flex:1;min-width:0;">
+                    <div style="font-size:11px;color:var(--tx-tertiary);font-weight:700;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:2px;">Currency</div>
+                    <sc-if value="{{ profileEditing }}"><input type="text" value="{{ profile.currency }}" onChange="{{ onCurrencyChange }}" style="border:none;outline:none;font-size:15px;font-weight:700;color:var(--tx-primary);background:transparent;width:100%;font-family:inherit;" /></sc-if>
+                    <sc-if value="{{ profileNotEditing }}"><div style="font-size:15px;font-weight:700;color:var(--tx-primary);">{{ profile.currency }}</div></sc-if>
+                  </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:13px;padding:13px 16px;">
+                  <div style="width:34px;height:34px;border-radius:11px;background:#EFEAFE;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#7C5CFC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"></path></svg></div>
+                  <div style="flex:1;min-width:0;">
+                    <div style="font-size:11px;color:var(--tx-tertiary);font-weight:700;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:2px;">Country</div>
+                    <sc-if value="{{ profileEditing }}"><input type="text" value="{{ profile.country }}" onChange="{{ onCountryChange }}" style="border:none;outline:none;font-size:15px;font-weight:700;color:var(--tx-primary);background:transparent;width:100%;font-family:inherit;" /></sc-if>
+                    <sc-if value="{{ profileNotEditing }}"><div style="font-size:15px;font-weight:700;color:var(--tx-primary);">{{ profile.country }}</div></sc-if>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          </sc-if>
+
+          <!-- ADD -->
+          <sc-if value="{{ isAdd }}">
+          <div style="height:100%;display:flex;flex-direction:column;padding-top:54px;background:var(--bg-app);">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 20px 6px;">
+              <div onClick="{{ go.home }}" style="cursor:pointer;font-size:15px;font-weight:700;color:var(--tx-secondary);">Cancel</div>
+              <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:16px;font-weight:800;color:var(--tx-primary);">{{ addTitle }}</div>
+              <div style="width:52px;"></div>
+            </div>
+            <div style="display:flex;margin:14px 20px 2px;padding:3px;background:var(--bg-subtle);border-radius:18px;">
+              <div onClick="{{ setExpenseMode }}" style="flex:1;padding:10px 0;border-radius:15px;text-align:center;font-size:14px;font-weight:800;cursor:pointer;background:{{ toggleExpBg }};color:{{ toggleExpFg }};box-shadow:{{ toggleExpShadow }};">Expense</div>
+              <div onClick="{{ setIncomeMode }}" style="flex:1;padding:10px 0;border-radius:15px;text-align:center;font-size:14px;font-weight:800;cursor:pointer;background:{{ toggleIncBg }};color:{{ toggleIncFg }};box-shadow:{{ toggleIncShadow }};">Income</div>
+            </div>
+            <div style="text-align:center;padding:20px 0 8px;">
+              <div style="font-size:13px;font-weight:700;color:var(--tx-secondary);margin-bottom:6px;">Amount</div>
+              <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:58px;font-weight:800;color:{{ addAmtColor }};font-variant-numeric:tabular-nums;letter-spacing:-1px;">₹{{ amount }}</div>
+            </div>
+            <div style="padding:0 18px 10px;display:flex;flex-direction:column;gap:10px;">
+              <div style="background:{{ nameFieldBg }};border-radius:16px;padding:13px 16px;box-shadow:var(--shadow-key);display:flex;align-items:center;gap:12px;border:1.5px solid {{ nameFieldBorder }};">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9AA096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                <input type="text" placeholder="Name (required)" value="{{ draftName }}" onChange="{{ onNameChange }}" style="border:none;outline:none;font-size:15px;font-weight:700;color:var(--tx-primary);background:transparent;width:100%;font-family:'Plus Jakarta Sans',sans-serif;placeholder-color:#C4C9C0;" />
+              </div>
+              <div style="background:var(--bg-card);border-radius:16px;padding:13px 16px;box-shadow:var(--shadow-key);display:flex;align-items:center;gap:12px;border:1.5px solid var(--border-input);">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9AA096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"></rect><path d="M16 2v4M8 2v4M3 10h18"></path></svg>
+                <input type="date" value="{{ draftDate }}" onChange="{{ onDateChange }}" style="border:none;outline:none;font-size:15px;font-weight:700;color:var(--tx-primary);background:transparent;width:100%;font-family:'Plus Jakarta Sans',sans-serif;" />
+              </div>
+            </div>
+            <div style="padding:0 16px 6px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;padding:0 2px;">
+                <div style="font-size:11px;font-weight:800;color:var(--tx-tertiary);letter-spacing:0.6px;text-transform:uppercase;">Category</div>
+                <div onClick="{{ toggleCatEdit }}" style="cursor:pointer;padding:5px 12px;border-radius:10px;background:{{ catEditBtnBg }};color:{{ catEditBtnFg }};font-size:12px;font-weight:800;">{{ catEditBtnLabel }}</div>
+              </div>
+              <div style="display:flex;flex-wrap:wrap;gap:9px;">
+                <sc-for list="{{ addCats }}" as="c" hint-placeholder-count="8">
+                  <div style="position:relative;display:inline-flex;">
+                    <div onClick="{{ c.onPick }}" style="display:flex;align-items:center;gap:7px;padding:9px 13px;border-radius:14px;cursor:pointer;background:{{ c.chipBg }};border:1.5px solid {{ c.chipBorder }};">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{ c.color }}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="{{ c.path }}"></path></svg>
+                      <span style="font-size:13px;font-weight:700;color:{{ c.chipText }};">{{ c.name }}</span>
+                    </div>
+                    <sc-if value="{{ c.showDelete }}">
+                      <div onClick="{{ c.onDelete }}" style="position:absolute;top:-5px;right:-5px;width:18px;height:18px;border-radius:50%;background:#E8322A;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:1;">
+                        <svg width="8" height="8" viewBox="0 0 10 10" fill="none"><path d="M2 2l6 6M8 2l-6 6" stroke="#fff" stroke-width="1.8" stroke-linecap="round"></path></svg>
+                      </div>
+                    </sc-if>
+                  </div>
+                </sc-for>
+                <sc-if value="{{ catEditMode }}">
+                  <div onClick="{{ startAddCat }}" style="display:flex;align-items:center;gap:7px;padding:9px 13px;border-radius:14px;cursor:pointer;background:#F0FFF8;border:1.5px dashed #0FB46B;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0FB46B" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+                    <span style="font-size:13px;font-weight:700;color:#0FB46B;">Add</span>
+                  </div>
+                </sc-if>
+              </div>
+              <sc-if value="{{ addingCat }}">
+                <div style="margin-top:10px;padding:14px;background:var(--bg-card);border-radius:16px;border:1.5px solid #0FB46B;">
+                  <!-- Row: icon preview + color swatch + name input + cancel -->
+                  <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                    <div onClick="{{ openIconPicker }}" style="cursor:pointer;width:34px;height:34px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:{{ newCatSoft }};border:1.5px solid {{ newCatPickerIsIcon ? newCatColor : 'transparent' }};">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="{{ newCatColor }}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="{{ newCatIcon }}"></path></svg>
+                    </div>
+                    <div onClick="{{ openColorPicker }}" style="cursor:pointer;width:24px;height:24px;border-radius:50%;flex-shrink:0;background:{{ newCatColor }};border:2px solid var(--bg-card);outline:{{ newCatPickerIsColor ? '2px solid ' + newCatColor : 'none' }};outline-offset:2px;"></div>
+                    <input type="text" placeholder="Category name…" value="{{ newCatName }}" onChange="{{ onNewCatChange }}" style="border:none;outline:none;font-size:14px;font-weight:700;color:var(--tx-primary);background:transparent;flex:1;font-family:'Plus Jakarta Sans',sans-serif;" />
+                    <div onClick="{{ cancelAddCat }}" style="width:28px;height:28px;border-radius:9px;background:var(--bg-close);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;">
+                      <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 2l6 6M8 2l-6 6" stroke="var(--tx-secondary)" stroke-width="1.8" stroke-linecap="round"></path></svg>
+                    </div>
+                  </div>
+                  <!-- Color picker (shown when open) -->
+                  <sc-if value="{{ newCatPickerIsColor }}">
+                    <div style="padding:10px;background:var(--bg-subtle);border-radius:12px;margin-bottom:10px;">
+                      <div style="font-size:10px;font-weight:800;color:var(--tx-tertiary);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:8px;">Pick a color</div>
+                      <div style="display:flex;flex-wrap:wrap;gap:9px;">
+                        <sc-for list="{{ COLOR_OPTIONS }}" as="col" hint-placeholder-count="12">
+                          <div onClick="{{ col.onPick }}" style="width:28px;height:28px;border-radius:50%;background:{{ col.color }};cursor:pointer;outline:{{ col.outline }};outline-offset:2px;box-shadow:{{ col.shadow }};"></div>
+                        </sc-for>
+                      </div>
+                    </div>
+                  </sc-if>
+                  <!-- Icon picker (shown when open) -->
+                  <sc-if value="{{ newCatPickerIsIcon }}">
+                    <div style="padding:10px;background:var(--bg-subtle);border-radius:12px;margin-bottom:10px;">
+                      <div style="font-size:10px;font-weight:800;color:var(--tx-tertiary);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:8px;">Pick an icon</div>
+                      <div style="display:flex;flex-wrap:wrap;gap:7px;">
+                        <sc-for list="{{ ICON_OPTIONS }}" as="ico" hint-placeholder-count="20">
+                          <div onClick="{{ ico.onPick }}" style="width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:{{ ico.bg }};border:1.5px solid {{ ico.borderColor }};">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{ ico.stroke }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{ ico.path }}"></path></svg>
+                          </div>
+                        </sc-for>
+                      </div>
+                    </div>
+                  </sc-if>
+                  <!-- Confirm -->
+                  <div onClick="{{ confirmAddCat }}" style="height:36px;border-radius:11px;background:#0FB46B;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+                    <span style="font-size:13px;font-weight:800;color:#fff;">Add category</span>
+                  </div>
+                </div>
+              </sc-if>
+            </div>
+            <div style="flex:1;min-height:14px;"></div>
+            <div style="padding:8px 18px 0;">
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+                <sc-for list="{{ keys }}" as="k" hint-placeholder-count="12">
+                  <div onClick="{{ k.onPress }}" style="height:58px;border-radius:18px;background:var(--bg-card);box-shadow:var(--shadow-key);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:var(--tx-primary);cursor:pointer;">{{ k.label }}</div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="padding:16px 18px 30px;">
+              <div onClick="{{ save }}" style="height:56px;border-radius:18px;background:{{ addBtnBg }};display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#fff;cursor:pointer;box-shadow:{{ addBtnShadow }};">{{ addBtnLabel }}</div>
+            </div>
+          </div>
+          </sc-if>
+
+        </div>
+
+        <!-- TAB BAR -->
+        <sc-if value="{{ showTabs }}" hint-placeholder-val="{{ true }}">
+        <div style="flex-shrink:0;background:var(--bg-card);box-shadow:var(--shadow-tab);padding:12px 16px 28px;display:flex;align-items:flex-end;justify-content:space-around;">
+          <div onClick="{{ go.home }}" style="display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;color:{{ tab.home }};width:40px;"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"></path><path d="M5 10v10h5v-6h4v6h5V10"></path></svg><span style="font-size:9px;font-weight:800;">Home</span></div>
+          <div onClick="{{ go.tx }}" style="display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;color:{{ tab.tx }};width:40px;"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"></path></svg><span style="font-size:9px;font-weight:800;">Activity</span></div>
+          <div onClick="{{ go.budgets }}" style="display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;color:{{ tab.budgets }};width:40px;"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 12V3M12 12l6 4"></path></svg><span style="font-size:9px;font-weight:800;">Budgets</span></div>
+          <div onClick="{{ go.insights }}" style="display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;color:{{ tab.insights }};width:40px;"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10M12 20V4M6 20v-6"></path></svg><span style="font-size:9px;font-weight:800;">Insights</span></div>
+          <div onClick="{{ go.settings }}" style="display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;color:{{ tab.settings }};width:40px;"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"></circle><path d="M19.4 13.5a1.7 1.7 0 0 0 .3 1.9 2 2 0 1 1-2.8 2.8 1.7 1.7 0 0 0-2.9 1.2 2 2 0 0 1-4 0 1.7 1.7 0 0 0-2.9-1.2 2 2 0 1 1-2.8-2.8 1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.6-1 2 2 0 0 1 0-4 1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9 2 2 0 1 1 2.8-2.8 1.7 1.7 0 0 0 2.9-1.2 2 2 0 0 1 4 0 1.7 1.7 0 0 0 2.9 1.2 2 2 0 1 1 2.8 2.8 1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1 2 2 0 0 1 0 4 1.7 1.7 0 0 0-1.6 1z"></path></svg><span style="font-size:9px;font-weight:800;">Settings</span></div>
+        </div>
+        </sc-if>
+
+        <!-- FAB -->
+        <sc-if value="{{ showFab }}">
+          <div onClick="{{ go.add }}" style="position:absolute;bottom:88px;right:18px;width:56px;height:56px;border-radius:18px;background:linear-gradient(135deg,#13C076,#0A9E5E);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 28px rgba(15,180,107,.50);cursor:pointer;z-index:5;">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+          </div>
+        </sc-if>
+
+        <!-- INCOME LIST SCREEN -->
+        <sc-if value="{{ showIncomeList }}">
+          <div style="position:absolute;inset:0;background:var(--bg-app);z-index:9;display:flex;flex-direction:column;overflow:hidden;">
+            <div style="padding:52px 20px 0;display:flex;align-items:center;gap:14px;">
+              <div onClick="{{ go.home }}" style="cursor:pointer;width:40px;height:40px;border-radius:13px;background:var(--bg-card);box-shadow:var(--shadow-tx);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--tx-primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"></path></svg>
+              </div>
+              <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:20px;font-weight:800;color:var(--tx-primary);">Income</div>
+            </div>
+            <div style="margin:16px 20px 0;padding:16px 18px;background:linear-gradient(135deg,#13C076,#0A9E5E);border-radius:22px;display:flex;align-items:center;justify-content:space-between;">
+              <div>
+                <div style="font-size:12px;font-weight:700;color:rgba(255,255,255,.75);margin-bottom:4px;">Total income</div>
+                <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:28px;font-weight:800;color:#fff;">{{ totalIncomeStr }}</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:12px;font-weight:700;color:rgba(255,255,255,.75);margin-bottom:4px;">Transactions</div>
+                <div style="font-size:22px;font-weight:800;color:#fff;">{{ incomeCount }}</div>
+              </div>
+            </div>
+            <div style="flex:1;overflow-y:auto;padding:16px 20px 24px;">
+              <sc-if value="{{ incomeCount }}">
+                <div style="display:flex;flex-direction:column;gap:10px;">
+                  <sc-for list="{{ incomeTxList }}" as="t" hint-placeholder-count="4">
+                    <div onClick="{{ t.onEdit }}" style="cursor:pointer;display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--bg-card);border-radius:20px;box-shadow:var(--shadow-tx);">
+                      <div style="width:44px;height:44px;border-radius:14px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:{{ t.soft }};">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{ t.color }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{ t.path }}"></path></svg>
+                      </div>
+                      <div style="flex:1;min-width:0;">
+                        <div style="font-size:15px;font-weight:700;color:var(--tx-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ t.name }}</div>
+                        <div style="font-size:12px;color:var(--tx-tertiary);font-weight:600;margin-top:2px;">{{ t.category }} · {{ t.date }}</div>
+                      </div>
+                      <div style="font-size:15px;font-weight:800;color:#0FB46B;font-variant-numeric:tabular-nums;flex-shrink:0;">{{ t.amountStr }}</div>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <sc-if value="{{ noIncomeTx }}">
+                <div style="text-align:center;padding:60px 0;">
+                  <div style="width:56px;height:56px;border-radius:18px;background:#E6F6EC;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0FB46B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                  </div>
+                  <div style="font-size:15px;font-weight:700;color:var(--tx-secondary);">No income yet</div>
+                  <div style="font-size:12px;font-weight:600;color:var(--tx-tertiary);margin-top:4px;">Tap + to add your first income</div>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- TX EDIT MODAL -->
+        <sc-if value="{{ showTxModal }}">
+          <div onClick="{{ closeTxModal }}" style="position:absolute;inset:0;background:rgba(22,32,26,.45);z-index:11;display:flex;align-items:flex-end;">
+            <div onClick="{{ stopProp }}" style="width:100%;background:var(--bg-app);border-radius:28px 28px 0 0;padding:22px 20px 40px;box-sizing:border-box;max-height:88%;overflow-y:auto;">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+                <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:18px;font-weight:800;color:var(--tx-primary);">Edit Transaction</div>
+                <div onClick="{{ closeTxModal }}" style="cursor:pointer;width:30px;height:30px;border-radius:10px;background:var(--bg-close);display:flex;align-items:center;justify-content:center;">
+                  <svg width="12" height="12" viewBox="0 0 10 10" fill="none"><path d="M1 1l8 8M9 1l-8 8" stroke="#8E948C" stroke-width="1.8" stroke-linecap="round"></path></svg>
+                </div>
+              </div>
+              <div style="display:flex;margin-bottom:14px;padding:3px;background:var(--bg-subtle);border-radius:16px;">
+                <div onClick="{{ txSetExpense }}" style="flex:1;padding:9px 0;border-radius:13px;text-align:center;font-size:13px;font-weight:800;cursor:pointer;background:{{ txToggleExpBg }};color:{{ txToggleExpFg }};box-shadow:{{ txToggleExpShadow }};">Expense</div>
+                <div onClick="{{ txSetIncome }}" style="flex:1;padding:9px 0;border-radius:13px;text-align:center;font-size:13px;font-weight:800;cursor:pointer;background:{{ txToggleIncBg }};color:{{ txToggleIncFg }};box-shadow:{{ txToggleIncShadow }};">Income</div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px;">
+                <div style="background:var(--bg-card);border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:10px;border:1.5px solid var(--border-input);">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA096" stroke-width="2" stroke-linecap="round"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                  <input type="text" placeholder="Name" value="{{ txDraftName }}" onChange="{{ onTxNameChange }}" style="border:none;outline:none;font-size:14px;font-weight:700;color:var(--tx-primary);background:transparent;flex:1;font-family:'Plus Jakarta Sans',sans-serif;" />
+                </div>
+                <div style="background:var(--bg-card);border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:10px;border:1.5px solid var(--border-input);">
+                  <span style="font-size:14px;font-weight:800;color:var(--tx-tertiary);">₹</span>
+                  <input type="number" placeholder="0.00" value="{{ txDraftAmount }}" onChange="{{ onTxAmountChange }}" style="border:none;outline:none;font-size:14px;font-weight:700;color:var(--tx-primary);background:transparent;flex:1;font-family:'Plus Jakarta Sans',sans-serif;" />
+                </div>
+                <div style="background:var(--bg-card);border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:10px;border:1.5px solid var(--border-input);">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9AA096" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="3"></rect><path d="M16 2v4M8 2v4M3 10h18"></path></svg>
+                  <input type="date" value="{{ txDraftDate }}" onChange="{{ onTxDateChange }}" style="border:none;outline:none;font-size:14px;font-weight:700;color:var(--tx-primary);background:transparent;flex:1;font-family:'Plus Jakarta Sans',sans-serif;" />
+                </div>
+              </div>
+              <div style="margin-bottom:16px;">
+                <div style="font-size:11px;font-weight:800;color:var(--tx-tertiary);letter-spacing:0.6px;text-transform:uppercase;margin-bottom:8px;">Category</div>
+                <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                  <sc-for list="{{ txEditCats }}" as="c" hint-placeholder-count="6">
+                    <div onClick="{{ c.onPick }}" style="display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:12px;cursor:pointer;background:{{ c.chipBg }};border:1.5px solid {{ c.chipBorder }};">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="{{ c.color }}" stroke-width="2.2" stroke-linecap="round"><path d="{{ c.path }}"></path></svg>
+                      <span style="font-size:12px;font-weight:700;color:{{ c.chipText }};">{{ c.name }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:10px;">
+                <div onClick="{{ saveTx }}" style="height:52px;border-radius:16px;background:linear-gradient(135deg,#13C076,#0A9E5E);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#fff;cursor:pointer;box-shadow:0 8px 20px rgba(15,180,107,.28);">Save changes</div>
+                <div onClick="{{ deleteTx }}" style="height:52px;border-radius:16px;background:#FFF0F0;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#E8322A;cursor:pointer;">Delete transaction</div>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- BUDGET MODAL -->
+        <sc-if value="{{ showBudgetModal }}">
+          <div onClick="{{ closeBudgetModal }}" style="position:absolute;inset:0;background:rgba(22,32,26,.45);z-index:10;display:flex;align-items:flex-end;">
+            <div onClick="{{ stopProp }}" style="width:100%;background:var(--bg-app);border-radius:28px 28px 0 0;padding:22px 20px 36px;box-sizing:border-box;">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+                <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:18px;font-weight:800;color:var(--tx-primary);">{{ budgetModalTitle }}</div>
+                <div onClick="{{ closeBudgetModal }}" style="cursor:pointer;width:30px;height:30px;border-radius:10px;background:var(--bg-close);display:flex;align-items:center;justify-content:center;">
+                  <svg width="12" height="12" viewBox="0 0 10 10" fill="none"><path d="M1 1l8 8M9 1l-8 8" stroke="#8E948C" stroke-width="1.8" stroke-linecap="round"></path></svg>
+                </div>
+              </div>
+              <sc-if value="{{ budgetModalIsAdd }}">
+                <div style="margin-bottom:14px;">
+                  <div style="font-size:11px;font-weight:800;color:var(--tx-tertiary);letter-spacing:0.6px;text-transform:uppercase;margin-bottom:8px;">Category</div>
+                  <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                    <sc-for list="{{ availableBudgetCats }}" as="c" hint-placeholder-count="4">
+                      <div onClick="{{ c.onPick }}" style="display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:12px;cursor:pointer;background:{{ c.chipBg }};border:1.5px solid {{ c.chipBorder }};">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="{{ c.color }}" stroke-width="2.2" stroke-linecap="round"><path d="{{ c.path }}"></path></svg>
+                        <span style="font-size:12px;font-weight:700;color:{{ c.chipText }};">{{ c.name }}</span>
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ budgetModalIsEdit }}">
+                <div style="display:flex;align-items:center;gap:12px;padding:13px 16px;background:var(--bg-card);border-radius:16px;margin-bottom:14px;">
+                  <div style="width:38px;height:38px;border-radius:12px;background:{{ budgetModalCatSoft }};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="{{ budgetModalCatColor }}" stroke-width="2.2" stroke-linecap="round"><path d="{{ budgetModalCatPath }}"></path></svg>
+                  </div>
+                  <div style="font-size:16px;font-weight:800;color:var(--tx-primary);">{{ budgetDraftCat }}</div>
+                </div>
+              </sc-if>
+              <div style="margin-bottom:18px;">
+                <div style="font-size:11px;font-weight:800;color:var(--tx-tertiary);letter-spacing:0.6px;text-transform:uppercase;margin-bottom:8px;">Monthly limit</div>
+                <div style="display:flex;align-items:center;gap:8px;padding:13px 16px;background:var(--bg-card);border-radius:16px;border:1.5px solid var(--border-input);">
+                  <span style="font-size:16px;font-weight:800;color:var(--tx-tertiary);">₹</span>
+                  <input type="number" placeholder="0" value="{{ budgetDraftLimit }}" onChange="{{ onBudgetLimitChange }}" style="border:none;outline:none;font-size:16px;font-weight:800;color:var(--tx-primary);background:transparent;width:100%;font-family:'Plus Jakarta Sans',sans-serif;" />
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:10px;">
+                <div onClick="{{ saveBudget }}" style="height:52px;border-radius:16px;background:linear-gradient(135deg,#13C076,#0A9E5E);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#fff;cursor:pointer;box-shadow:0 8px 20px rgba(15,180,107,.28);">Save budget</div>
+                <sc-if value="{{ budgetModalIsEdit }}">
+                  <div onClick="{{ deleteBudget }}" style="height:52px;border-radius:16px;background:#FFF0F0;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#E8322A;cursor:pointer;">Delete budget</div>
+                </sc-if>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+      </div>
+    </x-import>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    nav: 'home',
+    draft: { amount: '', category: 'Dining', name: '', date: new Date().toISOString().slice(0, 10) },
+    nameError: false,
+    amountError: false,
+    entryType: 'expense',
+    catEditMode: false,
+    addingCat: false,
+    newCatName: '',
+    newCatPicker: null,
+    newCatIcon: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z',
+    newCatColor: '#E8322A',
+    newCatSoft: '#FFECEC',
+    customCatMeta: {},
+    expenseCats: ['Dining', 'Groceries', 'Transport', 'Shopping', 'Bills', 'Entertainment', 'Health', 'Education', 'Travel', 'Fitness'],
+    incomeCats: ['Salary', 'Freelance', 'Business', 'Investment', 'Gift', 'Rental', 'Bonus', 'Refund', 'Other'],
+    filter: 'All',
+    searchQuery: '',
+    profileEditing: false,
+    profile: {
+      firstName: 'Alex', lastName: 'Rivera', dob: '1992-06-15',
+      mobile: '+1 (555) 012-3456', email: 'alex.rivera@email.com',
+      currency: 'INR', country: 'India', monthlyIncome: '4200',
+    },
+    chartMode: 'bar',
+    budgetsState: [
+      { cat: 'Groceries', limit: 600 },
+      { cat: 'Dining', limit: 350 },
+      { cat: 'Transport', limit: 200 },
+      { cat: 'Shopping', limit: 280 },
+      { cat: 'Bills', limit: 600 },
+      { cat: 'Entertainment', limit: 150 },
+    ],
+    budgetModal: null,
+    budgetDraft: { cat: '', limit: '' },
+    txModal: null,
+    txDraft: { name: '', amount: '', category: '', isoDate: '', type: 'expense' },
+    darkMode: false,
+    savingsGoal: 3000,
+    savingsHistory: [
+      { month: 'Oct', saved: 820 },
+      { month: 'Nov', saved: 1050 },
+      { month: 'Dec', saved: 560 },
+      { month: 'Jan', saved: 1340 },
+      { month: 'Feb', saved: 980 },
+      { month: 'Mar', saved: 2410 },
+    ],
+    showGoalInput: false,
+    goalDraft: '',
+    insightsMonth: 5,
+    monthlyData: [
+      { month: 'Oct', year: 2025, spent: 1820, income: 4200, cats: { Groceries: 320, Dining: 280, Transport: 160, Shopping: 240, Bills: 580, Entertainment: 240 } },
+      { month: 'Nov', year: 2025, spent: 2050, income: 4200, cats: { Groceries: 360, Dining: 310, Transport: 180, Shopping: 430, Bills: 590, Entertainment: 180 } },
+      { month: 'Dec', year: 2025, spent: 3280, income: 4200, cats: { Groceries: 480, Dining: 620, Transport: 200, Shopping: 980, Bills: 600, Entertainment: 400 } },
+      { month: 'Jan', year: 2026, spent: 1760, income: 4200, cats: { Groceries: 310, Dining: 260, Transport: 155, Shopping: 290, Bills: 590, Entertainment: 155 } },
+      { month: 'Feb', year: 2026, spent: 1620, income: 4200, cats: { Groceries: 285, Dining: 240, Transport: 145, Shopping: 185, Bills: 590, Entertainment: 175 } },
+      { month: 'Mar', year: 2026, spent: 0, income: 4200, cats: {} },
+    ],
+    monthSpent: 1790,
+    transactions: [
+      { name: 'Whole Foods Market', category: 'Groceries', amount: -84.20, date: 'Today' },
+      { name: 'Blue Bottle Coffee', category: 'Dining', amount: -6.50, date: 'Today' },
+      { name: 'Uber', category: 'Transport', amount: -18.75, date: 'Yesterday' },
+      { name: 'Netflix', category: 'Entertainment', amount: -15.99, date: 'Yesterday' },
+      { name: 'Zara', category: 'Shopping', amount: -64.00, date: 'Mar 12' },
+      { name: 'City Electric', category: 'Bills', amount: -110.40, date: 'Mar 11' },
+      { name: 'Monthly Salary', category: 'Income', amount: 4200.00, date: 'Mar 1' },
+    ],
+  };
+
+  goIncomeList() { this.setState({ nav: 'income-list' }); }
+  go(screen) {
+    if (screen === 'add') {
+      const today = new Date().toISOString().slice(0, 10);
+      this.setState({ nav: screen, entryType: 'expense', nameError: false, amountError: false, catEditMode: false, addingCat: false, newCatName: '', draft: { amount: '', category: this.state.expenseCats[0] || 'Dining', name: '', date: today } });
+    } else {
+      this.setState({ nav: screen });
+    }
+  }
+  pickCat(name) { this.setState(s => ({ draft: { ...s.draft, category: name } })); }
+  setFilter(f) { this.setState({ filter: f }); }
+  setEntryType(type) {
+    const defaultCat = type === 'income' ? (this.state.incomeCats[0] || 'Salary') : (this.state.expenseCats[0] || 'Dining');
+    this.setState(s => ({ entryType: type, catEditMode: false, addingCat: false, newCatName: '', amountError: false, draft: { ...s.draft, category: defaultCat } }));
+  }
+  toggleCatEdit() { this.setState(s => ({ catEditMode: !s.catEditMode, addingCat: false, newCatName: '' })); }
+  deleteCategory(name) {
+    this.setState(s => {
+      const key = s.entryType === 'income' ? 'incomeCats' : 'expenseCats';
+      if (s[key].length <= 1) return {};
+      const cats = s[key].filter(c => c !== name);
+      return { [key]: cats, draft: { ...s.draft, category: s.draft.category === name ? cats[0] : s.draft.category } };
+    });
+  }
+  startAddCat() { this.setState({ addingCat: true, newCatName: '', newCatIcon: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z', newCatColor: '#E8322A', newCatSoft: '#FFECEC', newCatPicker: null }); }
+  confirmAddCat() {
+    this.setState(s => {
+      const name = s.newCatName.trim();
+      if (!name) return { addingCat: false };
+      const key = s.entryType === 'income' ? 'incomeCats' : 'expenseCats';
+      if (s[key].includes(name)) return { addingCat: false, newCatName: '' };
+      const newMeta = { ...s.customCatMeta, [name]: { color: s.newCatColor, path: s.newCatIcon, soft: s.newCatSoft } };
+      return { [key]: [...s[key], name], customCatMeta: newMeta, addingCat: false, newCatName: '', draft: { ...s.draft, category: name } };
+    });
+  }
+  cancelAddCat() { this.setState({ addingCat: false, newCatName: '', newCatPicker: null }); }
+  openAddBudget() {
+    const budgetedCats = this.state.budgetsState.map(b => b.cat);
+    const available = this.state.expenseCats.filter(c => !budgetedCats.includes(c));
+    this.setState({ budgetModal: 'add', budgetDraft: { cat: available[0] || '', limit: '' } });
+  }
+  openEditBudget(cat) {
+    const b = this.state.budgetsState.find(b => b.cat === cat);
+    this.setState({ budgetModal: 'edit', budgetDraft: { cat, limit: b ? String(b.limit) : '' } });
+  }
+  saveBudget() {
+    this.setState(s => {
+      const { cat, limit } = s.budgetDraft;
+      const val = parseFloat(limit);
+      if (!cat || !val) return { budgetModal: null };
+      const exists = s.budgetsState.some(b => b.cat === cat);
+      const newBudgets = exists
+        ? s.budgetsState.map(b => b.cat === cat ? { ...b, limit: val } : b)
+        : [...s.budgetsState, { cat, limit: val }];
+      return { budgetsState: newBudgets, budgetModal: null, budgetDraft: { cat: '', limit: '' } };
+    });
+  }
+  deleteBudget() {
+    this.setState(s => ({
+      budgetsState: s.budgetsState.filter(b => b.cat !== s.budgetDraft.cat),
+      budgetModal: null, budgetDraft: { cat: '', limit: '' }
+    }));
+  }
+  closeBudgetModal() { this.setState({ budgetModal: null, budgetDraft: { cat: '', limit: '' } }); }
+  setBudgetDraftCat(cat) { this.setState(s => ({ budgetDraft: { ...s.budgetDraft, cat } })); }
+  setBudgetDraftLimit(val) { this.setState(s => ({ budgetDraft: { ...s.budgetDraft, limit: val } })); }
+  openTxEdit(index) {
+    const tx = this.state.transactions[index];
+    const isInc = tx.amount >= 0;
+    const today = new Date();
+    let isoDate = tx.isoDate || '';
+    if (!isoDate) {
+      if (tx.date === 'Today') isoDate = today.toISOString().slice(0, 10);
+      else if (tx.date === 'Yesterday') { const d = new Date(today); d.setDate(d.getDate() - 1); isoDate = d.toISOString().slice(0, 10); }
+      else { const p = new Date(tx.date + ' ' + today.getFullYear()); isoDate = isNaN(p) ? today.toISOString().slice(0, 10) : p.toISOString().slice(0, 10); }
+    }
+    this.setState({ txModal: { index }, txDraft: { name: tx.name, amount: String(Math.abs(tx.amount)), category: tx.category, isoDate, type: isInc ? 'income' : 'expense' } });
+  }
+  saveTx() {
+    this.setState(s => {
+      if (!s.txModal) return {};
+      const { index } = s.txModal;
+      const { name, amount, category, isoDate, type } = s.txDraft;
+      const val = parseFloat(amount || '0');
+      if (!name.trim() || !val) return { txModal: null };
+      const isInc = type === 'income';
+      const dateLabel = isoDate ? new Date(isoDate + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'Today';
+      const oldTx = s.transactions[index];
+      const updatedTx = { ...oldTx, name: name.trim(), amount: isInc ? val : -val, category, date: dateLabel, isoDate };
+      let monthSpent = s.monthSpent;
+      if (oldTx.amount < 0) monthSpent -= Math.abs(oldTx.amount);
+      if (!isInc) monthSpent += val;
+      return { transactions: s.transactions.map((t, i) => i === index ? updatedTx : t), monthSpent, txModal: null };
+    });
+  }
+  deleteTx() {
+    this.setState(s => {
+      if (!s.txModal) return {};
+      const { index } = s.txModal;
+      const oldTx = s.transactions[index];
+      let monthSpent = s.monthSpent;
+      if (oldTx.amount < 0) monthSpent -= Math.abs(oldTx.amount);
+      return { transactions: s.transactions.filter((_, i) => i !== index), monthSpent, txModal: null };
+    });
+  }
+  closeTxModal() { this.setState({ txModal: null }); }
+  toggleDarkMode() { this.setState(s => ({ darkMode: !s.darkMode })); }
+  press(key) {
+    this.setState(s => {
+      const d = s.draft; let a = d.amount;
+      if (key === 'del') a = a.slice(0, -1);
+      else if (key === '.') { if (!a.includes('.')) a = (a || '0') + '.'; }
+      else { if (a.includes('.') && a.split('.')[1].length >= 2) return {}; if (a === '0' || a === '') a = key; else a = a + key; }
+      return { draft: { ...d, amount: a }, amountError: false };
+    });
+  }
+  save() {
+    this.setState(s => {
+      if (!s.draft.name.trim()) return { nameError: true };
+      const val = parseFloat(s.draft.amount || '0');
+      if (!val) return { amountError: true };
+      const isInc = s.entryType === 'income';
+      const dateLabel = s.draft.date
+        ? new Date(s.draft.date + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+        : 'Today';
+      const tx = { name: s.draft.name.trim(), category: s.draft.category, amount: isInc ? val : -val, date: dateLabel };
+      const today = new Date().toISOString().slice(0, 10);
+      return {
+        transactions: [tx, ...s.transactions],
+        monthSpent: isInc ? s.monthSpent : s.monthSpent + val,
+        draft: { amount: '', category: 'Dining', name: '', date: today },
+        nameError: false,
+        amountError: false,
+        entryType: 'expense',
+        nav: 'transactions',
+      };
+    });
+  }
+
+  toggleGoalEdit() {
+    this.setState(s => ({ showGoalInput: !s.showGoalInput, goalDraft: String(s.savingsGoal) }));
+  }
+  saveGoal() {
+    const val = parseFloat(this.state.goalDraft);
+    if (val > 0) this.setState({ savingsGoal: val, showGoalInput: false, goalDraft: '' });
+    else this.setState({ showGoalInput: false });
+  }
+  setProfile(key, val) { this.setState(s => ({ profile: { ...s.profile, [key]: val } })); }
+  toggleEdit() { this.setState(s => ({ profileEditing: !s.profileEditing })); }
+
+  renderVals() {
+    const DM = this.state.darkMode;
+    const META = {
+      Groceries: { color: '#2FB872', soft: '#E6F6EE', path: 'M5 7h14l-1.2 11.1a1 1 0 0 1-1 .9H7.2a1 1 0 0 1-1-.9L5 7zM8.5 7a3.5 3.5 0 0 1 7 0' },
+      Dining: { color: '#FF6B5E', soft: '#FFEDEA', path: 'M5 8h11v3a5.5 5.5 0 0 1-11 0V8zM16 9h2.2a2 2 0 0 1 0 4H16M5 21h11' },
+      Transport: { color: '#2BB3FF', soft: '#E6F4FF', path: 'M5.5 12l1.2-4.2A2 2 0 0 1 8.6 6.4h6.8a2 2 0 0 1 1.9 1.4L18.5 12M4.5 12h15v5h-15zM7 17v1.8M17 17v1.8' },
+      Shopping: { color: '#7C5CFC', soft: '#EFEAFE', path: 'M5 4.6h6.5l8.4 8.4-6.5 6.5L5 11.1V4.6z' },
+      Bills: { color: '#F5A623', soft: '#FEF2DE', path: 'M7 3h10v18l-2.5-1.5L12 21l-2.5-1.5L7 21V3zM10 8h4M10 12h4' },
+      Entertainment: { color: '#FF5CA8', soft: '#FFEAF3', path: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM10 8.5l5 3.5-5 3.5z' },
+      Health: { color: '#18BFA8', soft: '#E3F8F4', path: 'M12 19.5C8 16.5 4.5 13.6 4.5 10A3.5 3.5 0 0 1 12 7.7A3.5 3.5 0 0 1 19.5 10c0 3.6-3.5 6.5-7.5 9.5z' },
+      Income: { color: '#16A34A', soft: '#E6F6EC', path: 'M12 3v18M15.5 6.5H10a2.75 2.75 0 0 0 0 5.5h4a2.75 2.75 0 0 1 0 5.5H8' },
+      Other: { color: '#8A8F86', soft: '#EFEFEC', path: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z' },
+      Salary: { color: '#16A34A', soft: '#E6F6EC', path: 'M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' },
+      Freelance: { color: '#0FB46B', soft: '#E8FAF2', path: 'M22 11.1V12a10 10 0 1 1-5.9-9.1M22 4L12 14.01l-3-3' },
+      Business: { color: '#2BB3FF', soft: '#E6F4FF', path: 'M20 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zM16 3H8v4h8V3z' },
+      Investment: { color: '#7C5CFC', soft: '#EFEAFE', path: 'M23 6l-9.5 9.5-5-5L1 18M17 6h6v6' },
+      Gift: { color: '#FF5CA8', soft: '#FFEAF3', path: 'M20 12v10H4V12M22 7H2v5h20V7zM12 22V7M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z' },
+      Education: { color: '#3B82F6', soft: '#EFF6FF', path: 'M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z' },
+      Travel: { color: '#06B6D4', soft: '#ECFEFF', path: 'M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z' },
+      Fitness: { color: '#10B981', soft: '#ECFDF5', path: 'M22 12h-4l-3 9L9 3l-3 9H2' },
+      Rental: { color: '#8B5CF6', soft: '#F5F3FF', path: 'M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM9 22V12h6v10' },
+      Bonus: { color: '#F59E0B', soft: '#FFFBEB', path: 'M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z' },
+      Refund: { color: '#14B8A6', soft: '#F0FDFA', path: 'M1 4v6h6M23 20v-6h-6M20.49 9A9 9 0 0 0 5.64 5.64L1 10M23 14l-4.64 4.36A9 9 0 0 1 3.51 15' },
+    };
+    const getMeta = cat => META[cat] || this.state.customCatMeta[cat] || META.Other;
+    const hour = new Date().getHours();
+    const greeting = hour >= 5 && hour < 12 ? 'Good morning'
+      : hour >= 12 && hour < 17 ? 'Good afternoon'
+      : hour >= 17 && hour < 21 ? 'Good evening'
+      : 'Good night';
+    const greetingMeta = hour >= 5 && hour < 12
+      ? { path: 'M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z', color: '#F59E0B', bg: '#FFFBEB' }
+      : hour >= 12 && hour < 17
+      ? { path: 'M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z', color: '#F97316', bg: '#FFF7ED' }
+      : hour >= 17 && hour < 21
+      ? { path: 'M17 18a5 5 0 0 0-10 0M3 18h18M12 9V3M4.22 11.78l1.42-1.42M18.36 11.78l-1.42-1.42', color: '#E8703A', bg: '#FFF1E6' }
+      : { path: 'M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z', color: '#7C5CFC', bg: '#EFEAFE' };
+
+    const money = n => Number(n).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const round = n => '₹' + Math.round(n).toLocaleString('en-IN');
+
+    const decorate = t => {
+      const m = getMeta(t.category);
+      const inc = t.amount >= 0;
+      return { ...t, color: m.color, soft: m.soft, path: m.path, isIncome: inc,
+        amtColor: inc ? '#16A34A' : '#16201A',
+        amountStr: (inc ? '+₹' : '-₹') + money(Math.abs(t.amount)) };
+    };
+    const tx = this.state.transactions.map((t, i) => ({ ...decorate(t), onEdit: () => this.openTxEdit(i) }));
+    const filter = this.state.filter;
+    const q = this.state.searchQuery.trim().toLowerCase();
+    const filteredTx = tx.filter(t => {
+      const matchType = filter === 'All' || (filter === 'Income' ? t.isIncome : !t.isIncome);
+      const matchSearch = !q || t.name.toLowerCase().includes(q) || t.category.toLowerCase().includes(q);
+      return matchType && matchSearch;
+    });
+
+    const FILTER_COLORS = { All: '#2BB3FF', Expenses: '#E8322A', Income: '#0FB46B' };
+    const filters = ['All', 'Expenses', 'Income'].map(label => {
+      const active = label === filter;
+      return { label, onPick: () => this.setFilter(label),
+        bg: active ? FILTER_COLORS[label] : (DM ? '#192218' : '#fff'),
+        fg: active ? '#fff' : (DM ? '#8A9088' : '#6B7066'),
+        weight: active ? 800 : 700, shadow: active ? 'none' : (DM ? 'none' : '0 3px 10px rgba(22,32,26,.04)') };
+    });
+
+    const spentByCat = {};
+    this.state.transactions.forEach(t => {
+      if (t.amount < 0) spentByCat[t.category] = (spentByCat[t.category] || 0) + Math.abs(t.amount);
+    });
+    const budgetsRaw = this.state.budgetsState.map(b => ({ cat: b.cat, limit: b.limit, spent: spentByCat[b.cat] || 0 }));
+    const budgets = budgetsRaw.map(b => {
+      const m = getMeta(b.cat);
+      const pct = Math.min(b.spent / b.limit * 100, 100);
+      const over = b.spent > b.limit;
+      return { cat: b.cat, color: m.color, soft: m.soft, path: m.path,
+        spent: '₹' + money(b.spent), limit: '₹' + money(b.limit),
+        pctStr: Math.round(b.spent / b.limit * 100) + '%', barW: pct + '%',
+        barColor: over ? '#E25555' : m.color, ringDeg: (pct / 100 * 360) + 'deg',
+        over, remColor: over ? '#E25555' : m.color,
+        onEdit: () => this.openEditBudget(b.cat) };
+    });
+
+    const totalSpent = budgetsRaw.reduce((a, b) => a + b.spent, 0);
+    const stack = budgetsRaw.map(b => ({ color: getMeta(b.cat).color, cat: b.cat,
+      w: (b.spent / totalSpent * 100).toFixed(2) + '%' }));
+    const totalBudgetLimit = budgetsRaw.reduce((a, b) => a + b.limit, 0);
+    const totalBudgetSpent = budgetsRaw.reduce((a, b) => a + b.spent, 0);
+    const budgetProgressStack = budgetsRaw.filter(b => b.spent > 0).map(b => ({
+      color: getMeta(b.cat).color, cat: b.cat,
+      w: (b.spent / (totalBudgetLimit || 1) * 100).toFixed(2) + '%'
+    }));
+    const chartMode = this.state.chartMode || 'bar';
+    const ptc = (cx, cy, r, deg) => {
+      const rad = (deg - 90) * Math.PI / 180;
+      return [cx + r * Math.cos(rad), cy + r * Math.sin(rad)];
+    };
+    let ang = -90;
+    const pieSlices = budgetsRaw.map(b => {
+      const sweep = (b.spent / totalSpent) * 360;
+      const [x1, y1] = ptc(70, 70, 65, ang);
+      const [x2, y2] = ptc(70, 70, 65, ang + sweep);
+      const large = sweep > 180 ? 1 : 0;
+      const d = `M70 70 L${x1.toFixed(2)} ${y1.toFixed(2)} A65 65 0 ${large} 1 ${x2.toFixed(2)} ${y2.toFixed(2)}Z`;
+      ang += sweep;
+      return { d, color: getMeta(b.cat).color };
+    });
+
+    const monthBudget = 2180;
+    const spentPct = Math.min(this.state.monthSpent / monthBudget * 100, 100);
+
+    const entryType = this.state.entryType;
+    const isIncomeEntry = entryType === 'income';
+    const catKey = isIncomeEntry ? 'incomeCats' : 'expenseCats';
+    const currentCatNames = this.state[catKey];
+    const catCount = currentCatNames.length;
+    const CATS = currentCatNames.map(c => ({ name: c, ...getMeta(c) }));
+    const KEYS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '0', 'del'];
+    const p = this.state.profile;
+    const dobMs = new Date(p.dob + 'T00:00:00').getTime();
+    const age = Math.floor((Date.now() - dobMs) / (365.25 * 24 * 60 * 60 * 1000));
+    const dobDisplay = new Date(p.dob + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    const fullName = p.firstName + ' ' + p.lastName;
+    const fullNameUpper = fullName.toUpperCase();
+    const monthlyIncomeDisplay = '₹' + Number(p.monthlyIncome || 0).toLocaleString('en-IN');
+
+    const nav = this.state.nav;
+    const d = this.state.draft;
+    const ACT = '#0FB46B', INA = DM ? '#607060' : '#B4B9B0';
+
+    // Insights
+    const insightsIdx = this.state.insightsMonth;
+    const mData = this.state.monthlyData.map((m, i) => {
+      if (i === this.state.monthlyData.length - 1) {
+        const liveCats = {};
+        this.state.transactions.filter(t => t.amount < 0).forEach(t => {
+          liveCats[t.category] = (liveCats[t.category] || 0) + Math.abs(t.amount);
+        });
+        return { ...m, spent: this.state.monthSpent, cats: liveCats };
+      }
+      return m;
+    });
+    const selMonth = mData[insightsIdx];
+    const prevMonthIns = insightsIdx > 0 ? mData[insightsIdx - 1] : null;
+    const insTrendDiff = prevMonthIns ? selMonth.spent - prevMonthIns.spent : 0;
+    const maxInsSpent = Math.max(...mData.map(m => m.spent));
+    const insTrendBars = mData.map((m, i) => ({
+      month: m.month, onPick: () => this.setState({ insightsMonth: i }),
+      barH: Math.max((m.spent / maxInsSpent) * 74, 4).toFixed(0) + 'px',
+      barColor: i === insightsIdx ? '#0FB46B' : (DM ? '#263024' : '#ECEBE6'),
+      labelColor: i === insightsIdx ? '#0FB46B' : 'var(--tx-tertiary)',
+    }));
+    const insMonthPills = mData.map((m, i) => ({
+      label: m.month + ' \'' + String(m.year).slice(2),
+      active: i === insightsIdx, onPick: () => this.setState({ insightsMonth: i }),
+      bg: i === insightsIdx ? '#0FB46B' : (DM ? '#263024' : '#ECEBE6'),
+      fg: i === insightsIdx ? '#fff' : 'var(--tx-secondary)',
+    }));
+    const insCats = Object.entries(selMonth.cats)
+      .map(([cat, spent]) => {
+        const cm = getMeta(cat); const pct = selMonth.spent > 0 ? (spent / selMonth.spent * 100) : 0;
+        return { cat, spent, color: cm.color, soft: cm.soft, path: cm.path,
+          spentStr: '₹' + money(spent), pctStr: pct.toFixed(0) + '%', barW: pct.toFixed(1) + '%' };
+      })
+      .sort((a, b) => b.spent - a.spent);
+
+    // Savings
+    const savTotalIncome = this.state.transactions.filter(t => t.amount > 0).reduce((a, t) => a + t.amount, 0);
+    const savTotalExp = this.state.monthSpent;
+    const savedAmt = Math.max(savTotalIncome - savTotalExp, 0);
+    const savRate = savTotalIncome > 0 ? Math.round(savedAmt / savTotalIncome * 100) : 0;
+    const savGoal = this.state.savingsGoal;
+    const savGoalPct = Math.min(savedAmt / (savGoal || 1) * 100, 100);
+    const savCirc = 2 * Math.PI * 36;
+    const savDash = (savGoalPct / 100) * savCirc;
+    const savMaxH = Math.max(...this.state.savingsHistory.map(h => h.saved));
+    const savHistItems = this.state.savingsHistory.map((h, i) => {
+      const isCur = i === this.state.savingsHistory.length - 1;
+      return { month: h.month, barH: Math.max((h.saved / savMaxH) * 66, 4).toFixed(0) + 'px',
+        barColor: isCur ? '#0FB46B' : (DM ? '#263024' : '#ECEBE6'),
+        labelColor: isCur ? '#0FB46B' : 'var(--tx-tertiary)' };
+    });
+    const savPrevSaved = this.state.savingsHistory[this.state.savingsHistory.length - 2].saved;
+    const savTrendDiff = savedAmt - savPrevSaved;
+
+    return {
+      greeting,
+      greetingIconPath: greetingMeta.path,
+      greetingIconColor: greetingMeta.color,
+      greetingIconBg: greetingMeta.bg,
+      isHome: nav === 'home', isTx: nav === 'transactions', isBudgets: nav === 'budgets',
+      isSettings: nav === 'settings', isAdd: nav === 'add', isProfile: nav === 'profile',
+      isSavings: nav === 'savings',
+      goSavings: () => this.go('savings'),
+      isInsights: nav === 'insights',
+      showTabs: nav !== 'add' && nav !== 'profile' && nav !== 'income-list' && nav !== 'savings',
+      showFab: nav !== 'add' && nav !== 'profile' && nav !== 'income-list' && nav !== 'savings' && nav !== 'budgets',
+      go: { home: () => this.go('home'), tx: () => this.go('transactions'),
+        budgets: () => this.go('budgets'), settings: () => this.go('settings'),
+        add: () => this.go('add'), profile: () => this.go('profile'),
+        insights: () => this.go('insights') },
+      goProfile: () => this.go('profile'),
+      goSettings: () => this.go('settings'),
+      tab: { home: nav === 'home' ? '#0FB46B' : INA, tx: nav === 'transactions' ? '#2BB3FF' : INA,
+        budgets: nav === 'budgets' ? '#7C5CFC' : INA,
+        insights: nav === 'insights' ? '#F59E0B' : INA,
+        settings: (nav === 'settings' || nav === 'profile') ? '#F5A623' : INA },
+      amount: d.amount ? d.amount : '0',
+      addCats: CATS.map(c => {
+        const sel = c.name === d.category;
+        return { name: c.name, color: c.color, soft: c.soft, path: c.path,
+          chipBg: sel ? c.soft : (DM ? '#192218' : '#FFFFFF'), chipBorder: sel ? c.color : (DM ? '#263024' : '#ECEBE6'),
+          chipText: sel ? c.color : (DM ? '#7A8278' : '#6B7066'), onPick: () => this.pickCat(c.name),
+          showDelete: this.state.catEditMode && catCount > 1,
+          onDelete: () => this.deleteCategory(c.name) };
+      }),
+      addTitle: isIncomeEntry ? 'New income' : 'New expense',
+      addAmtColor: this.state.amountError ? '#E8322A' : (isIncomeEntry ? '#0FB46B' : '#16201A'),
+      addBtnLabel: isIncomeEntry ? 'Add income' : 'Add expense',
+      addBtnBg: isIncomeEntry ? 'linear-gradient(135deg,#13C076,#0A9E5E)' : 'linear-gradient(135deg,#E8322A,#C0241D)',
+      addBtnShadow: isIncomeEntry ? '0 10px 24px rgba(15,180,107,.36)' : '0 10px 24px rgba(220,50,40,.32)',
+      toggleExpBg: !isIncomeEntry ? '#E8322A' : 'transparent',
+      toggleExpFg: !isIncomeEntry ? '#fff' : '#9AA096',
+      toggleExpShadow: !isIncomeEntry ? '0 2px 8px rgba(220,50,40,.28)' : 'none',
+      toggleIncBg: isIncomeEntry ? '#0FB46B' : 'transparent',
+      toggleIncFg: isIncomeEntry ? '#fff' : '#9AA096',
+      toggleIncShadow: isIncomeEntry ? '0 2px 8px rgba(15,180,107,.28)' : 'none',
+      setExpenseMode: () => this.setEntryType('expense'),
+      setIncomeMode: () => this.setEntryType('income'),
+      catEditMode: this.state.catEditMode,
+      addingCat: this.state.addingCat,
+      newCatName: this.state.newCatName,
+      catEditBtnLabel: this.state.catEditMode ? 'Done' : 'Edit',
+      catEditBtnBg: this.state.catEditMode ? '#0FB46B' : '#F0EFE8',
+      catEditBtnFg: this.state.catEditMode ? '#fff' : '#6B7066',
+      toggleCatEdit: () => this.toggleCatEdit(),
+      startAddCat: () => this.startAddCat(),
+      confirmAddCat: () => this.confirmAddCat(),
+      cancelAddCat: () => this.cancelAddCat(),
+      onNewCatChange: e => this.setState({ newCatName: e.target.value }),
+      newCatPicker: this.state.newCatPicker,
+      newCatPickerIsColor: this.state.newCatPicker === 'color',
+      newCatPickerIsIcon: this.state.newCatPicker === 'icon',
+      openColorPicker: () => this.setState(s => ({ newCatPicker: s.newCatPicker === 'color' ? null : 'color' })),
+      openIconPicker: () => this.setState(s => ({ newCatPicker: s.newCatPicker === 'icon' ? null : 'icon' })),
+      pickColor: (color, soft) => this.setState({ newCatColor: color, newCatSoft: soft, newCatPicker: null }),
+      pickIcon: (path) => this.setState({ newCatIcon: path, newCatPicker: null }),
+      newCatIconChipBg: DM ? '#2A3828' : '#F0EFE8',
+      newCatIconStroke: DM ? '#C8D8C4' : '#3A403A',
+      newCatIcon: this.state.newCatIcon,
+      newCatColor: this.state.newCatColor,
+      newCatSoft: this.state.newCatSoft,
+      ICON_OPTIONS: [
+        { path: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z' },
+        { path: 'M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z' },
+        { path: 'M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' },
+        { path: 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z' },
+        { path: 'M22 11.1V12a10 10 0 1 1-5.9-9.1M22 4L12 14.01l-3-3' },
+        { path: 'M23 6l-9.5 9.5-5-5L1 18M17 6h6v6' },
+        { path: 'M20 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zM16 3H8v4h8V3z' },
+        { path: 'M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.4 6M7 13l1.4 6M17 13l1 6M9 19a1 1 0 1 0 0 2 1 1 0 0 0 0-2zM18 19a1 1 0 1 0 0 2 1 1 0 0 0 0-2z' },
+        { path: 'M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z' },
+        { path: 'M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8zM6 1v3M10 1v3M14 1v3' },
+        { path: 'M22 12h-4l-3 9L9 3l-3 9H2' },
+        { path: 'M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z' },
+        { path: 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M16 13H8M16 17H8M10 9H8' },
+        { path: 'M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z' },
+        { path: 'M9 19V6l12-3v13M9 19c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zM21 16c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2z' },
+        { path: 'M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1zM4 22v-7' },
+        { path: 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z' },
+        { path: 'M1 6v16l7-4 8 4 7-4V2l-7 4-8-4-7 4zM8 2v16M16 6v16' },
+        { path: 'M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z' },
+        { path: 'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5' },
+        { path: 'M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z' },
+        { path: 'M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zM12 8v4l3 3' },
+        { path: 'M3 18v-6a9 9 0 0 1 18 0v6M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z' },
+        { path: 'M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z' },
+        { path: 'M23 7l-7 5 7 5V7zM1 5h15a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H1V5z' },
+        { path: 'M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zM8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01' },
+        { path: 'M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM22 11l-4 4-2-2' },
+        { path: 'M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2zM22 6l-10 7L2 6' },
+        { path: 'M18 20V10M12 20V4M6 20v-6' },
+        { path: 'M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z' },
+      ].map(ic => {
+        const sel = ic.path === this.state.newCatIcon;
+        return { path: ic.path, sel,
+          bg: sel ? this.state.newCatSoft : (DM ? '#2A3828' : '#EAEBE6'),
+          borderColor: sel ? this.state.newCatColor : 'transparent',
+          stroke: sel ? this.state.newCatColor : (DM ? '#C8D8C4' : '#3A403A'),
+          onPick: () => this.setState({ newCatIcon: ic.path, newCatPicker: null }) };
+      }),
+      COLOR_OPTIONS: [
+        { color: '#E8322A', soft: '#FFECEC' },
+        { color: '#F5A623', soft: '#FFF6E6' },
+        { color: '#0FB46B', soft: '#E8FAF2' },
+        { color: '#2BB3FF', soft: '#E6F4FF' },
+        { color: '#7C5CFC', soft: '#EFEAFE' },
+        { color: '#FF5CA8', soft: '#FFEAF3' },
+        { color: '#06B6D4', soft: '#ECFEFF' },
+        { color: '#10B981', soft: '#ECFDF5' },
+        { color: '#F59E0B', soft: '#FFFBEB' },
+        { color: '#8B5CF6', soft: '#F5F3FF' },
+        { color: '#EF4444', soft: '#FEF2F2' },
+        { color: '#8A8F86', soft: '#EFEFEC' },
+      ].map(c => {
+        const sel = c.color === this.state.newCatColor;
+        return { color: c.color, soft: c.soft, sel,
+          outline: sel ? `3px solid ${c.color}` : 'none',
+          shadow: sel ? '0 0 0 2px #fff' : 'none',
+          onPick: () => this.setState({ newCatColor: c.color, newCatSoft: c.soft, newCatPicker: null }) };
+      }),
+      draftName: d.name || '',
+      draftDate: d.date || new Date().toISOString().slice(0, 10),
+      onNameChange: e => this.setState(s => ({ nameError: false, draft: { ...s.draft, name: e.target.value } })),
+      onDateChange: e => this.setState(s => ({ draft: { ...s.draft, date: e.target.value } })),
+      nameFieldBg: this.state.nameError ? '#FFF5F5' : '#fff',
+      nameFieldBorder: this.state.nameError ? '#E8322A' : '#F0EFE8',
+      keys: KEYS.map(k => ({ label: k === 'del' ? '\u232B' : k, onPress: () => this.press(k) })),
+      save: () => this.save(),
+      darkMode: DM,
+      toggleDarkMode: () => this.toggleDarkMode(),
+      darkModePillBg: DM ? '#0FB46B' : '#C8CECC',
+      darkModePillThumb: DM ? 'translateX(20px)' : 'translateX(0px)',
+      isBarChart: chartMode === 'bar',
+      isPieChart: chartMode === 'pie',
+      pieSlices,
+      setBarChart: () => this.setState({ chartMode: 'bar' }),
+      setPieChart: () => this.setState({ chartMode: 'pie' }),
+      chartBarBg: chartMode === 'bar' ? '#fff' : 'transparent',
+      chartBarShadow: chartMode === 'bar' ? '0 1px 4px rgba(22,32,26,.12)' : 'none',
+      chartBarFg: chartMode === 'bar' ? '#16201A' : '#9AA096',
+      chartPieBg: chartMode === 'pie' ? '#fff' : 'transparent',
+      chartPieShadow: chartMode === 'pie' ? '0 1px 4px rgba(22,32,26,.12)' : 'none',
+      chartPieFg: chartMode === 'pie' ? '#16201A' : '#9AA096',
+      legendMarginTop: chartMode === 'pie' ? '10px' : '16px',
+      totalBudgetLimitStr: round(totalBudgetLimit),
+      totalBudgetSpentStr: round(totalBudgetSpent),
+      budgetProgressStack,
+      searchQuery: this.state.searchQuery,
+      onSearchChange: e => this.setState({ searchQuery: e.target.value }),
+      clearSearch: () => this.setState({ searchQuery: '' }),
+      hasSearch: !!this.state.searchQuery.trim(),
+      noTxResults: filteredTx.length === 0,
+      transactions: tx, filteredTx, filters, budgets, stack,
+      monthSpentStr: round(this.state.monthSpent),
+      monthBudgetStr: round(monthBudget),
+      spentBarW: spentPct.toFixed(1) + '%',
+      remainStr: round(Math.max(monthBudget - this.state.monthSpent, 0)) + ' left',
+      profile: p, fullName, fullNameUpper,
+      profileEditing: this.state.profileEditing,
+      profileNotEditing: !this.state.profileEditing,
+      profileEditLabel: this.state.profileEditing ? 'Save' : 'Edit',
+      toggleEdit: () => this.toggleEdit(),
+      profileAge: age, dobDisplay, monthlyIncomeDisplay,
+      onFirstNameChange: e => this.setProfile('firstName', e.target.value),
+      onLastNameChange: e => this.setProfile('lastName', e.target.value),
+      onDobChange: e => this.setProfile('dob', e.target.value),
+      onMobileChange: e => this.setProfile('mobile', e.target.value),
+      onEmailChange: e => this.setProfile('email', e.target.value),
+      onMonthlyIncomeChange: e => this.setProfile('monthlyIncome', e.target.value),
+      onCurrencyChange: e => this.setProfile('currency', e.target.value),
+      onCountryChange: e => this.setProfile('country', e.target.value),
+      goIncomeList: () => this.goIncomeList(),
+      showIncomeList: nav === 'income-list',
+      incomeTxList: tx.filter(t => t.isIncome),
+      totalIncomeStr: '₹' + money(tx.filter(t => t.isIncome).reduce((a, t) => a + t.amount, 0)),
+      incomeCount: tx.filter(t => t.isIncome).length,
+      noIncomeTx: tx.filter(t => t.isIncome).length === 0,
+      showBudgetModal: !!this.state.budgetModal,
+      budgetModalIsAdd: this.state.budgetModal === 'add',
+      budgetModalIsEdit: this.state.budgetModal === 'edit',
+      budgetModalTitle: this.state.budgetModal === 'edit' ? 'Edit Budget' : 'New Budget',
+      budgetDraftCat: this.state.budgetDraft.cat,
+      budgetDraftLimit: this.state.budgetDraft.limit,
+      budgetModalCatColor: (META[this.state.budgetDraft.cat] || META.Other).color,
+      budgetModalCatSoft: (META[this.state.budgetDraft.cat] || META.Other).soft,
+      budgetModalCatPath: (META[this.state.budgetDraft.cat] || META.Other).path,
+      availableBudgetCats: (() => {
+        const budgetedCats = this.state.budgetsState.map(b => b.cat);
+        return this.state.expenseCats.filter(c => !budgetedCats.includes(c) || c === this.state.budgetDraft.cat).map(c => {
+          const m = META[c] || META.Other; const sel = c === this.state.budgetDraft.cat;
+          return { name: c, color: m.color, path: m.path,
+            chipBg: sel ? m.soft : (DM ? '#192218' : '#fff'), chipBorder: sel ? m.color : (DM ? '#263024' : '#ECEBE6'),
+            chipText: sel ? m.color : (DM ? '#7A8278' : '#6B7066'), onPick: () => this.setBudgetDraftCat(c) };
+        });
+      })(),
+      openAddBudget: () => this.openAddBudget(),
+      saveBudget: () => this.saveBudget(),
+      deleteBudget: () => this.deleteBudget(),
+      closeBudgetModal: () => this.closeBudgetModal(),
+      onBudgetLimitChange: e => this.setBudgetDraftLimit(e.target.value),
+      stopProp: e => e.stopPropagation(),
+      showTxModal: !!this.state.txModal,
+      txEditCats: (() => {
+        const d = this.state.txDraft;
+        const names = d.type === 'income' ? this.state.incomeCats : this.state.expenseCats;
+        return names.map(c => {
+          const m = META[c] || META.Other; const sel = c === d.category;
+          return { name: c, color: m.color, path: m.path,
+            chipBg: sel ? m.soft : (DM ? '#192218' : '#fff'), chipBorder: sel ? m.color : (DM ? '#263024' : '#ECEBE6'),
+            chipText: sel ? m.color : (DM ? '#7A8278' : '#6B7066'), onPick: () => this.setState(s => ({ txDraft: { ...s.txDraft, category: c } })) };
+        });
+      })(),
+      txDraftName: this.state.txDraft.name,
+      txDraftAmount: this.state.txDraft.amount,
+      txDraftDate: this.state.txDraft.isoDate || new Date().toISOString().slice(0, 10),
+      txToggleExpBg: this.state.txDraft.type !== 'income' ? '#E8322A' : 'transparent',
+      txToggleExpFg: this.state.txDraft.type !== 'income' ? '#fff' : '#9AA096',
+      txToggleExpShadow: this.state.txDraft.type !== 'income' ? '0 2px 8px rgba(220,50,40,.28)' : 'none',
+      txToggleIncBg: this.state.txDraft.type === 'income' ? '#0FB46B' : 'transparent',
+      txToggleIncFg: this.state.txDraft.type === 'income' ? '#fff' : '#9AA096',
+      txToggleIncShadow: this.state.txDraft.type === 'income' ? '0 2px 8px rgba(15,180,107,.28)' : 'none',
+      txSetExpense: () => this.setState(s => ({ txDraft: { ...s.txDraft, type: 'expense', category: this.state.expenseCats[0] || 'Dining' } })),
+      txSetIncome: () => this.setState(s => ({ txDraft: { ...s.txDraft, type: 'income', category: this.state.incomeCats[0] || 'Salary' } })),
+      onTxNameChange: e => this.setState(s => ({ txDraft: { ...s.txDraft, name: e.target.value } })),
+      onTxAmountChange: e => this.setState(s => ({ txDraft: { ...s.txDraft, amount: e.target.value } })),
+      onTxDateChange: e => this.setState(s => ({ txDraft: { ...s.txDraft, isoDate: e.target.value } })),
+      closeTxModal: () => this.closeTxModal(),
+      saveTx: () => this.saveTx(),
+      deleteTx: () => this.deleteTx(),
+      savedAmtStr: '₹' + money(savedAmt),
+      savedAmtDashStr: '₹' + money(savedAmt),
+      totalIncomeSaved: '₹' + money(savTotalIncome),
+      totalExpensesSaved: '₹' + money(savTotalExp),
+      expenseBarW: savTotalIncome > 0 ? (savTotalExp / savTotalIncome * 100).toFixed(1) + '%' : '0%',
+      savingsRateStr: savRate + '%',
+      savingsTrend: savTrendDiff >= 0
+        ? '↑ $' + Math.round(savTrendDiff) + ' vs Feb'
+        : '↓ $' + Math.round(Math.abs(savTrendDiff)) + ' vs Feb',
+      savingsHistory: savHistItems,
+      savingsGoalStr: '₹' + money(savGoal),
+      goalPctStr: Math.round(savGoalPct) + '%',
+      goalDashArray: savDash.toFixed(1) + ' ' + savCirc.toFixed(1),
+      goalBarW: savGoalPct.toFixed(1) + '%',
+      goalRemStr: savedAmt >= savGoal ? 'Goal reached! 🎉' : '₹' + money(savGoal - savedAmt) + ' to go',
+      showGoalInput: this.state.showGoalInput,
+      goalDraft: this.state.goalDraft,
+      toggleGoalEdit: () => this.toggleGoalEdit(),
+      onGoalDraftChange: e => this.setState({ goalDraft: e.target.value }),
+      saveGoal: () => this.saveGoal(),
+      goalEditBtnBg: this.state.showGoalInput ? 'transparent' : (DM ? '#263024' : '#F0EFE8'),
+      goalEditBtnFg: this.state.showGoalInput ? '#E8322A' : (DM ? '#9AA096' : '#6B7066'),
+      goalEditBtnLabel: this.state.showGoalInput ? 'Cancel' : 'Edit goal',
+      goalRingTextColor: DM ? '#E2E9E0' : '#16201A',
+      selectedMonthLabel: selMonth.month + ' ' + selMonth.year,
+      insightsSpentStr: '₹' + money(selMonth.spent),
+      insightsIncomeStr: '₹' + money(selMonth.income),
+      insightsSavedStr: '₹' + money(Math.max(selMonth.income - selMonth.spent, 0)),
+      insightsHasTrend: insightsIdx > 0,
+      insightsTrendLabel: prevMonthIns
+        ? (insTrendDiff >= 0
+          ? '↑ ₹' + Math.round(insTrendDiff).toLocaleString('en-IN') + ' more than ' + prevMonthIns.month
+          : '↓ ₹' + Math.round(Math.abs(insTrendDiff)).toLocaleString('en-IN') + ' less than ' + prevMonthIns.month)
+        : '',
+      insightsTrendBars: insTrendBars,
+      monthPills: insMonthPills,
+      insightsCats: insCats,
+      insightsCatsEmpty: insCats.length === 0,
+    };
+  }
+}
+</script>
+</body>
+</html>
