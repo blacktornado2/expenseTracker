@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { Pressable, Text } from 'react-native';
 import { create, act } from 'react-test-renderer';
 import SegmentedToggle from '../SegmentedToggle';
 
@@ -19,8 +19,11 @@ describe('SegmentedToggle', () => {
     const onChange = jest.fn();
     const tree = create(<SegmentedToggle options={options} value="bar" onChange={onChange} />).root;
     const pieText = tree.findAllByType(Text).find((node) => node.props.children === 'Pie')!;
+    const piePressable = tree
+      .findAllByType(Pressable)
+      .find((node) => node.findAllByType(Text).includes(pieText))!;
     act(() => {
-      pieText.parent!.props.onPress();
+      piePressable.props.onPress();
     });
     expect(onChange).toHaveBeenCalledWith('pie');
   });

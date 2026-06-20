@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 
 type Option<T extends string> = {
   value: T;
@@ -22,17 +22,19 @@ export default function SegmentedToggle<T extends string>({
       {options.map((option) => {
         const active = option.value === value;
         return (
-          <View key={option.value} onPress={() => onChange(option.value)} className={`px-3 py-1.5 rounded-full ${active ? 'bg-brand-green' : ''}`}>
-            <Text
-              className={
-                active
-                  ? 'text-white font-bold text-xs'
-                  : 'text-tx-secondary dark:text-tx-secondary-dark font-bold text-xs'
-              }
-            >
-              {option.label}
-            </Text>
-          </View>
+          <Pressable key={option.value} onPress={() => onChange(option.value)}>
+            <View className={`px-3 py-1.5 rounded-full ${active ? 'bg-brand-green' : ''}`}>
+              <Text
+                className={
+                  active
+                    ? 'text-white font-bold text-xs'
+                    : 'text-tx-secondary dark:text-tx-secondary-dark font-bold text-xs'
+                }
+              >
+                {option.label}
+              </Text>
+            </View>
+          </Pressable>
         );
       })}
     </View>
