@@ -1,10 +1,11 @@
 import React from 'react';
 import { SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { format } from 'date-fns';
-import { TransactionRow } from './Dashboard';
+import TransactionRow from '@/components/TransactionRow';
 import { useRouter } from 'expo-router';
 import { useSelector } from 'react-redux';
 import { transactionSelector } from '@/redux/store/selectors';
+import { getCategoryMeta } from '@/constants/categoryMeta';
 
 const categoryIcons: Record<string, string> = {
   'Shopping': '🛍️',
@@ -71,9 +72,8 @@ const TransactionHistory = () => {
             </Text>
 
             {monthGroup.transactions.map((txn, index, arr) => {
-              const txnDate = format(new Date(txn.date), 'MMM dd');
-              const title = `${txn.category.icon} ${txn.description}`;
-              const amount = txn.type === 'debit' ? `-₹${txn.amount}` : `+₹${txn.amount}`;
+              const meta = getCategoryMeta(txn.category.name);
+              const type = txn.type === 'credit' ? 'income' : 'expense';
 
               return (
                 <TouchableOpacity
@@ -87,11 +87,13 @@ const TransactionHistory = () => {
                   }
                 >
                   <TransactionRow
-                    date={txnDate}
-                    title={title}
-                    amount={amount}
-                    isLast={true}
-                    type={txn.type}
+                    name={txn.description}
+                    category={txn.category.name}
+                    date={new Date(txn.date)}
+                    amount={txn.amount}
+                    type={type}
+                    iconColor={meta.color}
+                    icon={<meta.Icon size={20} color="#FFFFFF" />}
                   />
                 </TouchableOpacity>
               );
