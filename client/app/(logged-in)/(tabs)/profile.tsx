@@ -7,8 +7,11 @@ import {
   SafeAreaView,
   ScrollView,
 } from 'react-native';
+import { useTheme } from '@/contexts/ThemeContext';
 
 const Profile = () => {
+  const { isDark, toggleDark } = useTheme();
+
   const user = {
     name: 'John Doe',
     gender: 'Male',
@@ -43,6 +46,15 @@ const Profile = () => {
         }}
         keyboardShouldPersistTaps="handled"
       >
+        <TouchableOpacity
+          onPress={toggleDark}
+          className="bg-bg-card dark:bg-bg-card-dark self-center rounded-xl px-4 py-2 mb-4"
+        >
+          <Text className="text-tx-primary dark:text-tx-primary-dark font-semibold">
+            {isDark ? 'Switch to light mode (debug)' : 'Switch to dark mode (debug)'}
+          </Text>
+        </TouchableOpacity>
+
         <View className="bg-white rounded-2xl shadow-md p-6">
           {/* Profile Picture and Name */}
           <View className="items-center mb-6">
