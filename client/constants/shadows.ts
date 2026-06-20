@@ -15,3 +15,11 @@ export const SHADOW_TX: ViewStyle = {
   shadowRadius: 18,
   elevation: 3,
 };
+
+export const SHADOW_HERO: ViewStyle = {
+  shadowColor: '#0FB46B',
+  shadowOffset: { width: 0, height: 18 },
+  shadowOpacity: 0.32,
+  shadowRadius: 38,
+  elevation: 10,
+};
