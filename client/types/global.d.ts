@@ -1,11 +1,17 @@
 export type User = {
     id: string;
+    email: string;
     firstName: string;
     lastName?: string;
-    dob: Date;
-    gender: "male" | "female";
-    totalIncome: number;
-    totalExpense: number;
+    dob?: Date | string;
+    gender?: "male" | "female";
+    mobile?: string;
+    monthlyIncome?: number;
+    currency?: string;
+    country?: string;
+    profilePicture?: string;
+    totalIncome?: number;
+    totalExpense?: number;
 }
 
 export type UserTransactions = {
