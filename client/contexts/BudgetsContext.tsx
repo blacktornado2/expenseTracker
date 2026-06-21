@@ -8,7 +8,7 @@ export type Budget = {
   limit: number;
 };
 
-type BudgetsContextValue = {
+export type BudgetsContextValue = {
   budgets: Budget[];
   addBudget: (budget: Budget) => Promise<void>;
   updateBudget: (cat: string, limit: number) => Promise<void>;
