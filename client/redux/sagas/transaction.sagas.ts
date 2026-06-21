@@ -29,7 +29,7 @@ export function* updateTransactionSaga(action: any) {
     const { token } = yield select(userSelector);
     const { id, ...payload } = action.payload;
     const { data } = yield call(updateTransactionService, token, id, payload);
-    yield put(updateTransactionSuccess(data));
+    yield put(updateTransactionSuccess(data.transaction));
   } catch (err) {
     yield put(updateTransactionFailure(err));
   }

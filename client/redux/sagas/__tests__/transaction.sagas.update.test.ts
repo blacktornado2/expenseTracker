@@ -20,8 +20,8 @@ describe('updateTransactionSaga', () => {
     expect(gen.next().value).toEqual(select(userSelector));
     const { id, ...payload } = action.payload;
     expect(gen.next({ token: 'abc' }).value).toEqual(call(updateTransactionService, 'abc', id, payload));
-    const data = { _id: '123', amount: 150 };
-    expect(gen.next({ data }).value).toEqual(put(updateTransactionSuccess(data)));
+    const body = { message: 'Transaction updated successfully', transaction: { _id: '123', amount: 150 } };
+    expect(gen.next({ data: body }).value).toEqual(put(updateTransactionSuccess(body.transaction)));
     expect(gen.next().done).toBe(true);
   });
 
