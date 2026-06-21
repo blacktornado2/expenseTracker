@@ -73,12 +73,12 @@ module.exports = {
   deleteTransaction: async (req, res) => {
     console.log("deleteTransaction function called");
     try {
-      const {id} =  req.params;
-      const deletedTransaction = Transaction.findByIdAndDelete(id);
+      const { transactionId: id } = req.params;
+      const deletedTransaction = await Transaction.findByIdAndDelete(id);
       if (!deletedTransaction) {
         return res.status(404).json({message: 'Transaction not found'});
       }
-      return res.status(500).json({message: 'Internal server error'});
+      return res.status(200).json({ message: 'Transaction deleted successfully' });
     } catch (err) {
        console.log('Error while deleting the transaction', err);
        return res.status(500).json({message: 'Internam server error'});
@@ -87,7 +87,7 @@ module.exports = {
   updateTransaction: async (req, res) => {
     console.log("updateTransaction function called");
     try {
-      const {id} = req.params;
+      const { transactionId: id } = req.params;
       const updatedData = req.body;
       const updatedTransaction = await Transaction.findByIdAndUpdate(id, updatedData, {
         new: true,

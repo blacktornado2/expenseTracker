@@ -1,8 +1,6 @@
-import TransactionHistory from '@/screens/TransactionHistory';
-import React from 'react'
+import React from 'react';
+import ActivityScreen from '@/screens/ActivityScreen';
 
 export default function Transactions() {
-    return (
-      <TransactionHistory />
-    );
-  }
+  return <ActivityScreen />;
+}

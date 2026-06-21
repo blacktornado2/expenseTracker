@@ -1,10 +1,12 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { format } from 'date-fns';
 import { Moon, Sun, Sunset, ArrowUpRight, PiggyBank } from 'lucide-react-native';
 
+import EditTransactionSheet from '@/components/sheets/EditTransactionSheet';
+import type { RawStoreTxn } from '@/utils/transactionMappings';
 import Card from '@/components/Card';
 import IconTile from '@/components/IconTile';
 import Avatar from '@/components/Avatar';
@@ -70,6 +72,8 @@ export default function Dashboard() {
     value: entry.value,
     color: getCategoryMeta(entry.label).color,
   }));
+
+  const [selectedTxn, setSelectedTxn] = useState<RawStoreTxn | null>(null);
 
   const recentTransactions = Array.isArray(transactions)
     ? [...transactions].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 5)
@@ -162,23 +166,7 @@ export default function Dashboard() {
             return (
               <TouchableOpacity
                 key={txn._id ?? txn.id}
-                onPress={() => {
-                  const normalizedTxn = {
-                    id: txn._id,
-                    userId: txn.user,
-                    type: txn.transactionType,
-                    amount: txn.amount,
-                    date: txn.date,
-                    category: {
-                      name: txn.category,
-                    },
-                    description: txn.description || txn.category,
-                  };
-                  router.push({
-                    pathname: '/transactionDetail',
-                    params: { txn: JSON.stringify(normalizedTxn) },
-                  });
-                }}
+                onPress={() => setSelectedTxn(txn as RawStoreTxn)}
               >
                 <TransactionRow
                   name={txn.description || txn.category}
@@ -194,6 +182,7 @@ export default function Dashboard() {
           })
         )}
       </ScrollView>
+      <EditTransactionSheet txn={selectedTxn} onClose={() => setSelectedTxn(null)} />
     </SafeAreaView>
   );
 }
