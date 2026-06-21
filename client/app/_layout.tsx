@@ -20,6 +20,7 @@ import { StatusBar } from 'expo-status-bar';
 
 import store from '@/redux/store/store';
 import { ThemeProvider, useTheme } from '@/contexts/ThemeContext';
+import { BudgetsProvider } from '@/contexts/BudgetsContext';
 
 import "./global.css";
 
@@ -60,7 +61,9 @@ export default function RootLayout() {
     <ThemeProvider>
       <NavigationThemeBridge>
         <Provider store={store}>
-          <Stack screenOptions={{ headerShown: false }} />
+          <BudgetsProvider>
+            <Stack screenOptions={{ headerShown: false }} />
+          </BudgetsProvider>
         </Provider>
         <StatusBar style="auto" />
       </NavigationThemeBridge>
