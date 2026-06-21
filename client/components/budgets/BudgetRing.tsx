@@ -44,7 +44,6 @@ export default function BudgetRing({ percent, color, over, size = 66 }: BudgetRi
             strokeWidth={STROKE_WIDTH}
             fill="none"
             strokeDasharray={`${filled} ${circumference - filled}`}
-            strokeDashoffset={circumference / 4}
             strokeLinecap="round"
             transform={`rotate(-90 ${size / 2} ${size / 2})`}
           />
