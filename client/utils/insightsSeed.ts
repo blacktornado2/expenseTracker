@@ -1,5 +1,3 @@
-import { subMonths } from 'date-fns';
-
 export type MonthlyDatum = {
   month: number;
   year: number;
@@ -24,11 +22,14 @@ const SEED_TEMPLATES: SeedTemplate[] = [
 ];
 
 export function getSeedMonths(referenceDate: Date = new Date()): MonthlyDatum[] {
+  const refYear = referenceDate.getUTCFullYear();
+  const refMonth = referenceDate.getUTCMonth();
+
   return SEED_TEMPLATES.map((template) => {
-    const d = subMonths(referenceDate, template.offsetMonths);
+    const totalMonths = refYear * 12 + refMonth - template.offsetMonths;
     return {
-      month: d.getUTCMonth(),
-      year: d.getUTCFullYear(),
+      month: ((totalMonths % 12) + 12) % 12,
+      year: Math.floor(totalMonths / 12),
       spent: template.spent,
       income: template.income,
       cats: template.cats,
