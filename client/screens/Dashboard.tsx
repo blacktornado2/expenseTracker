@@ -120,28 +120,32 @@ export default function Dashboard() {
         />
 
         <View className="flex-row mt-4" style={{ gap: 12 }}>
-          <Card radius={22} className="flex-1 p-4">
-            <IconTile backgroundColor="#E6F6EC">
-              <ArrowUpRight size={18} color="#16A34A" />
-            </IconTile>
-            <Text className="text-tx-tertiary dark:text-tx-tertiary-dark text-xs font-semibold mt-3">
-              Income
-            </Text>
-            <Text className="text-tx-primary dark:text-tx-primary-dark text-lg font-extrabold">
-              ₹{monthIncome.toLocaleString('en-IN')}
-            </Text>
-          </Card>
-          <Card radius={22} className="flex-1 p-4">
-            <IconTile backgroundColor="#EFEAFE">
-              <PiggyBank size={18} color="#7C5CFC" />
-            </IconTile>
-            <Text className="text-tx-tertiary dark:text-tx-tertiary-dark text-xs font-semibold mt-3">
-              Saved
-            </Text>
-            <Text className="text-tx-primary dark:text-tx-primary-dark text-lg font-extrabold">
-              ₹{saved.toLocaleString('en-IN')}
-            </Text>
-          </Card>
+          <TouchableOpacity className="flex-1" onPress={() => router.push('/income-list')}>
+            <Card radius={22} className="p-4">
+              <IconTile backgroundColor="#E6F6EC">
+                <ArrowUpRight size={18} color="#16A34A" />
+              </IconTile>
+              <Text className="text-tx-tertiary dark:text-tx-tertiary-dark text-xs font-semibold mt-3">
+                Income
+              </Text>
+              <Text className="text-tx-primary dark:text-tx-primary-dark text-lg font-extrabold">
+                ₹{monthIncome.toLocaleString('en-IN')}
+              </Text>
+            </Card>
+          </TouchableOpacity>
+          <TouchableOpacity className="flex-1" onPress={() => router.push('/savings')}>
+            <Card radius={22} className="p-4">
+              <IconTile backgroundColor="#EFEAFE">
+                <PiggyBank size={18} color="#7C5CFC" />
+              </IconTile>
+              <Text className="text-tx-tertiary dark:text-tx-tertiary-dark text-xs font-semibold mt-3">
+                Saved
+              </Text>
+              <Text className="text-tx-primary dark:text-tx-primary-dark text-lg font-extrabold">
+                ₹{saved.toLocaleString('en-IN')}
+              </Text>
+            </Card>
+          </TouchableOpacity>
         </View>
 
         <SpendBreakdownCard data={chartData} />
