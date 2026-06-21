@@ -28,8 +28,6 @@ const userSchema = new mongoose.Schema({
   },
   lastName: {
     type: String,
-    minLength: 3,
-    maxLength: 30,
     required: false,
     trim: true,
   },
@@ -41,6 +39,26 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: false,
     enum: ["male", "female"],
+  },
+  mobile: {
+    type: String,
+    required: false,
+    trim: true,
+  },
+  monthlyIncome: {
+    type: Number,
+    required: false,
+    default: 0,
+  },
+  currency: {
+    type: String,
+    required: false,
+    default: "INR",
+  },
+  country: {
+    type: String,
+    required: false,
+    trim: true,
   },
 });
 

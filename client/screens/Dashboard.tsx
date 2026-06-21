@@ -64,8 +64,9 @@ export default function Dashboard() {
   const greeting = getGreeting(now.getHours());
   const monthLabel = format(now, 'MMMM');
   const saved = monthIncome - monthSpent;
-  const budgetLeft = Math.max(0, DEFAULT_MONTHLY_BUDGET - monthSpent);
-  const spentPct = DEFAULT_MONTHLY_BUDGET > 0 ? (monthSpent / DEFAULT_MONTHLY_BUDGET) * 100 : 0;
+  const monthlyBudget = user?.monthlyIncome && user.monthlyIncome > 0 ? user.monthlyIncome : DEFAULT_MONTHLY_BUDGET;
+  const budgetLeft = Math.max(0, monthlyBudget - monthSpent);
+  const spentPct = monthlyBudget > 0 ? (monthSpent / monthlyBudget) * 100 : 0;
 
   const chartData = spendByCategory.map((entry) => ({
     label: entry.label,
@@ -116,7 +117,7 @@ export default function Dashboard() {
           amount={monthSpent}
           progressPct={spentPct}
           footerLeft={`₹${budgetLeft.toLocaleString('en-IN')} left`}
-          footerRight={`of ₹${DEFAULT_MONTHLY_BUDGET.toLocaleString('en-IN')}`}
+          footerRight={`of ₹${monthlyBudget.toLocaleString('en-IN')}`}
         />
 
         <View className="flex-row mt-4" style={{ gap: 12 }}>

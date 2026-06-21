@@ -1,101 +1,98 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  SafeAreaView,
-  ScrollView,
-} from 'react-native';
+import { Pressable, SafeAreaView, ScrollView, Text, View } from 'react-native';
+import { useRouter } from 'expo-router';
+import { useDispatch, useSelector } from 'react-redux';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Link2, Bell, Coins, LogOut, Moon } from 'lucide-react-native';
+
+import Avatar from '@/components/Avatar';
+import SettingRow from '@/components/settings/SettingRow';
+import ToggleSwitch from '@/components/settings/ToggleSwitch';
 import { useTheme } from '@/contexts/ThemeContext';
+import { userSelector } from '@/redux/store/selectors';
+import { logoutUserRequest } from '@/redux/actions/user.actions';
 
-const Profile = () => {
+export default function Settings() {
+  const router = useRouter();
+  const dispatch = useDispatch();
   const { isDark, toggleDark } = useTheme();
+  const { user } = useSelector(userSelector) as any;
 
-  const user = {
-    name: 'John Doe',
-    gender: 'Male',
-    age: 29,
-    email: 'johndoe@example.com',
-    phone: '+1 234 567 890',
-    location: 'San Francisco, CA',
-    joined: '2020-05-15',
-    image: 'https://i.pravatar.cc/300',
+  const name = `${user?.firstName ?? ''} ${user?.lastName ?? ''}`.trim() || 'Your account';
+
+  const onSignOut = () => {
+    dispatch(logoutUserRequest());
+    router.replace('/login');
   };
-
-  const handleLogout = () => {
-    alert('Logged out!');
-  };
-
-  const joinedDate = new Date(user.joined).toLocaleDateString();
-
-  const DetailRow = ({ label, value }) => (
-    <View className="flex-row justify-between px-4 py-2 border-b border-gray-200">
-      <Text className="text-gray-600 font-medium">{label}</Text>
-      <Text className="text-gray-800 font-semibold">{value}</Text>
-    </View>
-  );
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-100">
-      <ScrollView
-        contentContainerStyle={{
-          flexGrow: 1,
-          justifyContent: 'center',
-          padding: 24,
-        }}
-        keyboardShouldPersistTaps="handled"
-      >
-        <TouchableOpacity
-          onPress={toggleDark}
-          className="bg-bg-card dark:bg-bg-card-dark self-center rounded-xl px-4 py-2 mb-4"
+    <SafeAreaView className="flex-1 bg-bg-app dark:bg-bg-app-dark">
+      <ScrollView contentContainerStyle={{ paddingTop: 54, paddingHorizontal: 18, paddingBottom: 26 }}>
+        <Text
+          style={{ fontFamily: 'BricolageGrotesque_800ExtraBold', fontSize: 30 }}
+          className="text-tx-primary dark:text-tx-primary-dark mb-4"
         >
-          <Text className="text-tx-primary dark:text-tx-primary-dark font-semibold">
-            {isDark ? 'Switch to light mode (debug)' : 'Switch to dark mode (debug)'}
-          </Text>
-        </TouchableOpacity>
+          Settings
+        </Text>
 
-        <View className="bg-white rounded-2xl shadow-md p-6">
-          {/* Profile Picture and Name */}
-          <View className="items-center mb-6">
-            <Image
-              source={{ uri: user.image }}
-              className="w-32 h-32 rounded-full mb-4"
-              style={{
-                borderWidth: 3,
-                borderColor: '#f3f4f6',
-                shadowColor: '#000',
-                shadowOpacity: 0.1,
-                shadowRadius: 6,
-                elevation: 6,
-              }}
-            />
-            <Text className="text-2xl font-bold text-gray-900">{user.name}</Text>
-          </View>
-
-          {/* User Details */}
-          <View className="bg-gray-50 rounded-xl overflow-hidden mb-6">
-            <DetailRow label="Gender" value={user.gender} />
-            <DetailRow label="Age" value={user.age} />
-            <DetailRow label="Email" value={user.email} />
-            <DetailRow label="Phone" value={user.phone} />
-            <DetailRow label="Location" value={user.location} />
-            <DetailRow label="Joined" value={joinedDate} />
-          </View>
-
-          {/* Logout Button */}
-          <TouchableOpacity
-            onPress={handleLogout}
-            className="bg-red-600 py-4 rounded-full shadow-md"
+        {/* Profile card → Profile screen */}
+        <Pressable onPress={() => router.push('/profile')}>
+          <LinearGradient
+            colors={['#13C076', '#0A9E5E']}
+            style={{ borderRadius: 26, padding: 18, marginBottom: 20, flexDirection: 'row', alignItems: 'center', gap: 14 }}
           >
-            <Text className="text-white text-center text-lg font-semibold tracking-wide">
-              Logout
+            <Avatar initial={(user?.firstName ?? 'U')[0]} size={52} radius={18} />
+            <View className="flex-1">
+              <Text style={{ color: '#FFFFFF', fontWeight: '800', fontSize: 17 }}>{name}</Text>
+              <Text style={{ color: 'rgba(255,255,255,0.85)', fontWeight: '600', fontSize: 13, marginTop: 2 }}>
+                Premium plan
+              </Text>
+            </View>
+            <Text style={{ color: '#FFFFFF', fontSize: 22 }}>›</Text>
+          </LinearGradient>
+        </Pressable>
+
+        <SettingRow
+          tileBg="#E6F0FF"
+          icon={<Link2 size={18} color="#2563EB" />}
+          label="Linked accounts"
+          trailing={
+            <View style={{ backgroundColor: '#E6F0FF', borderRadius: 10, paddingHorizontal: 8, paddingVertical: 2 }}>
+              <Text style={{ color: '#2563EB', fontWeight: '700', fontSize: 12 }}>2</Text>
+            </View>
+          }
+        />
+
+        <SettingRow tileBg="#FFF1E6" icon={<Bell size={18} color="#E8703A" />} label="Notifications" />
+
+        <SettingRow
+          tileBg="#FFF7E6"
+          icon={<Coins size={18} color="#D97706" />}
+          label="Currency & format"
+          trailing={
+            <Text className="text-tx-tertiary dark:text-tx-tertiary-dark font-bold text-sm">
+              {user?.currency ?? 'INR'}
             </Text>
-          </TouchableOpacity>
-        </View>
+          }
+        />
+
+        {/* Dark mode toggle — wired to ThemeContext */}
+        <SettingRow
+          tileBg="#EFEAFE"
+          icon={<Moon size={18} color="#7C5CFC" />}
+          label="Dark mode"
+          trailing={<ToggleSwitch value={isDark} onValueChange={toggleDark} />}
+        />
+
+        {/* Sign out */}
+        <SettingRow
+          tileBg="#FDE8E8"
+          icon={<LogOut size={18} color="#DC2626" />}
+          label="Sign out"
+          labelColor="#DC2626"
+          onPress={onSignOut}
+        />
       </ScrollView>
     </SafeAreaView>
   );
-};
-
-export default Profile;
+}

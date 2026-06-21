@@ -1,5 +1,6 @@
 const User = require("./../models/user.model");
 const jwt = require("jsonwebtoken");
+const { pickAllowedUserUpdates } = require("../utils/userUpdate");
 
 module.exports = {
   register: async (req, res) => {
@@ -101,7 +102,7 @@ module.exports = {
     try {
       const { email } = req.params;
 
-      const user = await User.find({ email });
+      const user = await User.find({ email }).select("-password -__v");
 
       if (!user.length) {
         return res.status(404).json({ message: "User not found" });
@@ -117,10 +118,15 @@ module.exports = {
     console.log("update function called");
     const { email } = req.params;
     try {
+      const updates = pickAllowedUserUpdates(req.body);
       const user = await User.findOneAndUpdate(
         { email },
-        { ...req.body },
-        { new: true, runValidators: true }
+        { $set: updates },
+        {
+          new: true,
+          runValidators: true,
+          projection: { password: 0, __v: 0 },
+        }
       );
 
       if (!user) {
@@ -134,6 +140,9 @@ module.exports = {
       });
     } catch (error) {
       console.error("Error in updateProfile function:", error);
+      if (error.name === "ValidationError") {
+        return res.status(400).json({ message: error.message });
+      }
       return res.status(500).json({ message: "Internal server error" });
     }
   },

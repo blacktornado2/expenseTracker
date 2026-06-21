@@ -66,9 +66,9 @@ export const fetchUserFailure = (error: Error) => ({
   payload: error,
 });
 
-export const updateUserRequest = (user: User) => ({
+export const updateUserRequest = (payload: { email: string } & Record<string, unknown>) => ({
   type: UPDATE_USER_REQUEST,
-  payload: user,
+  payload,
 });
 
 export const updateUserSuccess = (user: User) => ({
