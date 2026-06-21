@@ -1,6 +1,7 @@
 import store from './store';
 
 import { UserStateType, Transaction } from '@/types/global';
+import { getSeedMonths, type MonthlyDatum } from '@/utils/insightsSeed';
 
 export type StoreRootState = ReturnType<typeof store.getState>;
 
@@ -59,3 +60,23 @@ export const selectMonthIncome = (state: StoreRootState): number =>
 
 export const selectSpendByCategory = (state: StoreRootState): { label: string; value: number }[] =>
   spendByCategoryFromTransactions(((transactionSelector(state) as any).transactions ?? []) as RawTransaction[]);
+
+export function buildMonthlyData(transactions: RawTransaction[], referenceDate: Date = new Date()): MonthlyDatum[] {
+  const seed = getSeedMonths(referenceDate);
+  const catsArr = spendByCategoryFromTransactions(transactions, referenceDate);
+  const cats: Record<string, number> = {};
+  catsArr.forEach((c) => { cats[c.label] = c.value; });
+
+  const current: MonthlyDatum = {
+    month: referenceDate.getUTCMonth(),
+    year: referenceDate.getUTCFullYear(),
+    spent: monthSpentFromTransactions(transactions, referenceDate),
+    income: monthIncomeFromTransactions(transactions, referenceDate),
+    cats,
+  };
+
+  return [...seed, current];
+}
+
+export const selectMonthlyData = (state: StoreRootState): MonthlyDatum[] =>
+  buildMonthlyData(((transactionSelector(state) as any).transactions ?? []) as RawTransaction[]);
