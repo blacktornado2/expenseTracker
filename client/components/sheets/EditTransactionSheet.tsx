@@ -38,6 +38,7 @@ export default function EditTransactionSheet({ txn, onClose }: Props) {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [nameError, setNameError] = useState(false);
   const [amountError, setAmountError] = useState(false);
+  const [hadError, setHadError] = useState(false);
 
   const wasUpdating = useRef(false);
   const wasDeleting = useRef(false);
@@ -47,6 +48,7 @@ export default function EditTransactionSheet({ txn, onClose }: Props) {
       setDraft(rawToTxDraft(txn));
       setNameError(false);
       setAmountError(false);
+      setHadError(false);
       wasUpdating.current = false;
       wasDeleting.current = false;
     }
@@ -58,6 +60,7 @@ export default function EditTransactionSheet({ txn, onClose }: Props) {
 
   useEffect(() => {
     if (wasUpdating.current && !updatePending) {
+      if (updateError) setHadError(true);
       wasUpdating.current = false;
       if (!updateError) onClose();
     }
@@ -65,6 +68,7 @@ export default function EditTransactionSheet({ txn, onClose }: Props) {
 
   useEffect(() => {
     if (wasDeleting.current && !deletePending) {
+      if (deleteError) setHadError(true);
       wasDeleting.current = false;
       if (!deleteError) onClose();
     }
@@ -92,21 +96,21 @@ export default function EditTransactionSheet({ txn, onClose }: Props) {
     setNameError(hasNameError);
     setAmountError(hasAmountError);
     if (hasNameError || hasAmountError) return;
+    setHadError(false);
     wasUpdating.current = true;
     dispatch(updateTransaction({ id: draft.id, ...txDraftToUpdatePayload(draft) }));
   };
 
   const onDelete = () => {
     if (!draft) return;
+    setHadError(false);
     wasDeleting.current = true;
     dispatch(deleteTransaction(draft.id));
   };
 
   const isBusy = updatePending || deletePending;
-  const error = updateError
-    ? 'Failed to save changes. Please try again.'
-    : deleteError
-    ? 'Failed to delete. Please try again.'
+  const error = hadError && (updateError || deleteError)
+    ? (updateError ? 'Failed to save changes. Please try again.' : 'Failed to delete. Please try again.')
     : null;
 
   return (
