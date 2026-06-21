@@ -42,6 +42,26 @@ const userSchema = new mongoose.Schema({
     required: false,
     enum: ["male", "female"],
   },
+  mobile: {
+    type: String,
+    required: false,
+    trim: true,
+  },
+  monthlyIncome: {
+    type: Number,
+    required: false,
+    default: 0,
+  },
+  currency: {
+    type: String,
+    required: false,
+    default: "INR",
+  },
+  country: {
+    type: String,
+    required: false,
+    trim: true,
+  },
 });
 
 // Hash password before saving

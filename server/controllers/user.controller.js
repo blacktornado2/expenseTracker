@@ -1,5 +1,6 @@
 const User = require("./../models/user.model");
 const jwt = require("jsonwebtoken");
+const { pickAllowedUserUpdates } = require("../utils/userUpdate");
 
 module.exports = {
   register: async (req, res) => {
@@ -117,9 +118,10 @@ module.exports = {
     console.log("update function called");
     const { email } = req.params;
     try {
+      const updates = pickAllowedUserUpdates(req.body);
       const user = await User.findOneAndUpdate(
         { email },
-        { ...req.body },
+        { $set: updates },
         { new: true, runValidators: true }
       );
 
