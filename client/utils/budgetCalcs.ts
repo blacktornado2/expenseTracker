@@ -22,7 +22,7 @@ export function totalConsumedStats(
   spendByCategory: { label: string; value: number }[],
   getCategoryColor: (cat: string) => string
 ): { totalSpent: number; totalLimit: number; segments: BudgetSegment[] } {
-  const spendMap = new Map(spendByCategory.map((s) => [s.label, s.value]));
+  const spendMap = new Map(spendByCategory.map((s) => [s.label.trim().toLowerCase(), s.value]));
   const totalLimit = budgets.reduce((sum, b) => sum + b.limit, 0);
   const segments: BudgetSegment[] = budgets.map((b) => {
     const spent = spendMap.get(b.cat) ?? 0;

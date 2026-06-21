@@ -19,7 +19,7 @@ export default function BudgetsScreen() {
   const [editBudget, setEditBudget] = useState<Budget | undefined>(undefined);
 
   const spendMap = useMemo(
-    () => new Map(spendByCategory.map((s) => [s.label, s.value])),
+    () => new Map(spendByCategory.map((s) => [s.label.trim().toLowerCase(), s.value])),
     [spendByCategory]
   );
 
@@ -56,7 +56,7 @@ export default function BudgetsScreen() {
             Budgets
           </Text>
           <Pressable
-            onPress={() => setSheetMode('add')}
+            onPress={() => { setEditBudget(undefined); setSheetMode('add'); }}
             style={{ borderRadius: 13, overflow: 'hidden' }}
           >
             <LinearGradient
