@@ -36,3 +36,17 @@ export function savingsTrend(current: number, previous?: number): SavingsTrend |
   if (diff === 0) return { diff: 0, direction: 'same' };
   return { diff: Math.abs(diff), direction: diff > 0 ? 'up' : 'down' };
 }
+
+export type SaveOutcome = 'close' | 'error' | 'noop';
+
+/**
+ * Decides what a save-goal (or similar pending-tracked) attempt should do once
+ * redux state settles, based on the pending flag's true -> false transition
+ * rather than on whether any particular value changed. Value-equality is the
+ * wrong signal: a retry that saves the same value as before would otherwise
+ * never resolve, leaving the UI stuck in edit mode.
+ */
+export function resolveSaveOutcome(wasPending: boolean, isPending: boolean, hasError: boolean): SaveOutcome {
+  if (!wasPending || isPending) return 'noop';
+  return hasError ? 'error' : 'close';
+}

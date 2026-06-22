@@ -6,6 +6,7 @@ import {
   amountToGoal,
   isGoalReached,
   savingsTrend,
+  resolveSaveOutcome,
 } from '../savingsCalcs';
 
 describe('savingsAmount', () => {
@@ -108,5 +109,31 @@ describe('savingsTrend', () => {
 
   it('returns direction "same" with diff 0 when saved is unchanged', () => {
     expect(savingsTrend(1000, 1000)).toEqual({ diff: 0, direction: 'same' });
+  });
+});
+
+describe('resolveSaveOutcome', () => {
+  it('returns "noop" when there was no in-flight save (wasPending false)', () => {
+    expect(resolveSaveOutcome(false, false, false)).toBe('noop');
+  });
+
+  it('returns "noop" while still pending, even if wasPending was true', () => {
+    expect(resolveSaveOutcome(true, true, false)).toBe('noop');
+  });
+
+  it('returns "close" on a pending -> not-pending transition with no error', () => {
+    expect(resolveSaveOutcome(true, false, false)).toBe('close');
+  });
+
+  it('returns "error" on a pending -> not-pending transition with an error', () => {
+    expect(resolveSaveOutcome(true, false, true)).toBe('error');
+  });
+
+  it('returns "close" even when the saved value is identical to the prior value', () => {
+    // Regression for the bug where value-equality (not the pending flag) was
+    // used to decide resolution: a retry saving the same amount must still
+    // resolve and close edit mode, since pending correctly flips true -> false
+    // regardless of whether the underlying value changed.
+    expect(resolveSaveOutcome(true, false, false)).toBe('close');
   });
 });
