@@ -1,12 +1,18 @@
-import React, { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-const STORAGE_KEY = 'BUDGETS';
+import React, { useEffect, type ReactNode } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  getBudgets,
+  createBudget,
+  updateBudget as updateBudgetAction,
+  deleteBudget as deleteBudgetAction,
+} from '@/redux/actions/budget.actions';
 
 export type Budget = {
   cat: string;
   limit: number;
 };
+
+type ServerBudget = { _id: string; category: string; limit: number };
 
 export type BudgetsContextValue = {
   budgets: Budget[];
@@ -15,59 +21,40 @@ export type BudgetsContextValue = {
   deleteBudget: (cat: string) => Promise<void>;
 };
 
-const BudgetsContext = createContext<BudgetsContextValue | undefined>(undefined);
-
-async function loadBudgets(): Promise<Budget[]> {
-  try {
-    const stored = await AsyncStorage.getItem(STORAGE_KEY);
-    return stored ? (JSON.parse(stored) as Budget[]) : [];
-  } catch {
-    return [];
-  }
-}
-
-async function saveBudgets(budgets: Budget[]): Promise<void> {
-  try {
-    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(budgets));
-  } catch {
-    // silent — matches customCategories.ts convention
-  }
-}
-
+// Provider is now a passthrough — Redux holds the state. Kept so app/_layout.tsx
+// (which wraps the tree in <BudgetsProvider>) does not need to change.
 export function BudgetsProvider({ children }: { children: ReactNode }) {
-  const [budgets, setBudgets] = useState<Budget[]>([]);
-
-  useEffect(() => {
-    loadBudgets().then(setBudgets);
-  }, []);
-
-  const addBudget = async (budget: Budget) => {
-    const next = [...budgets.filter((b) => b.cat !== budget.cat), budget];
-    setBudgets(next);
-    await saveBudgets(next);
-  };
-
-  const updateBudget = async (cat: string, limit: number) => {
-    const next = budgets.map((b) => (b.cat === cat ? { cat, limit } : b));
-    setBudgets(next);
-    await saveBudgets(next);
-  };
-
-  const deleteBudget = async (cat: string) => {
-    const next = budgets.filter((b) => b.cat !== cat);
-    setBudgets(next);
-    await saveBudgets(next);
-  };
-
-  return (
-    <BudgetsContext.Provider value={{ budgets, addBudget, updateBudget, deleteBudget }}>
-      {children}
-    </BudgetsContext.Provider>
-  );
+  return <>{children}</>;
 }
 
 export function useBudgets(): BudgetsContextValue {
-  const ctx = useContext(BudgetsContext);
-  if (!ctx) throw new Error('useBudgets must be used within BudgetsProvider');
-  return ctx;
+  const dispatch = useDispatch();
+  const serverBudgets = useSelector(
+    (state: any) => (state.budget?.budgets ?? []) as ServerBudget[]
+  );
+
+  useEffect(() => {
+    dispatch(getBudgets());
+  }, [dispatch]);
+
+  const budgets: Budget[] = serverBudgets.map((b) => ({ cat: b.category, limit: b.limit }));
+
+  const idForCat = (cat: string): string | undefined =>
+    serverBudgets.find((b) => b.category === cat)?._id;
+
+  const addBudget = async (budget: Budget) => {
+    dispatch(createBudget({ category: budget.cat, limit: budget.limit }));
+  };
+
+  const updateBudget = async (cat: string, limit: number) => {
+    const id = idForCat(cat);
+    if (id) dispatch(updateBudgetAction({ id, limit }));
+  };
+
+  const deleteBudget = async (cat: string) => {
+    const id = idForCat(cat);
+    if (id) dispatch(deleteBudgetAction(id));
+  };
+
+  return { budgets, addBudget, updateBudget, deleteBudget };
 }
