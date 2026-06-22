@@ -1,5 +1,5 @@
-import React from 'react';
-import { Pressable, View } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { Animated, Pressable } from 'react-native';
 import { useTheme } from '@/contexts/ThemeContext';
 
 type ToggleSwitchProps = {
@@ -15,6 +15,16 @@ const KNOB_DARK = '#E2E9E0';
 
 export default function ToggleSwitch({ value, onValueChange }: ToggleSwitchProps) {
   const { isDark } = useTheme();
+  const translateX = useRef(new Animated.Value(value ? 20 : 0)).current;
+
+  useEffect(() => {
+    Animated.timing(translateX, {
+      toValue: value ? 20 : 0,
+      duration: 200,
+      useNativeDriver: true,
+    }).start();
+  }, [value, translateX]);
+
   return (
     <Pressable
       testID="toggle-switch"
@@ -28,13 +38,13 @@ export default function ToggleSwitch({ value, onValueChange }: ToggleSwitchProps
         padding: 4,
       }}
     >
-      <View
+      <Animated.View
         style={{
           width: 20,
           height: 20,
           borderRadius: 10,
           backgroundColor: isDark ? KNOB_DARK : KNOB_LIGHT,
-          transform: [{ translateX: value ? 20 : 0 }],
+          transform: [{ translateX }],
         }}
       />
     </Pressable>

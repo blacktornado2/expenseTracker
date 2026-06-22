@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import { Animated } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 import { useTheme } from '@/contexts/ThemeContext';
 import type { ChartSegment } from './StackedBar';
+
+const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 type DonutProps = {
   data: ChartSegment[];
@@ -15,6 +18,12 @@ export default function Donut({ data, size = 140, strokeWidth = 22 }: DonutProps
   const circumference = 2 * Math.PI * radius;
   const total = data.reduce((sum, segment) => sum + segment.value, 0);
   let cumulativeBefore = 0;
+  const opacity = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    opacity.setValue(0);
+    Animated.timing(opacity, { toValue: 1, duration: 250, useNativeDriver: true }).start();
+  }, [data, opacity]);
 
   return (
     <Svg width={size} height={size}>
@@ -34,7 +43,7 @@ export default function Donut({ data, size = 140, strokeWidth = 22 }: DonutProps
             const offset = circumference - cumulativeBefore;
             cumulativeBefore += length;
             return (
-              <Circle
+              <AnimatedCircle
                 key={segment.label}
                 cx={size / 2}
                 cy={size / 2}
@@ -45,6 +54,7 @@ export default function Donut({ data, size = 140, strokeWidth = 22 }: DonutProps
                 strokeDashoffset={offset}
                 strokeLinecap="butt"
                 fill="none"
+                opacity={opacity}
                 transform={`rotate(-90 ${size / 2} ${size / 2})`}
               />
             );

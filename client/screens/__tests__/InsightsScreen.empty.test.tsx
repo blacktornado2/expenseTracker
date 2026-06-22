@@ -1,6 +1,9 @@
 import React from 'react';
 import { create, act } from 'react-test-renderer';
 
+// Suppress non-native driver warning and avoid leaked Animated timers in test env
+jest.mock('react-native/src/private/animated/NativeAnimatedHelper');
+
 jest.mock('@react-native-async-storage/async-storage', () => ({
   getItem: jest.fn().mockResolvedValue(null),
   setItem: jest.fn().mockResolvedValue(undefined),
@@ -17,6 +20,14 @@ const text = (root: any) =>
   root.findAllByType('Text' as any).map((n: any) => JSON.stringify(n.props.children)).join(' ');
 
 describe('InsightsScreen empty state', () => {
+  beforeEach(() => {
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
   it('shows "No expenses recorded" when the selected month has no categories', () => {
     mockMonthly = [{ month: 5, year: 2026, spent: 0, income: 0, cats: [] }];
     let renderer: any;
