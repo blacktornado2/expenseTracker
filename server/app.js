@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 
 const UserRouter = require("./routes/user.routes");
 const TransactionRouter = require("./routes/transaction.routes");
@@ -7,6 +8,7 @@ const SavingsGoalRouter = require("./routes/savingsGoal.routes");
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 
 app.use("/api/user", UserRouter);
