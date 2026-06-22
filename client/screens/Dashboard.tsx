@@ -6,7 +6,7 @@ import { format } from 'date-fns';
 import { Moon, Sun, Sunset, ArrowUpRight, PiggyBank } from 'lucide-react-native';
 
 import EditTransactionSheet from '@/components/sheets/EditTransactionSheet';
-import type { RawStoreTxn } from '@/utils/transactionMappings';
+import { txnTypeToEntryType, type RawStoreTxn } from '@/utils/transactionMappings';
 import Card from '@/components/Card';
 import IconTile from '@/components/IconTile';
 import Avatar from '@/components/Avatar';
@@ -167,7 +167,7 @@ export default function Dashboard() {
         ) : (
           recentTransactions.map((txn: any) => {
             const meta = getCategoryMeta(txn.category);
-            const type = txn.transactionType === 'credit' ? 'income' : 'expense';
+            const type = txnTypeToEntryType(txn.transactionType);
             return (
               <TouchableOpacity
                 key={txn._id ?? txn.id}

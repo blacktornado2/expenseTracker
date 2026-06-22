@@ -8,7 +8,7 @@ import EditTransactionSheet from '@/components/sheets/EditTransactionSheet';
 import { transactionSelector } from '@/redux/store/selectors';
 import { getCategoryMeta } from '@/constants/categoryMeta';
 import { filterTransactions, type ActivityFilter } from '@/utils/transactionFilters';
-import type { RawStoreTxn } from '@/utils/transactionMappings';
+import { txnTypeToEntryType, type RawStoreTxn } from '@/utils/transactionMappings';
 
 const FILTER_CHIPS: { label: string; value: ActivityFilter; color: string }[] = [
   { label: 'All', value: 'all', color: '#2BB3FF' },
@@ -108,7 +108,7 @@ export default function ActivityScreen() {
         }
         renderItem={({ item }: { item: any }) => {
           const meta = getCategoryMeta(item.category);
-          const type = item.transactionType === 'credit' ? 'income' : 'expense';
+          const type = txnTypeToEntryType(item.transactionType);
           return (
             <Pressable onPress={() => setSelectedTxn(item as RawStoreTxn)}>
               <TransactionRow
