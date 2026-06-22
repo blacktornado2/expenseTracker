@@ -14,12 +14,12 @@ type StackedBarProps = {
 
 export default function StackedBar({ data, height = 14 }: StackedBarProps) {
   const total = data.reduce((sum, segment) => sum + segment.value, 0);
-  const opacity = useRef(new Animated.Value(0)).current;
+  const growth = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    opacity.setValue(0);
-    Animated.timing(opacity, { toValue: 1, duration: 250, useNativeDriver: true }).start();
-  }, [data, opacity]);
+    growth.setValue(0);
+    Animated.timing(growth, { toValue: 1, duration: 250, useNativeDriver: false }).start();
+  }, [data, growth]);
 
   if (total <= 0) {
     return (
@@ -31,7 +31,15 @@ export default function StackedBar({ data, height = 14 }: StackedBarProps) {
   }
 
   return (
-    <Animated.View className="flex-row overflow-hidden" style={{ height, borderRadius: height / 2, opacity }}>
+    <Animated.View
+      className="flex-row overflow-hidden"
+      style={{
+        height,
+        borderRadius: height / 2,
+        transform: [{ scaleX: growth }],
+        transformOrigin: 'left',
+      }}
+    >
       {data
         .filter((segment) => segment.value > 0)
         .map((segment) => (

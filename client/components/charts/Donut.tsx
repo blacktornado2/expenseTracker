@@ -18,12 +18,12 @@ export default function Donut({ data, size = 140, strokeWidth = 22 }: DonutProps
   const circumference = 2 * Math.PI * radius;
   const total = data.reduce((sum, segment) => sum + segment.value, 0);
   let cumulativeBefore = 0;
-  const opacity = useRef(new Animated.Value(0)).current;
+  const progress = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    opacity.setValue(0);
-    Animated.timing(opacity, { toValue: 1, duration: 250, useNativeDriver: true }).start();
-  }, [data, opacity]);
+    progress.setValue(0);
+    Animated.timing(progress, { toValue: 1, duration: 250, useNativeDriver: false }).start();
+  }, [data, progress]);
 
   return (
     <Svg width={size} height={size}>
@@ -42,6 +42,16 @@ export default function Donut({ data, size = 140, strokeWidth = 22 }: DonutProps
             const length = (segment.value / total) * circumference;
             const offset = circumference - cumulativeBefore;
             cumulativeBefore += length;
+            // Sweep the arc in: start fully rotated back by its own length
+            // (i.e. not yet drawn) and animate forward to its final offset.
+            // strokeDasharray (the segment's drawn length) is static/exact —
+            // only the rotation/offset animates, so at rest the geometry is
+            // identical to the un-animated values.
+            const animatedOffset = progress.interpolate({
+              inputRange: [0, 1],
+              outputRange: [offset + length, offset],
+              extrapolate: 'clamp',
+            });
             return (
               <AnimatedCircle
                 key={segment.label}
@@ -51,10 +61,9 @@ export default function Donut({ data, size = 140, strokeWidth = 22 }: DonutProps
                 stroke={segment.color}
                 strokeWidth={strokeWidth}
                 strokeDasharray={`${length} ${circumference - length}`}
-                strokeDashoffset={offset}
+                strokeDashoffset={animatedOffset}
                 strokeLinecap="butt"
                 fill="none"
-                opacity={opacity}
                 transform={`rotate(-90 ${size / 2} ${size / 2})`}
               />
             );
