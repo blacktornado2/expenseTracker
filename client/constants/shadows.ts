@@ -23,3 +23,37 @@ export const SHADOW_HERO: ViewStyle = {
   shadowRadius: 38,
   elevation: 10,
 };
+
+// Numpad key — subtle in light, deepened in dark (spec dark token table).
+export const SHADOW_KEY: ViewStyle = {
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.06,
+  shadowRadius: 4,
+  elevation: 1,
+};
+
+export const SHADOW_KEY_DARK: ViewStyle = {
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 3 },
+  shadowOpacity: 0.45,
+  shadowRadius: 7,
+  elevation: 3,
+};
+
+// Tab bar — light in light mode, deepened in dark.
+export const SHADOW_TAB: ViewStyle = {
+  shadowColor: '#16201A',
+  shadowOffset: { width: 0, height: -2 },
+  shadowOpacity: 0.05,
+  shadowRadius: 12,
+  elevation: 8,
+};
+
+export const SHADOW_TAB_DARK: ViewStyle = {
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: -2 },
+  shadowOpacity: 0.5,
+  shadowRadius: 16,
+  elevation: 16,
+};

@@ -1,7 +1,9 @@
 import React from 'react';
+import { ViewStyle } from 'react-native';
 import { Tabs } from 'expo-router';
 import { Home, AlignJustify, PieChart, BarChart2, Settings } from 'lucide-react-native';
 import { useTheme } from '@/contexts/ThemeContext';
+import { SHADOW_TAB, SHADOW_TAB_DARK } from '@/constants/shadows';
 import Fab from '@/components/Fab';
 
 const TAB_ACCENTS = {
@@ -15,13 +17,22 @@ const TAB_ACCENTS = {
 const INACTIVE_LIGHT = '#B4B9B0';
 const INACTIVE_DARK = '#607060';
 
+// '#FFFFFF' = bg-card, '#192218' = bg-card-dark (tailwind.config.js).
+export function getTabBarStyle(isDark: boolean): ViewStyle {
+  return {
+    backgroundColor: isDark ? '#192218' : '#FFFFFF',
+    borderTopColor: isDark ? '#252E23' : '#F3F2EB', // border-row(-dark)
+    ...(isDark ? SHADOW_TAB_DARK : SHADOW_TAB),
+  };
+}
+
 export default function TabLayout() {
   const { isDark } = useTheme();
   const inactiveColor = isDark ? INACTIVE_DARK : INACTIVE_LIGHT;
 
   return (
     <>
-      <Tabs screenOptions={{ headerShown: false }}>
+      <Tabs screenOptions={{ headerShown: false, tabBarStyle: getTabBarStyle(isDark) }}>
         <Tabs.Screen
           name="index"
           options={{
