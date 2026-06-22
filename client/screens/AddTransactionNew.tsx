@@ -24,6 +24,7 @@ import { createTransaction } from '@/redux/actions/transaction.actions';
 import { userSelector } from '@/redux/store/selectors';
 import { entryTypeToTxnType } from '@/utils/transactionMappings';
 import { useTheme } from '@/contexts/ThemeContext';
+import { resolveSaveOutcome, SAVE_ERROR_MESSAGE } from '@/utils/savingsCalcs';
 
 type EntryType = 'expense' | 'income';
 
@@ -48,28 +49,33 @@ export default function AddTransactionNew() {
   const [showEditor, setShowEditor] = useState(false);
   const [amountError, setAmountError] = useState(false);
   const [nameError, setNameError] = useState(false);
+  const [hadError, setHadError] = useState(false);
   const createError = useSelector((s: any) => s.transaction?.createError);
-  const transactionCount = useSelector((s: any) => s.transaction?.transactions?.length ?? 0);
+  const createPending = useSelector((s: any) => s.transaction?.createPending ?? false);
   const wasSubmitting = useRef(false);
 
   useEffect(() => {
     loadCustomCategories().then(setCustomCategories);
   }, []);
 
-  // After a submit attempt, navigate away only once the dispatch resolves
-  // (either the transaction list grows, i.e. success, or a createError
-  // appears, i.e. failure). On failure, stay on the form with the draft
+  // After a submit attempt, resolve once the createPending flag's true ->
+  // false transition fires, rather than keying off the transaction-count
+  // proxy or error-reference equality. Those signals miss a failure ->
+  // retry-success with no net count change in the same tick, and a stale
+  // createError lingers across edits since it's only cleared on
+  // CREATE_TRANSACTION_SUCCESS. On failure, stay on the form with the draft
   // intact and surface the inline error below instead of navigating away.
   useEffect(() => {
-    if (!wasSubmitting.current) return;
-    if (createError) {
-      wasSubmitting.current = false;
+    const outcome = resolveSaveOutcome(wasSubmitting.current, createPending, !!createError);
+    wasSubmitting.current = createPending;
+    if (outcome === 'noop') return;
+    if (outcome === 'error') {
+      setHadError(true);
       return;
     }
-    wasSubmitting.current = false;
     router.replace('/(logged-in)/(tabs)/transactions');
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [createError, transactionCount]);
+  }, [createPending]);
 
   const categoryOptions: CategoryOption[] = useMemo(() => {
     const builtIns = BUILT_IN_CATEGORIES.map(({ key, label }) => {
@@ -119,6 +125,7 @@ export default function AddTransactionNew() {
     if (hasAmountError || hasNameError) {
       return;
     }
+    setHadError(false);
     wasSubmitting.current = true;
     dispatch(
       createTransaction({
@@ -220,9 +227,9 @@ export default function AddTransactionNew() {
         </Text>
       </Pressable>
 
-      {createError ? (
+      {hadError ? (
         <Text className="text-center mt-3" style={{ color: '#E8322A', fontSize: 13, fontWeight: '600' }}>
-          Couldn't save — check your connection and try again.
+          {SAVE_ERROR_MESSAGE}
         </Text>
       ) : null}
     </ScrollView>
