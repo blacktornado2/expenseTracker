@@ -20,6 +20,7 @@ import {
   amountToGoal,
   isGoalReached,
   savingsTrend,
+  resolveSaveOutcome,
 } from '@/utils/savingsCalcs';
 
 const GREEN = '#0FB46B';
@@ -32,26 +33,30 @@ export default function SavingsScreen() {
   const { isDark } = useTheme();
   const trackColor = isDark ? '#202C1E' : '#ECEBE6';
   const savingsGoalError = useSelector((s: any) => s.savingsGoal?.error);
+  const savingsGoalPending = useSelector((s: any) => !!s.savingsGoal?.pending);
 
   const [editingGoal, setEditingGoal] = useState(false);
   const [goalInput, setGoalInput] = useState('');
   const [goalError, setGoalError] = useState(false);
-  const wasSavingGoal = useRef(false);
+  const wasPending = useRef(false);
 
   // After a set-goal attempt, exit edit mode only once the save resolves
-  // without an error. On failure, stay in edit mode with the input intact
-  // and surface the inline error instead of collapsing the form.
+  // without an error. Detect resolution via the pending flag's true -> false
+  // transition (not value-equality on `goal`), so a retry that saves the
+  // same value as before still resolves instead of leaving edit mode stuck.
+  // On failure, stay in edit mode with the input intact and surface the
+  // inline error instead of collapsing the form.
   useEffect(() => {
-    if (!wasSavingGoal.current) return;
-    wasSavingGoal.current = false;
-    if (savingsGoalError) {
+    const outcome = resolveSaveOutcome(wasPending.current, savingsGoalPending, !!savingsGoalError);
+    wasPending.current = savingsGoalPending;
+    if (outcome === 'noop') return;
+    if (outcome === 'error') {
       setGoalError(true);
     } else {
       setGoalError(false);
       setEditingGoal(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [savingsGoalError, goal]);
+  }, [savingsGoalPending, savingsGoalError]);
 
   const current = monthlyData[monthlyData.length - 1];
   const previous = monthlyData.length > 1 ? monthlyData[monthlyData.length - 2] : undefined;
@@ -75,7 +80,6 @@ export default function SavingsScreen() {
   const onSetGoal = () => {
     const next = parseFloat(goalInput);
     if (next > 0) {
-      wasSavingGoal.current = true;
       setGoal(next);
     }
   };
