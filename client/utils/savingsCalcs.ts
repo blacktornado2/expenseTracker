@@ -37,6 +37,8 @@ export function savingsTrend(current: number, previous?: number): SavingsTrend |
   return { diff: Math.abs(diff), direction: diff > 0 ? 'up' : 'down' };
 }
 
+export const SAVE_ERROR_MESSAGE = "Couldn't save — check your connection and try again.";
+
 export type SaveOutcome = 'close' | 'error' | 'noop';
 
 /**

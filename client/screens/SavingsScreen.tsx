@@ -21,6 +21,7 @@ import {
   isGoalReached,
   savingsTrend,
   resolveSaveOutcome,
+  SAVE_ERROR_MESSAGE,
 } from '@/utils/savingsCalcs';
 
 const GREEN = '#0FB46B';
@@ -189,7 +190,7 @@ export default function SavingsScreen() {
 
           {goalError ? (
             <Text className="text-center mt-2" style={{ color: '#E8322A', fontSize: 13, fontWeight: '600' }}>
-              Couldn't save — check your connection and try again.
+              {SAVE_ERROR_MESSAGE}
             </Text>
           ) : null}
 

@@ -9,6 +9,7 @@ import { getCategoryMeta } from '@/constants/categoryMeta';
 import { loadCustomCategories, type CustomCategory } from '@/utils/customCategories';
 import { useBudgets, type Budget } from '@/contexts/BudgetsContext';
 import { useTheme } from '@/contexts/ThemeContext';
+import { resolveSaveOutcome, SAVE_ERROR_MESSAGE } from '@/utils/savingsCalcs';
 
 type BudgetSheetProps = {
   mode: 'add' | 'edit' | null;
@@ -27,7 +28,12 @@ export default function BudgetSheet({ mode, editBudget, onClose }: BudgetSheetPr
   const createError = useSelector((s: any) => s.budget?.createError);
   const updateError = useSelector((s: any) => s.budget?.updateError);
   const deleteError = useSelector((s: any) => s.budget?.deleteError);
+  const createPending = useSelector((s: any) => s.budget?.createPending ?? false);
+  const updatePending = useSelector((s: any) => s.budget?.updatePending ?? false);
+  const deletePending = useSelector((s: any) => s.budget?.deletePending ?? false);
   const lastAction = useRef<'add' | 'edit' | 'delete' | null>(null);
+  const wasSaving = useRef(false);
+  const wasDeleting = useRef(false);
 
   // Load custom categories once on mount
   useEffect(() => {
@@ -47,35 +53,44 @@ export default function BudgetSheet({ mode, editBudget, onClose }: BudgetSheetPr
     }
     setActionError(null);
     lastAction.current = null;
+    wasSaving.current = false;
+    wasDeleting.current = false;
   }, [mode, editBudget]);
 
-  // After a save/delete attempt, close the sheet only once the relevant
-  // Redux error stays clear. On failure, keep the sheet open with the draft
-  // intact and surface the inline error instead of closing.
+  // After a save attempt, resolve once the relevant pending flag's
+  // true -> false transition fires (not on error-reference equality, which
+  // would never re-fire on a clean successful retry). On failure, keep the
+  // sheet open with the draft intact and surface the inline error instead
+  // of closing.
   useEffect(() => {
-    if (lastAction.current === 'add' || lastAction.current === 'edit') {
-      const err = lastAction.current === 'add' ? createError : updateError;
-      lastAction.current = null;
-      if (err) {
-        setActionError("Couldn't save — check your connection and try again.");
-      } else {
-        onClose();
-      }
+    if (lastAction.current !== 'add' && lastAction.current !== 'edit') return;
+    const isPending = lastAction.current === 'add' ? createPending : updatePending;
+    const hasError = !!(lastAction.current === 'add' ? createError : updateError);
+    const outcome = resolveSaveOutcome(wasSaving.current, isPending, hasError);
+    wasSaving.current = isPending;
+    if (outcome === 'noop') return;
+    lastAction.current = null;
+    if (outcome === 'error') {
+      setActionError(SAVE_ERROR_MESSAGE);
+    } else {
+      onClose();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [createError, updateError]);
+  }, [createPending, updatePending]);
 
   useEffect(() => {
-    if (lastAction.current === 'delete') {
-      lastAction.current = null;
-      if (deleteError) {
-        setActionError("Couldn't delete — check your connection and try again.");
-      } else {
-        onClose();
-      }
+    if (lastAction.current !== 'delete') return;
+    const outcome = resolveSaveOutcome(wasDeleting.current, deletePending, !!deleteError);
+    wasDeleting.current = deletePending;
+    if (outcome === 'noop') return;
+    lastAction.current = null;
+    if (outcome === 'error') {
+      setActionError("Couldn't delete — check your connection and try again.");
+    } else {
+      onClose();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [deleteError]);
+  }, [deletePending]);
 
   const budgetedCats = useMemo(
     () => new Set(budgets.map((b) => b.cat)),
