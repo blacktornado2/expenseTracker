@@ -15,9 +15,11 @@ export default function InsightsScreen() {
   const [selectedIndex, setSelectedIndex] = useState(monthlyData.length - 1);
 
   const selected = monthlyData[selectedIndex];
-  const previous = selectedIndex > 0 ? monthlyData[selectedIndex - 1] : undefined;
-  const delta = trendDelta(selected, previous);
-  const saved = Math.max(0, selected.income - selected.spent);
+  const hasMonth = monthlyData.length > 0 && !!selected;
+  const noExpenses = hasMonth ? selected.cats.length === 0 : true;
+  const previous = hasMonth && selectedIndex > 0 ? monthlyData[selectedIndex - 1] : undefined;
+  const delta = hasMonth ? trendDelta(selected, previous) : null;
+  const saved = hasMonth ? Math.max(0, selected.income - selected.spent) : 0;
 
   return (
     <SafeAreaView className="flex-1 bg-bg-app dark:bg-bg-app-dark">
@@ -39,13 +41,15 @@ export default function InsightsScreen() {
           />
         </View>
 
-        <HeroCard
-          label={monthFullLabel(selected.month, selected.year)}
-          subtitle="Total spent"
-          amount={selected.spent}
-          footerLeft={`Income ₹${selected.income.toLocaleString('en-IN')}`}
-          footerRight={`Saved ₹${saved.toLocaleString('en-IN')}`}
-        />
+        {hasMonth ? (
+          <HeroCard
+            label={monthFullLabel(selected.month, selected.year)}
+            subtitle="Total spent"
+            amount={selected.spent}
+            footerLeft={`Income ₹${selected.income.toLocaleString('en-IN')}`}
+            footerRight={`Saved ₹${saved.toLocaleString('en-IN')}`}
+          />
+        ) : null}
 
         {delta ? (
           <Text
@@ -70,7 +74,13 @@ export default function InsightsScreen() {
 
         <Card radius={22} className="p-4">
           <Text className="text-tx-primary dark:text-tx-primary-dark font-bold mb-3">Where it went</Text>
-          <CategoryBreakdownList cats={selected.cats} />
+          {noExpenses ? (
+            <Text className="text-tx-secondary dark:text-tx-secondary-dark text-center py-6" style={{ fontSize: 14, fontWeight: '600' }}>
+              No expenses recorded
+            </Text>
+          ) : (
+            <CategoryBreakdownList cats={selected.cats} />
+          )}
         </Card>
       </ScrollView>
     </SafeAreaView>
