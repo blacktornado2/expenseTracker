@@ -20,7 +20,7 @@ export default function NumpadKey({ label, onPress }: NumpadKeyProps) {
       style={[{ width: 58, height: 58, borderRadius: 18 }, isDark ? SHADOW_KEY_DARK : SHADOW_KEY]}
     >
       {label === 'backspace' ? (
-        <Delete color="#2B2F2A" size={22} />
+        <Delete color={isDark ? '#E2E9E0' : '#2B2F2A'} size={22} />
       ) : (
         <Text className="text-tx-primary dark:text-tx-primary-dark font-bold text-xl">{label}</Text>
       )}

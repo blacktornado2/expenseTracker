@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
+import { useTheme } from '@/contexts/ThemeContext';
 
 type BudgetRingProps = {
   percent: number; // 0–100
@@ -13,6 +14,7 @@ const STROKE_WIDTH = 8;
 const OVER_COLOR = '#E25555';
 
 export default function BudgetRing({ percent, color, over, size = 66 }: BudgetRingProps) {
+  const { isDark } = useTheme();
   const radius = (size - STROKE_WIDTH) / 2;
   const circumference = 2 * Math.PI * radius;
   const filled = (percent / 100) * circumference;
@@ -30,7 +32,7 @@ export default function BudgetRing({ percent, color, over, size = 66 }: BudgetRi
           cx={size / 2}
           cy={size / 2}
           r={radius}
-          stroke="#ECEBE6"
+          stroke={isDark ? '#202C1E' : '#ECEBE6'}
           strokeWidth={STROKE_WIDTH}
           fill="none"
         />

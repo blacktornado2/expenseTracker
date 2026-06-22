@@ -1,5 +1,6 @@
 import React from 'react';
 import Svg, { Circle } from 'react-native-svg';
+import { useTheme } from '@/contexts/ThemeContext';
 import type { ChartSegment } from './StackedBar';
 
 type DonutProps = {
@@ -9,6 +10,7 @@ type DonutProps = {
 };
 
 export default function Donut({ data, size = 140, strokeWidth = 22 }: DonutProps) {
+  const { isDark } = useTheme();
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const total = data.reduce((sum, segment) => sum + segment.value, 0);
@@ -20,7 +22,7 @@ export default function Donut({ data, size = 140, strokeWidth = 22 }: DonutProps
         cx={size / 2}
         cy={size / 2}
         r={radius}
-        stroke="#ECEBE6"
+        stroke={isDark ? '#202C1E' : '#ECEBE6'}
         strokeWidth={strokeWidth}
         fill="none"
       />

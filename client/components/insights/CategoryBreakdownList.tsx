@@ -2,12 +2,14 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { categoryBreakdown } from '@/utils/insightsCalcs';
 import { getCategoryMeta } from '@/constants/categoryMeta';
+import { useTheme } from '@/contexts/ThemeContext';
 
 type CategoryBreakdownListProps = {
   cats: Record<string, number>;
 };
 
 export default function CategoryBreakdownList({ cats }: CategoryBreakdownListProps) {
+  const { isDark } = useTheme();
   const rows = categoryBreakdown(cats);
 
   if (rows.length === 0) {
@@ -53,7 +55,7 @@ export default function CategoryBreakdownList({ cats }: CategoryBreakdownListPro
                 style={{
                   height: 6,
                   borderRadius: 3,
-                  backgroundColor: '#ECEBE6',
+                  backgroundColor: isDark ? '#202C1E' : '#ECEBE6',
                   marginTop: 6,
                   overflow: 'hidden',
                 }}

@@ -9,6 +9,7 @@ import HeroCard from '@/components/HeroCard';
 import TrendBars from '@/components/insights/TrendBars';
 import GoalRing from '@/components/savings/GoalRing';
 import { useSavingsGoal } from '@/contexts/SavingsGoalContext';
+import { useTheme } from '@/contexts/ThemeContext';
 import { selectMonthlyData } from '@/redux/store/selectors';
 import { monthFullLabel } from '@/utils/insightsCalcs';
 import {
@@ -28,6 +29,8 @@ export default function SavingsScreen() {
   const router = useRouter();
   const monthlyData = useSelector(selectMonthlyData);
   const { goal, setGoal } = useSavingsGoal();
+  const { isDark } = useTheme();
+  const trackColor = isDark ? '#202C1E' : '#ECEBE6';
 
   const [editingGoal, setEditingGoal] = useState(false);
   const [goalInput, setGoalInput] = useState('');
@@ -98,7 +101,7 @@ export default function SavingsScreen() {
               ₹{current.income.toLocaleString('en-IN')}
             </Text>
           </View>
-          <View style={{ height: 8, borderRadius: 4, backgroundColor: '#ECEBE6', overflow: 'hidden' }}>
+          <View style={{ height: 8, borderRadius: 4, backgroundColor: trackColor, overflow: 'hidden' }}>
             <View style={{ height: 8, borderRadius: 4, width: '100%', backgroundColor: GREEN }} />
           </View>
 
@@ -108,13 +111,13 @@ export default function SavingsScreen() {
               ₹{current.spent.toLocaleString('en-IN')}
             </Text>
           </View>
-          <View style={{ height: 8, borderRadius: 4, backgroundColor: '#ECEBE6', overflow: 'hidden' }}>
+          <View style={{ height: 8, borderRadius: 4, backgroundColor: trackColor, overflow: 'hidden' }}>
             <View style={{ height: 8, borderRadius: 4, width: `${expensesPct}%`, backgroundColor: RED }} />
           </View>
 
           <View
             className="flex-row justify-between items-center mt-4 pt-4"
-            style={{ borderTopWidth: 1, borderTopColor: '#ECEBE6' }}
+            style={{ borderTopWidth: 1, borderTopColor: trackColor }}
           >
             <Text className="text-tx-primary dark:text-tx-primary-dark font-bold text-sm">Net saved</Text>
             <Text style={{ color: saved >= 0 ? GREEN : RED }} className="font-extrabold text-sm">
@@ -142,9 +145,9 @@ export default function SavingsScreen() {
             <View className="flex-row items-center" style={{ gap: 10 }}>
               <View
                 className="flex-row items-center flex-1 rounded-2xl px-3 py-2.5"
-                style={{ borderWidth: 1, borderColor: '#E5E5E0' }}
+                style={{ borderWidth: 1, borderColor: isDark ? '#263024' : '#E5E5E0' }}
               >
-                <Text style={{ color: '#9AA096', marginRight: 4, fontWeight: '600' }}>₹</Text>
+                <Text style={{ color: isDark ? '#7E8E7C' : '#9AA096', marginRight: 4, fontWeight: '600' }}>₹</Text>
                 <TextInput
                   testID="goal-input"
                   value={goalInput}
@@ -152,7 +155,7 @@ export default function SavingsScreen() {
                   keyboardType="numeric"
                   placeholder="0"
                   placeholderTextColor="#9AA096"
-                  style={{ flex: 1, color: '#2B2F2A' }}
+                  style={{ flex: 1, color: isDark ? '#E2E9E0' : '#2B2F2A' }}
                 />
               </View>
               <Pressable onPress={onSetGoal} style={{ backgroundColor: GREEN, borderRadius: 16, paddingHorizontal: 18, paddingVertical: 12 }}>
@@ -169,7 +172,7 @@ export default function SavingsScreen() {
                 <Text className="text-tx-tertiary dark:text-tx-tertiary-dark text-xs font-semibold">
                   of ₹{goal.toLocaleString('en-IN')} goal
                 </Text>
-                <View style={{ height: 6, borderRadius: 3, backgroundColor: '#ECEBE6', marginTop: 8, overflow: 'hidden' }}>
+                <View style={{ height: 6, borderRadius: 3, backgroundColor: trackColor, marginTop: 8, overflow: 'hidden' }}>
                   <View style={{ height: 6, borderRadius: 3, width: `${goalPct}%`, backgroundColor: GREEN }} />
                 </View>
                 <Text className="text-tx-secondary dark:text-tx-secondary-dark text-xs font-bold mt-2">

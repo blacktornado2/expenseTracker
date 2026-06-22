@@ -9,6 +9,7 @@ import { transactionSelector } from '@/redux/store/selectors';
 import { getCategoryMeta } from '@/constants/categoryMeta';
 import { filterTransactions, type ActivityFilter } from '@/utils/transactionFilters';
 import { txnTypeToEntryType, type RawStoreTxn } from '@/utils/transactionMappings';
+import { useTheme } from '@/contexts/ThemeContext';
 
 const FILTER_CHIPS: { label: string; value: ActivityFilter; color: string }[] = [
   { label: 'All', value: 'all', color: '#2BB3FF' },
@@ -19,6 +20,7 @@ const FILTER_CHIPS: { label: string; value: ActivityFilter; color: string }[] = 
 export default function ActivityScreen() {
   const storeState = useSelector(transactionSelector as any) as { transactions: RawStoreTxn[] };
   const { transactions } = storeState;
+  const { isDark } = useTheme();
   const [searchQuery, setSearchQuery] = useState('');
   const [filter, setFilter] = useState<ActivityFilter>('all');
   const [selectedTxn, setSelectedTxn] = useState<RawStoreTxn | null>(null);
@@ -53,20 +55,20 @@ export default function ActivityScreen() {
 
             {/* Search field */}
             <View
-              className="flex-row items-center bg-white mb-4"
-              style={{ borderRadius: 16, borderWidth: 1.5, borderColor: '#E5E5E0', paddingHorizontal: 12, paddingVertical: 10 }}
+              className="flex-row items-center bg-white dark:bg-bg-card-dark mb-4"
+              style={{ borderRadius: 16, borderWidth: 1.5, borderColor: isDark ? '#263024' : '#E5E5E0', paddingHorizontal: 12, paddingVertical: 10 }}
             >
-              <Search color="#9AA096" size={18} />
+              <Search color={isDark ? '#7E8E7C' : '#9AA096'} size={18} />
               <TextInput
                 value={searchQuery}
                 onChangeText={setSearchQuery}
                 placeholder="Search by name or category"
                 placeholderTextColor="#9AA096"
-                style={{ flex: 1, marginLeft: 8, color: '#2B2F2A' }}
+                style={{ flex: 1, marginLeft: 8, color: isDark ? '#E2E9E0' : '#2B2F2A' }}
               />
               {searchQuery.length > 0 ? (
                 <Pressable onPress={() => setSearchQuery('')}>
-                  <X color="#9AA096" size={18} />
+                  <X color={isDark ? '#7E8E7C' : '#9AA096'} size={18} />
                 </Pressable>
               ) : null}
             </View>
@@ -83,10 +85,10 @@ export default function ActivityScreen() {
                       paddingHorizontal: 16,
                       paddingVertical: 8,
                       borderRadius: 20,
-                      backgroundColor: active ? chip.color : '#FFFFFF',
+                      backgroundColor: active ? chip.color : isDark ? '#192218' : '#FFFFFF',
                     }}
                   >
-                    <Text style={{ color: active ? '#FFFFFF' : '#2B2F2A', fontWeight: '700', fontSize: 13 }}>
+                    <Text style={{ color: active ? '#FFFFFF' : isDark ? '#E2E9E0' : '#2B2F2A', fontWeight: '700', fontSize: 13 }}>
                       {chip.label}
                     </Text>
                   </Pressable>
@@ -97,7 +99,7 @@ export default function ActivityScreen() {
         }
         ListEmptyComponent={
           <View className="items-center mt-16" style={{ gap: 8 }}>
-            <Search color="#9AA096" size={40} />
+            <Search color={isDark ? '#7E8E7C' : '#9AA096'} size={40} />
             <Text className="text-tx-primary dark:text-tx-primary-dark font-bold text-base">
               No transactions found
             </Text>

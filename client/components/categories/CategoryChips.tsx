@@ -2,6 +2,7 @@ import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { Plus, X, type LucideIcon } from 'lucide-react-native';
 import { withAlpha } from '@/constants/categoryPalette';
+import { useTheme } from '@/contexts/ThemeContext';
 
 export type CategoryOption = {
   key: string;
@@ -28,6 +29,10 @@ export default function CategoryChips({
   onDelete,
   onAdd,
 }: CategoryChipsProps) {
+  const { isDark } = useTheme();
+  const borderColor = isDark ? '#263024' : '#E5E5E0';
+  const tertiaryText = isDark ? '#7E8E7C' : '#9AA096';
+  const primaryText = isDark ? '#E2E9E0' : '#2B2F2A';
   return (
     <View className="flex-row flex-wrap" style={{ gap: 10 }}>
       {categories.map((category) => {
@@ -41,11 +46,11 @@ export default function CategoryChips({
               style={{
                 backgroundColor: active ? withAlpha(category.color) : 'transparent',
                 borderWidth: 1,
-                borderColor: active ? category.color : '#E5E5E0',
+                borderColor: active ? category.color : borderColor,
               }}
             >
               <category.Icon color={category.color} size={16} />
-              <Text style={{ color: active ? category.color : '#2B2F2A', marginLeft: 6, fontWeight: '700' }}>
+              <Text style={{ color: active ? category.color : primaryText, marginLeft: 6, fontWeight: '700' }}>
                 {category.label}
               </Text>
             </Pressable>
@@ -76,10 +81,10 @@ export default function CategoryChips({
           testID="category-chip-add"
           onPress={onAdd}
           className="flex-row items-center rounded-full px-3 py-2"
-          style={{ borderWidth: 1, borderColor: '#9AA096', borderStyle: 'dashed' }}
+          style={{ borderWidth: 1, borderColor: tertiaryText, borderStyle: 'dashed' }}
         >
-          <Plus color="#9AA096" size={16} />
-          <Text style={{ color: '#9AA096', marginLeft: 6, fontWeight: '700' }}>Add</Text>
+          <Plus color={tertiaryText} size={16} />
+          <Text style={{ color: tertiaryText, marginLeft: 6, fontWeight: '700' }}>Add</Text>
         </Pressable>
       ) : null}
     </View>
