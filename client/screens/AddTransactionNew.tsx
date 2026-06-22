@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useDispatch, useSelector } from 'react-redux';
@@ -48,10 +48,28 @@ export default function AddTransactionNew() {
   const [showEditor, setShowEditor] = useState(false);
   const [amountError, setAmountError] = useState(false);
   const [nameError, setNameError] = useState(false);
+  const createError = useSelector((s: any) => s.transaction?.createError);
+  const transactionCount = useSelector((s: any) => s.transaction?.transactions?.length ?? 0);
+  const wasSubmitting = useRef(false);
 
   useEffect(() => {
     loadCustomCategories().then(setCustomCategories);
   }, []);
+
+  // After a submit attempt, navigate away only once the dispatch resolves
+  // (either the transaction list grows, i.e. success, or a createError
+  // appears, i.e. failure). On failure, stay on the form with the draft
+  // intact and surface the inline error below instead of navigating away.
+  useEffect(() => {
+    if (!wasSubmitting.current) return;
+    if (createError) {
+      wasSubmitting.current = false;
+      return;
+    }
+    wasSubmitting.current = false;
+    router.replace('/(logged-in)/(tabs)/transactions');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [createError, transactionCount]);
 
   const categoryOptions: CategoryOption[] = useMemo(() => {
     const builtIns = BUILT_IN_CATEGORIES.map(({ key, label }) => {
@@ -101,6 +119,7 @@ export default function AddTransactionNew() {
     if (hasAmountError || hasNameError) {
       return;
     }
+    wasSubmitting.current = true;
     dispatch(
       createTransaction({
         transactionType: entryTypeToTxnType(entryType),
@@ -110,7 +129,6 @@ export default function AddTransactionNew() {
         description: name.trim(),
       })
     );
-    router.replace('/(logged-in)/(tabs)/transactions');
   };
 
   const amountColor = amountError ? '#E8322A' : entryType === 'income' ? '#0FB46B' : isDark ? '#E2E9E0' : '#2B2F2A';
@@ -201,6 +219,12 @@ export default function AddTransactionNew() {
           {entryType === 'income' ? 'Add income' : 'Add expense'}
         </Text>
       </Pressable>
+
+      {createError ? (
+        <Text className="text-center mt-3" style={{ color: '#E8322A', fontSize: 13, fontWeight: '600' }}>
+          Couldn't save — check your connection and try again.
+        </Text>
+      ) : null}
     </ScrollView>
   );
 }

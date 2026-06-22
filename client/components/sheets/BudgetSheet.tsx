@@ -1,6 +1,7 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useSelector } from 'react-redux';
 import BottomSheet from './BottomSheet';
 import CategoryChips, { type CategoryOption } from '@/components/categories/CategoryChips';
 import { BUILT_IN_CATEGORIES, getIconByKey } from '@/constants/categoryPalette';
@@ -22,6 +23,11 @@ export default function BudgetSheet({ mode, editBudget, onClose }: BudgetSheetPr
   const [limitStr, setLimitStr] = useState('');
   const [limitError, setLimitError] = useState(false);
   const [customCategories, setCustomCategories] = useState<CustomCategory[]>([]);
+  const [actionError, setActionError] = useState<string | null>(null);
+  const createError = useSelector((s: any) => s.budget?.createError);
+  const updateError = useSelector((s: any) => s.budget?.updateError);
+  const deleteError = useSelector((s: any) => s.budget?.deleteError);
+  const lastAction = useRef<'add' | 'edit' | 'delete' | null>(null);
 
   // Load custom categories once on mount
   useEffect(() => {
@@ -39,7 +45,37 @@ export default function BudgetSheet({ mode, editBudget, onClose }: BudgetSheetPr
       setLimitStr('');
       setLimitError(false);
     }
+    setActionError(null);
+    lastAction.current = null;
   }, [mode, editBudget]);
+
+  // After a save/delete attempt, close the sheet only once the relevant
+  // Redux error stays clear. On failure, keep the sheet open with the draft
+  // intact and surface the inline error instead of closing.
+  useEffect(() => {
+    if (lastAction.current === 'add' || lastAction.current === 'edit') {
+      const err = lastAction.current === 'add' ? createError : updateError;
+      lastAction.current = null;
+      if (err) {
+        setActionError("Couldn't save — check your connection and try again.");
+      } else {
+        onClose();
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [createError, updateError]);
+
+  useEffect(() => {
+    if (lastAction.current === 'delete') {
+      lastAction.current = null;
+      if (deleteError) {
+        setActionError("Couldn't delete — check your connection and try again.");
+      } else {
+        onClose();
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [deleteError]);
 
   const budgetedCats = useMemo(
     () => new Set(budgets.map((b) => b.cat)),
@@ -80,18 +116,21 @@ export default function BudgetSheet({ mode, editBudget, onClose }: BudgetSheetPr
       setLimitError(true);
       return;
     }
+    setActionError(null);
     if (mode === 'add') {
+      lastAction.current = 'add';
       await addBudget({ cat: selectedCat, limit });
     } else if (mode === 'edit' && editBudget) {
+      lastAction.current = 'edit';
       await updateBudget(editBudget.cat, limit);
     }
-    onClose();
   };
 
   const onDelete = async () => {
     if (editBudget) {
+      setActionError(null);
+      lastAction.current = 'delete';
       await deleteBudget(editBudget.cat);
-      onClose();
     }
   };
 
@@ -224,6 +263,12 @@ export default function BudgetSheet({ mode, editBudget, onClose }: BudgetSheetPr
           </Text>
         </LinearGradient>
       </Pressable>
+
+      {actionError ? (
+        <Text className="text-center mb-3" style={{ color: '#E8322A', fontSize: 13, fontWeight: '600' }}>
+          {actionError}
+        </Text>
+      ) : null}
 
       {/* Delete button — edit mode only */}
       {mode === 'edit' && (

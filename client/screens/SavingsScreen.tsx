@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Pressable, SafeAreaView, ScrollView, Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSelector } from 'react-redux';
@@ -31,9 +31,27 @@ export default function SavingsScreen() {
   const { goal, setGoal } = useSavingsGoal();
   const { isDark } = useTheme();
   const trackColor = isDark ? '#202C1E' : '#ECEBE6';
+  const savingsGoalError = useSelector((s: any) => s.savingsGoal?.error);
 
   const [editingGoal, setEditingGoal] = useState(false);
   const [goalInput, setGoalInput] = useState('');
+  const [goalError, setGoalError] = useState(false);
+  const wasSavingGoal = useRef(false);
+
+  // After a set-goal attempt, exit edit mode only once the save resolves
+  // without an error. On failure, stay in edit mode with the input intact
+  // and surface the inline error instead of collapsing the form.
+  useEffect(() => {
+    if (!wasSavingGoal.current) return;
+    wasSavingGoal.current = false;
+    if (savingsGoalError) {
+      setGoalError(true);
+    } else {
+      setGoalError(false);
+      setEditingGoal(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [savingsGoalError, goal]);
 
   const current = monthlyData[monthlyData.length - 1];
   const previous = monthlyData.length > 1 ? monthlyData[monthlyData.length - 2] : undefined;
@@ -50,15 +68,16 @@ export default function SavingsScreen() {
 
   const startEditingGoal = () => {
     setGoalInput(goal > 0 ? String(goal) : '');
+    setGoalError(false);
     setEditingGoal(true);
   };
 
   const onSetGoal = () => {
     const next = parseFloat(goalInput);
     if (next > 0) {
+      wasSavingGoal.current = true;
       setGoal(next);
     }
-    setEditingGoal(false);
   };
 
   return (
@@ -162,7 +181,15 @@ export default function SavingsScreen() {
                 <Text style={{ color: '#FFFFFF' }} className="font-bold text-sm">Set</Text>
               </Pressable>
             </View>
-          ) : (
+          ) : null}
+
+          {goalError ? (
+            <Text className="text-center mt-2" style={{ color: '#E8322A', fontSize: 13, fontWeight: '600' }}>
+              Couldn't save — check your connection and try again.
+            </Text>
+          ) : null}
+
+          {!editingGoal && (
             <View className="flex-row items-center" style={{ gap: 16 }}>
               <GoalRing percent={goalPct} />
               <View className="flex-1">
