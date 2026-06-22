@@ -52,4 +52,5 @@ export type UserStateType = {
         success: string | null;
         error: null;
     } | null;
+    token: string | null;
 }
