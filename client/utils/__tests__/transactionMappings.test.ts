@@ -1,4 +1,4 @@
-import { rawToTxDraft, txDraftToUpdatePayload } from '../transactionMappings';
+import { rawToTxDraft, txDraftToUpdatePayload, entryTypeToTxnType, txnTypeToEntryType } from '../transactionMappings';
 import type { RawStoreTxn, TxDraft } from '../transactionMappings';
 
 describe('rawToTxDraft', () => {
@@ -47,5 +47,16 @@ describe('txDraftToUpdatePayload', () => {
   it('defaults amount to 0 for empty amountStr', () => {
     const draft: TxDraft = { id: 'd', entryType: 'expense', name: 'Bad', amountStr: '', date: '2026-06-21T00:00:00.000Z', category: 'dining' };
     expect(txDraftToUpdatePayload(draft).amount).toBe(0);
+  });
+});
+
+describe('credit↔income mapping helpers', () => {
+  it('maps entry type to transaction type', () => {
+    expect(entryTypeToTxnType('income')).toBe('credit');
+    expect(entryTypeToTxnType('expense')).toBe('debit');
+  });
+  it('maps transaction type to entry type', () => {
+    expect(txnTypeToEntryType('credit')).toBe('income');
+    expect(txnTypeToEntryType('debit')).toBe('expense');
   });
 });

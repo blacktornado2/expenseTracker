@@ -22,6 +22,7 @@ import {
 } from '@/utils/customCategories';
 import { createTransaction } from '@/redux/actions/transaction.actions';
 import { userSelector } from '@/redux/store/selectors';
+import { entryTypeToTxnType } from '@/utils/transactionMappings';
 
 type EntryType = 'expense' | 'income';
 
@@ -100,7 +101,7 @@ export default function AddTransactionNew() {
     }
     dispatch(
       createTransaction({
-        transactionType: entryType === 'income' ? 'credit' : 'debit',
+        transactionType: entryTypeToTxnType(entryType),
         amount,
         category: selectedCategory,
         date: date.toISOString(),
