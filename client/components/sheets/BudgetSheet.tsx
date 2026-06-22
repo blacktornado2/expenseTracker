@@ -1,12 +1,15 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useSelector } from 'react-redux';
 import BottomSheet from './BottomSheet';
 import CategoryChips, { type CategoryOption } from '@/components/categories/CategoryChips';
 import { BUILT_IN_CATEGORIES, getIconByKey } from '@/constants/categoryPalette';
 import { getCategoryMeta } from '@/constants/categoryMeta';
 import { loadCustomCategories, type CustomCategory } from '@/utils/customCategories';
 import { useBudgets, type Budget } from '@/contexts/BudgetsContext';
+import { useTheme } from '@/contexts/ThemeContext';
+import { resolveSaveOutcome, SAVE_ERROR_MESSAGE } from '@/utils/savingsCalcs';
 
 type BudgetSheetProps = {
   mode: 'add' | 'edit' | null;
@@ -16,10 +19,21 @@ type BudgetSheetProps = {
 
 export default function BudgetSheet({ mode, editBudget, onClose }: BudgetSheetProps) {
   const { budgets, addBudget, updateBudget, deleteBudget } = useBudgets();
+  const { isDark } = useTheme();
   const [selectedCat, setSelectedCat] = useState('');
   const [limitStr, setLimitStr] = useState('');
   const [limitError, setLimitError] = useState(false);
   const [customCategories, setCustomCategories] = useState<CustomCategory[]>([]);
+  const [actionError, setActionError] = useState<string | null>(null);
+  const createError = useSelector((s: any) => s.budget?.createError);
+  const updateError = useSelector((s: any) => s.budget?.updateError);
+  const deleteError = useSelector((s: any) => s.budget?.deleteError);
+  const createPending = useSelector((s: any) => s.budget?.createPending ?? false);
+  const updatePending = useSelector((s: any) => s.budget?.updatePending ?? false);
+  const deletePending = useSelector((s: any) => s.budget?.deletePending ?? false);
+  const lastAction = useRef<'add' | 'edit' | 'delete' | null>(null);
+  const wasSaving = useRef(false);
+  const wasDeleting = useRef(false);
 
   // Load custom categories once on mount
   useEffect(() => {
@@ -37,7 +51,46 @@ export default function BudgetSheet({ mode, editBudget, onClose }: BudgetSheetPr
       setLimitStr('');
       setLimitError(false);
     }
+    setActionError(null);
+    lastAction.current = null;
+    wasSaving.current = false;
+    wasDeleting.current = false;
   }, [mode, editBudget]);
+
+  // After a save attempt, resolve once the relevant pending flag's
+  // true -> false transition fires (not on error-reference equality, which
+  // would never re-fire on a clean successful retry). On failure, keep the
+  // sheet open with the draft intact and surface the inline error instead
+  // of closing.
+  useEffect(() => {
+    if (lastAction.current !== 'add' && lastAction.current !== 'edit') return;
+    const isPending = lastAction.current === 'add' ? createPending : updatePending;
+    const hasError = !!(lastAction.current === 'add' ? createError : updateError);
+    const outcome = resolveSaveOutcome(wasSaving.current, isPending, hasError);
+    wasSaving.current = isPending;
+    if (outcome === 'noop') return;
+    lastAction.current = null;
+    if (outcome === 'error') {
+      setActionError(SAVE_ERROR_MESSAGE);
+    } else {
+      onClose();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [createPending, updatePending]);
+
+  useEffect(() => {
+    if (lastAction.current !== 'delete') return;
+    const outcome = resolveSaveOutcome(wasDeleting.current, deletePending, !!deleteError);
+    wasDeleting.current = deletePending;
+    if (outcome === 'noop') return;
+    lastAction.current = null;
+    if (outcome === 'error') {
+      setActionError("Couldn't delete — check your connection and try again.");
+    } else {
+      onClose();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [deletePending]);
 
   const budgetedCats = useMemo(
     () => new Set(budgets.map((b) => b.cat)),
@@ -78,18 +131,21 @@ export default function BudgetSheet({ mode, editBudget, onClose }: BudgetSheetPr
       setLimitError(true);
       return;
     }
+    setActionError(null);
     if (mode === 'add') {
+      lastAction.current = 'add';
       await addBudget({ cat: selectedCat, limit });
     } else if (mode === 'edit' && editBudget) {
+      lastAction.current = 'edit';
       await updateBudget(editBudget.cat, limit);
     }
-    onClose();
   };
 
   const onDelete = async () => {
     if (editBudget) {
+      setActionError(null);
+      lastAction.current = 'delete';
       await deleteBudget(editBudget.cat);
-      onClose();
     }
   };
 
@@ -169,13 +225,13 @@ export default function BudgetSheet({ mode, editBudget, onClose }: BudgetSheetPr
         className="flex-row items-center rounded-2xl px-3 py-3 mb-6"
         style={{
           borderWidth: 1.5,
-          borderColor: limitError ? '#E8322A' : '#E5E5E0',
-          backgroundColor: limitError ? '#FFF5F5' : undefined,
+          borderColor: limitError ? '#E8322A' : isDark ? '#263024' : '#E5E5E0',
+          backgroundColor: limitError ? (isDark ? '#2A1A1A' : '#FFF5F5') : undefined,
         }}
       >
         <Text
           style={{
-            color: '#9AA096',
+            color: isDark ? '#7E8E7C' : '#9AA096',
             marginRight: 2,
             fontWeight: '600',
             fontFamily: 'PlusJakartaSans_600SemiBold',
@@ -194,7 +250,7 @@ export default function BudgetSheet({ mode, editBudget, onClose }: BudgetSheetPr
           placeholderTextColor="#9AA096"
           style={{
             flex: 1,
-            color: '#2B2F2A',
+            color: isDark ? '#E2E9E0' : '#2B2F2A',
             fontFamily: 'PlusJakartaSans_600SemiBold',
             fontSize: 16,
           }}
@@ -223,6 +279,12 @@ export default function BudgetSheet({ mode, editBudget, onClose }: BudgetSheetPr
         </LinearGradient>
       </Pressable>
 
+      {actionError ? (
+        <Text className="text-center mb-3" style={{ color: '#E8322A', fontSize: 13, fontWeight: '600' }}>
+          {actionError}
+        </Text>
+      ) : null}
+
       {/* Delete button — edit mode only */}
       {mode === 'edit' && (
         <Pressable
@@ -232,7 +294,7 @@ export default function BudgetSheet({ mode, editBudget, onClose }: BudgetSheetPr
             height: 52,
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: '#FFF0F0',
+            backgroundColor: isDark ? '#2A1A1A' : '#FFF0F0',
           }}
         >
           <Text

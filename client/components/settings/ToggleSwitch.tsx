@@ -1,5 +1,6 @@
-import React from 'react';
-import { Pressable, View } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { Animated, Pressable } from 'react-native';
+import { useTheme } from '@/contexts/ThemeContext';
 
 type ToggleSwitchProps = {
   value: boolean;
@@ -7,9 +8,23 @@ type ToggleSwitchProps = {
 };
 
 const ON_TRACK = '#0FB46B';
-const OFF_TRACK = '#C8CECC';
+const OFF_TRACK_LIGHT = '#C8CECC';
+const OFF_TRACK_DARK = '#3A4738';
+const KNOB_LIGHT = '#FFFFFF';
+const KNOB_DARK = '#E2E9E0';
 
 export default function ToggleSwitch({ value, onValueChange }: ToggleSwitchProps) {
+  const { isDark } = useTheme();
+  const translateX = useRef(new Animated.Value(value ? 20 : 0)).current;
+
+  useEffect(() => {
+    Animated.timing(translateX, {
+      toValue: value ? 20 : 0,
+      duration: 200,
+      useNativeDriver: true,
+    }).start();
+  }, [value, translateX]);
+
   return (
     <Pressable
       testID="toggle-switch"
@@ -18,18 +33,18 @@ export default function ToggleSwitch({ value, onValueChange }: ToggleSwitchProps
         width: 48,
         height: 28,
         borderRadius: 14,
-        backgroundColor: value ? ON_TRACK : OFF_TRACK,
+        backgroundColor: value ? ON_TRACK : isDark ? OFF_TRACK_DARK : OFF_TRACK_LIGHT,
         justifyContent: 'center',
         padding: 4,
       }}
     >
-      <View
+      <Animated.View
         style={{
           width: 20,
           height: 20,
           borderRadius: 10,
-          backgroundColor: '#FFFFFF',
-          transform: [{ translateX: value ? 20 : 0 }],
+          backgroundColor: isDark ? KNOB_DARK : KNOB_LIGHT,
+          transform: [{ translateX }],
         }}
       />
     </Pressable>

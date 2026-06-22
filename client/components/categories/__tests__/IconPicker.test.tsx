@@ -3,9 +3,16 @@ import React from 'react';
 import { Pressable } from 'react-native';
 import { create, act } from 'react-test-renderer';
 import { Tag, Car } from 'lucide-react-native';
+
+jest.mock('@/contexts/ThemeContext', () => ({ useTheme: jest.fn() }));
+import { useTheme } from '@/contexts/ThemeContext';
 import IconPicker from '../IconPicker';
 
 describe('IconPicker', () => {
+  beforeEach(() => {
+    (useTheme as jest.Mock).mockReturnValue({ isDark: false, toggleDark: jest.fn() });
+  });
+
   const icons = [
     { key: 'tag', Icon: Tag },
     { key: 'car', Icon: Car },

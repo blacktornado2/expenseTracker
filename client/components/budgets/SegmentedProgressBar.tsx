@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text, View } from 'react-native';
+import { useTheme } from '@/contexts/ThemeContext';
 import type { BudgetSegment } from '@/utils/budgetCalcs';
 
 type SegmentedProgressBarProps = {
@@ -7,6 +8,7 @@ type SegmentedProgressBarProps = {
 };
 
 export default function SegmentedProgressBar({ segments }: SegmentedProgressBarProps) {
+  const { isDark } = useTheme();
   return (
     <View>
       {/* Bar */}
@@ -16,7 +18,7 @@ export default function SegmentedProgressBar({ segments }: SegmentedProgressBarP
           borderRadius: 5,
           overflow: 'hidden',
           flexDirection: 'row',
-          backgroundColor: '#ECEBE6',
+          backgroundColor: isDark ? '#202C1E' : '#ECEBE6',
           marginBottom: 12,
         }}
       >
@@ -47,7 +49,7 @@ export default function SegmentedProgressBar({ segments }: SegmentedProgressBarP
               style={{
                 fontSize: 11,
                 fontWeight: '600',
-                color: '#9AA096',
+                color: isDark ? '#7E8E7C' : '#9AA096',
                 fontFamily: 'PlusJakartaSans_600SemiBold',
               }}
             >

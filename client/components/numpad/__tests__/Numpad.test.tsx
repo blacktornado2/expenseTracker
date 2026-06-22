@@ -1,6 +1,9 @@
 import React from 'react';
 import { Pressable } from 'react-native';
 import { create, act } from 'react-test-renderer';
+
+jest.mock('@/contexts/ThemeContext', () => ({ useTheme: jest.fn(() => ({ isDark: false, toggleDark: jest.fn() })) }));
+
 import Numpad from '../Numpad';
 
 describe('Numpad', () => {

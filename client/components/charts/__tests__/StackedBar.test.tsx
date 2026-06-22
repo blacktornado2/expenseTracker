@@ -3,7 +3,18 @@ import { View } from 'react-native';
 import { create } from 'react-test-renderer';
 import StackedBar from '../StackedBar';
 
+// Suppress non-native driver warning in test env
+jest.mock('react-native/src/private/animated/NativeAnimatedHelper');
+
 describe('StackedBar', () => {
+  beforeEach(() => {
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
   it('sizes each segment proportionally to its value', () => {
     const data = [
       { label: 'A', value: 30, color: '#111111' },

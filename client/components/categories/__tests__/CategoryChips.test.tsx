@@ -2,6 +2,9 @@ import React from 'react';
 import { Text } from 'react-native';
 import { create, act } from 'react-test-renderer';
 import { ShoppingCart, PawPrint } from 'lucide-react-native';
+
+jest.mock('@/contexts/ThemeContext', () => ({ useTheme: jest.fn() }));
+import { useTheme } from '@/contexts/ThemeContext';
 import CategoryChips, { type CategoryOption } from '../CategoryChips';
 
 const categories: CategoryOption[] = [
@@ -10,6 +13,11 @@ const categories: CategoryOption[] = [
 ];
 
 describe('CategoryChips', () => {
+  beforeEach(() => {
+    (useTheme as jest.Mock).mockReturnValue({ isDark: false, toggleDark: jest.fn() });
+  });
+
+
   it('renders a chip per category with its label', () => {
     const tree = create(
       <CategoryChips categories={categories} selected="groceries" onSelect={jest.fn()} editMode={false} onDelete={jest.fn()} onAdd={jest.fn()} />

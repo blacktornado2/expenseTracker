@@ -1,7 +1,7 @@
 import transactionReducer from '../transaction.reducer';
-import { GET_TRANSACTIONS_SUCCESS, CREATE_TRANSACTION_SUCCESS, CREATE_TRANSACTION_FAILURE, UPDATE_TRANSACTION_SUCCESS, UPDATE_TRANSACTION_FAILURE, DELETE_TRANSACTION_SUCCESS, DELETE_TRANSACTION_FAILURE, UPDATE_TRANSACTION_REQUEST, DELETE_TRANSACTION_REQUEST } from '../../actions/action.types';
+import { GET_TRANSACTIONS_SUCCESS, CREATE_TRANSACTION_REQUEST, CREATE_TRANSACTION_SUCCESS, CREATE_TRANSACTION_FAILURE, UPDATE_TRANSACTION_SUCCESS, UPDATE_TRANSACTION_FAILURE, DELETE_TRANSACTION_SUCCESS, DELETE_TRANSACTION_FAILURE, UPDATE_TRANSACTION_REQUEST, DELETE_TRANSACTION_REQUEST } from '../../actions/action.types';
 
-const emptyBase = { transactions: [] as any[], createError: null, updateError: null, deleteError: null, updatePending: false, deletePending: false };
+const emptyBase = { transactions: [] as any[], createError: null, updateError: null, deleteError: null, createPending: false, updatePending: false, deletePending: false };
 
 describe('transactionReducer', () => {
   it('replaces transactions on GET_TRANSACTIONS_SUCCESS', () => {
@@ -24,10 +24,29 @@ describe('transactionReducer', () => {
     expect(next.transactions).toEqual([{ id: 'old' }]);
     expect(next.createError).toBe(error);
   });
+
+  it('sets createPending=true and clears createError on CREATE_TRANSACTION_REQUEST', () => {
+    const state = { ...emptyBase, createError: new Error('stale') };
+    const next = transactionReducer(state, { type: CREATE_TRANSACTION_REQUEST, payload: {} });
+    expect(next.createPending).toBe(true);
+    expect(next.createError).toBeNull();
+  });
+
+  it('clears createPending on CREATE_TRANSACTION_SUCCESS', () => {
+    const state = { ...emptyBase, createPending: true };
+    const next = transactionReducer(state, { type: CREATE_TRANSACTION_SUCCESS, payload: { id: 'new' } });
+    expect(next.createPending).toBe(false);
+  });
+
+  it('clears createPending on CREATE_TRANSACTION_FAILURE', () => {
+    const state = { ...emptyBase, createPending: true };
+    const next = transactionReducer(state, { type: CREATE_TRANSACTION_FAILURE, payload: new Error('x') });
+    expect(next.createPending).toBe(false);
+  });
 });
 
 describe('transactionReducer — update/delete', () => {
-  const base = { transactions: [{ _id: '1', amount: 100 }, { _id: '2', amount: 200 }], createError: null, updateError: null, deleteError: null, updatePending: false, deletePending: false };
+  const base = { transactions: [{ _id: '1', amount: 100 }, { _id: '2', amount: 200 }], createError: null, updateError: null, deleteError: null, createPending: false, updatePending: false, deletePending: false };
 
   it('sets updatePending=true on UPDATE_TRANSACTION_REQUEST', () => {
     const next = transactionReducer(base, { type: UPDATE_TRANSACTION_REQUEST, payload: {} });

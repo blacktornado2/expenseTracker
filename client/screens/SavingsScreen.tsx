@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Pressable, SafeAreaView, ScrollView, Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSelector } from 'react-redux';
@@ -9,6 +9,7 @@ import HeroCard from '@/components/HeroCard';
 import TrendBars from '@/components/insights/TrendBars';
 import GoalRing from '@/components/savings/GoalRing';
 import { useSavingsGoal } from '@/contexts/SavingsGoalContext';
+import { useTheme } from '@/contexts/ThemeContext';
 import { selectMonthlyData } from '@/redux/store/selectors';
 import { monthFullLabel } from '@/utils/insightsCalcs';
 import {
@@ -19,6 +20,8 @@ import {
   amountToGoal,
   isGoalReached,
   savingsTrend,
+  resolveSaveOutcome,
+  SAVE_ERROR_MESSAGE,
 } from '@/utils/savingsCalcs';
 
 const GREEN = '#0FB46B';
@@ -28,9 +31,33 @@ export default function SavingsScreen() {
   const router = useRouter();
   const monthlyData = useSelector(selectMonthlyData);
   const { goal, setGoal } = useSavingsGoal();
+  const { isDark } = useTheme();
+  const trackColor = isDark ? '#202C1E' : '#ECEBE6';
+  const savingsGoalError = useSelector((s: any) => s.savingsGoal?.error);
+  const savingsGoalPending = useSelector((s: any) => !!s.savingsGoal?.pending);
 
   const [editingGoal, setEditingGoal] = useState(false);
   const [goalInput, setGoalInput] = useState('');
+  const [goalError, setGoalError] = useState(false);
+  const wasPending = useRef(false);
+
+  // After a set-goal attempt, exit edit mode only once the save resolves
+  // without an error. Detect resolution via the pending flag's true -> false
+  // transition (not value-equality on `goal`), so a retry that saves the
+  // same value as before still resolves instead of leaving edit mode stuck.
+  // On failure, stay in edit mode with the input intact and surface the
+  // inline error instead of collapsing the form.
+  useEffect(() => {
+    const outcome = resolveSaveOutcome(wasPending.current, savingsGoalPending, !!savingsGoalError);
+    wasPending.current = savingsGoalPending;
+    if (outcome === 'noop') return;
+    if (outcome === 'error') {
+      setGoalError(true);
+    } else {
+      setGoalError(false);
+      setEditingGoal(false);
+    }
+  }, [savingsGoalPending, savingsGoalError]);
 
   const current = monthlyData[monthlyData.length - 1];
   const previous = monthlyData.length > 1 ? monthlyData[monthlyData.length - 2] : undefined;
@@ -47,6 +74,7 @@ export default function SavingsScreen() {
 
   const startEditingGoal = () => {
     setGoalInput(goal > 0 ? String(goal) : '');
+    setGoalError(false);
     setEditingGoal(true);
   };
 
@@ -55,7 +83,6 @@ export default function SavingsScreen() {
     if (next > 0) {
       setGoal(next);
     }
-    setEditingGoal(false);
   };
 
   return (
@@ -98,7 +125,7 @@ export default function SavingsScreen() {
               ₹{current.income.toLocaleString('en-IN')}
             </Text>
           </View>
-          <View style={{ height: 8, borderRadius: 4, backgroundColor: '#ECEBE6', overflow: 'hidden' }}>
+          <View style={{ height: 8, borderRadius: 4, backgroundColor: trackColor, overflow: 'hidden' }}>
             <View style={{ height: 8, borderRadius: 4, width: '100%', backgroundColor: GREEN }} />
           </View>
 
@@ -108,13 +135,13 @@ export default function SavingsScreen() {
               ₹{current.spent.toLocaleString('en-IN')}
             </Text>
           </View>
-          <View style={{ height: 8, borderRadius: 4, backgroundColor: '#ECEBE6', overflow: 'hidden' }}>
+          <View style={{ height: 8, borderRadius: 4, backgroundColor: trackColor, overflow: 'hidden' }}>
             <View style={{ height: 8, borderRadius: 4, width: `${expensesPct}%`, backgroundColor: RED }} />
           </View>
 
           <View
             className="flex-row justify-between items-center mt-4 pt-4"
-            style={{ borderTopWidth: 1, borderTopColor: '#ECEBE6' }}
+            style={{ borderTopWidth: 1, borderTopColor: trackColor }}
           >
             <Text className="text-tx-primary dark:text-tx-primary-dark font-bold text-sm">Net saved</Text>
             <Text style={{ color: saved >= 0 ? GREEN : RED }} className="font-extrabold text-sm">
@@ -142,9 +169,9 @@ export default function SavingsScreen() {
             <View className="flex-row items-center" style={{ gap: 10 }}>
               <View
                 className="flex-row items-center flex-1 rounded-2xl px-3 py-2.5"
-                style={{ borderWidth: 1, borderColor: '#E5E5E0' }}
+                style={{ borderWidth: 1, borderColor: isDark ? '#263024' : '#E5E5E0' }}
               >
-                <Text style={{ color: '#9AA096', marginRight: 4, fontWeight: '600' }}>₹</Text>
+                <Text style={{ color: isDark ? '#7E8E7C' : '#9AA096', marginRight: 4, fontWeight: '600' }}>₹</Text>
                 <TextInput
                   testID="goal-input"
                   value={goalInput}
@@ -152,14 +179,22 @@ export default function SavingsScreen() {
                   keyboardType="numeric"
                   placeholder="0"
                   placeholderTextColor="#9AA096"
-                  style={{ flex: 1, color: '#2B2F2A' }}
+                  style={{ flex: 1, color: isDark ? '#E2E9E0' : '#2B2F2A' }}
                 />
               </View>
               <Pressable onPress={onSetGoal} style={{ backgroundColor: GREEN, borderRadius: 16, paddingHorizontal: 18, paddingVertical: 12 }}>
                 <Text style={{ color: '#FFFFFF' }} className="font-bold text-sm">Set</Text>
               </Pressable>
             </View>
-          ) : (
+          ) : null}
+
+          {goalError ? (
+            <Text className="text-center mt-2" style={{ color: '#E8322A', fontSize: 13, fontWeight: '600' }}>
+              {SAVE_ERROR_MESSAGE}
+            </Text>
+          ) : null}
+
+          {!editingGoal && (
             <View className="flex-row items-center" style={{ gap: 16 }}>
               <GoalRing percent={goalPct} />
               <View className="flex-1">
@@ -169,7 +204,7 @@ export default function SavingsScreen() {
                 <Text className="text-tx-tertiary dark:text-tx-tertiary-dark text-xs font-semibold">
                   of ₹{goal.toLocaleString('en-IN')} goal
                 </Text>
-                <View style={{ height: 6, borderRadius: 3, backgroundColor: '#ECEBE6', marginTop: 8, overflow: 'hidden' }}>
+                <View style={{ height: 6, borderRadius: 3, backgroundColor: trackColor, marginTop: 8, overflow: 'hidden' }}>
                   <View style={{ height: 6, borderRadius: 3, width: `${goalPct}%`, backgroundColor: GREEN }} />
                 </View>
                 <Text className="text-tx-secondary dark:text-tx-secondary-dark text-xs font-bold mt-2">

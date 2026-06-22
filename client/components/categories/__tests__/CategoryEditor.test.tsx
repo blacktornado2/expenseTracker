@@ -2,10 +2,18 @@
 import React from 'react';
 import { Pressable, TextInput } from 'react-native';
 import { create, act } from 'react-test-renderer';
+
+jest.mock('@/contexts/ThemeContext', () => ({ useTheme: jest.fn() }));
+import { useTheme } from '@/contexts/ThemeContext';
 import CategoryEditor from '../CategoryEditor';
 import { COLOR_SWATCHES, ICON_OPTIONS } from '@/constants/categoryPalette';
 
 describe('CategoryEditor', () => {
+  beforeEach(() => {
+    (useTheme as jest.Mock).mockReturnValue({ isDark: false, toggleDark: jest.fn() });
+  });
+
+
   it('does not call onConfirm when the name is empty', () => {
     const onConfirm = jest.fn();
     const tree = create(<CategoryEditor onConfirm={onConfirm} onCancel={jest.fn()} />).root;

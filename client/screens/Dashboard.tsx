@@ -29,20 +29,19 @@ type Greeting = {
   text: string;
   Icon: typeof Sun;
   color: string;
-  pillBg: string;
 };
 
 function getGreeting(hour: number): Greeting {
   if (hour >= 5 && hour < 12) {
-    return { text: 'Good morning', Icon: Sun, color: '#F59E0B', pillBg: '#FFFBEB' };
+    return { text: 'Good morning', Icon: Sun, color: '#F59E0B' };
   }
   if (hour >= 12 && hour < 17) {
-    return { text: 'Good afternoon', Icon: Sun, color: '#F97316', pillBg: '#FFF7ED' };
+    return { text: 'Good afternoon', Icon: Sun, color: '#F97316' };
   }
   if (hour >= 17 && hour < 21) {
-    return { text: 'Good evening', Icon: Sunset, color: '#E8703A', pillBg: '#FFF1E6' };
+    return { text: 'Good evening', Icon: Sunset, color: '#E8703A' };
   }
-  return { text: 'Good night', Icon: Moon, color: '#7C5CFC', pillBg: '#EFEAFE' };
+  return { text: 'Good night', Icon: Moon, color: '#7C5CFC' };
 }
 
 export default function Dashboard() {
@@ -86,11 +85,11 @@ export default function Dashboard() {
         <View className="flex-row items-center justify-between mb-5">
           <View className="flex-row items-center" style={{ gap: 10 }}>
             <View
+              className="bg-bg-subtle dark:bg-bg-subtle-dark"
               style={{
                 width: 26,
                 height: 26,
                 borderRadius: 9,
-                backgroundColor: greeting.pillBg,
                 alignItems: 'center',
                 justifyContent: 'center',
               }}

@@ -15,6 +15,7 @@ import { loadCustomCategories, type CustomCategory } from '@/utils/customCategor
 import { transactionSelector } from '@/redux/store/selectors';
 import { updateTransaction, deleteTransaction } from '@/redux/actions/transaction.actions';
 import { rawToTxDraft, txDraftToUpdatePayload, type RawStoreTxn, type TxDraft } from '@/utils/transactionMappings';
+import { useTheme } from '@/contexts/ThemeContext';
 
 type EntryType = 'expense' | 'income';
 
@@ -32,6 +33,7 @@ export default function EditTransactionSheet({ txn, onClose }: Props) {
   const dispatch = useDispatch();
   const txState = useSelector(transactionSelector as any) as any;
   const { updateError, deleteError, updatePending, deletePending } = txState;
+  const { isDark } = useTheme();
 
   const [draft, setDraft] = useState<TxDraft | null>(null);
   const [customCategories, setCustomCategories] = useState<CustomCategory[]>([]);
@@ -129,42 +131,42 @@ export default function EditTransactionSheet({ txn, onClose }: Props) {
           {/* Name field */}
           <View
             className="flex-row items-center rounded-2xl px-3 py-3 mb-3"
-            style={{ borderWidth: 1, borderColor: nameError ? '#E8322A' : '#E5E5E0', backgroundColor: nameError ? '#FFF5F5' : undefined }}
+            style={{ borderWidth: 1, borderColor: nameError ? '#E8322A' : isDark ? '#263024' : '#E5E5E0', backgroundColor: nameError ? (isDark ? '#2A1A1A' : '#FFF5F5') : undefined }}
           >
-            <Pencil color="#9AA096" size={18} />
+            <Pencil color={isDark ? '#7E8E7C' : '#9AA096'} size={18} />
             <TextInput
               value={draft.name}
               onChangeText={(v) => { setDraft((d) => d ? { ...d, name: v } : d); setNameError(false); }}
               placeholder="Name"
               placeholderTextColor="#9AA096"
-              style={{ marginLeft: 8, flex: 1, color: '#2B2F2A' }}
+              style={{ marginLeft: 8, flex: 1, color: isDark ? '#E2E9E0' : '#2B2F2A' }}
             />
           </View>
 
           {/* Amount field */}
           <View
             className="flex-row items-center rounded-2xl px-3 py-3 mb-3"
-            style={{ borderWidth: 1, borderColor: amountError ? '#E8322A' : '#E5E5E0', backgroundColor: amountError ? '#FFF5F5' : undefined }}
+            style={{ borderWidth: 1, borderColor: amountError ? '#E8322A' : isDark ? '#263024' : '#E5E5E0', backgroundColor: amountError ? (isDark ? '#2A1A1A' : '#FFF5F5') : undefined }}
           >
-            <Text style={{ color: '#9AA096', marginRight: 2, fontWeight: '600' }}>₹</Text>
+            <Text style={{ color: isDark ? '#7E8E7C' : '#9AA096', marginRight: 2, fontWeight: '600' }}>₹</Text>
             <TextInput
               value={draft.amountStr}
               onChangeText={(v) => { setDraft((d) => d ? { ...d, amountStr: v } : d); setAmountError(false); }}
               keyboardType="numeric"
               placeholder="0"
               placeholderTextColor="#9AA096"
-              style={{ flex: 1, color: '#2B2F2A' }}
+              style={{ flex: 1, color: isDark ? '#E2E9E0' : '#2B2F2A' }}
             />
           </View>
 
           {/* Date field */}
           <Pressable
             className="flex-row items-center rounded-2xl px-3 py-3 mb-4"
-            style={{ borderWidth: 1, borderColor: '#E5E5E0' }}
+            style={{ borderWidth: 1, borderColor: isDark ? '#263024' : '#E5E5E0' }}
             onPress={() => setShowDatePicker(true)}
           >
-            <CalendarDays color="#9AA096" size={18} />
-            <Text style={{ marginLeft: 8, color: '#2B2F2A' }}>
+            <CalendarDays color={isDark ? '#7E8E7C' : '#9AA096'} size={18} />
+            <Text style={{ marginLeft: 8, color: isDark ? '#E2E9E0' : '#2B2F2A' }}>
               {format(new Date(draft.date), 'MMMM dd, yyyy')}
             </Text>
           </Pressable>
@@ -220,7 +222,7 @@ export default function EditTransactionSheet({ txn, onClose }: Props) {
           <Pressable
             onPress={onDelete}
             disabled={isBusy}
-            style={{ marginTop: 12, borderRadius: 16, height: 52, alignItems: 'center', justifyContent: 'center', backgroundColor: '#FFF0F0' }}
+            style={{ marginTop: 12, borderRadius: 16, height: 52, alignItems: 'center', justifyContent: 'center', backgroundColor: isDark ? '#2A1A1A' : '#FFF0F0' }}
           >
             {isBusy && wasDeleting.current ? (
               <ActivityIndicator color="#E8322A" />

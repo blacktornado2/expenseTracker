@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useDispatch, useSelector } from 'react-redux';
@@ -23,6 +23,8 @@ import {
 import { createTransaction } from '@/redux/actions/transaction.actions';
 import { userSelector } from '@/redux/store/selectors';
 import { entryTypeToTxnType } from '@/utils/transactionMappings';
+import { useTheme } from '@/contexts/ThemeContext';
+import { resolveSaveOutcome, SAVE_ERROR_MESSAGE } from '@/utils/savingsCalcs';
 
 type EntryType = 'expense' | 'income';
 
@@ -35,6 +37,7 @@ export default function AddTransactionNew() {
   const router = useRouter();
   const dispatch = useDispatch();
   useSelector(userSelector);
+  const { isDark } = useTheme();
 
   const [entryType, setEntryType] = useState<EntryType>('expense');
   const [amountStr, setAmountStr] = useState('');
@@ -46,10 +49,33 @@ export default function AddTransactionNew() {
   const [showEditor, setShowEditor] = useState(false);
   const [amountError, setAmountError] = useState(false);
   const [nameError, setNameError] = useState(false);
+  const [hadError, setHadError] = useState(false);
+  const createError = useSelector((s: any) => s.transaction?.createError);
+  const createPending = useSelector((s: any) => s.transaction?.createPending ?? false);
+  const wasSubmitting = useRef(false);
 
   useEffect(() => {
     loadCustomCategories().then(setCustomCategories);
   }, []);
+
+  // After a submit attempt, resolve once the createPending flag's true ->
+  // false transition fires, rather than keying off the transaction-count
+  // proxy or error-reference equality. Those signals miss a failure ->
+  // retry-success with no net count change in the same tick, and a stale
+  // createError lingers across edits since it's only cleared on
+  // CREATE_TRANSACTION_SUCCESS. On failure, stay on the form with the draft
+  // intact and surface the inline error below instead of navigating away.
+  useEffect(() => {
+    const outcome = resolveSaveOutcome(wasSubmitting.current, createPending, !!createError);
+    wasSubmitting.current = createPending;
+    if (outcome === 'noop') return;
+    if (outcome === 'error') {
+      setHadError(true);
+      return;
+    }
+    router.replace('/(logged-in)/(tabs)/transactions');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [createPending]);
 
   const categoryOptions: CategoryOption[] = useMemo(() => {
     const builtIns = BUILT_IN_CATEGORIES.map(({ key, label }) => {
@@ -99,6 +125,8 @@ export default function AddTransactionNew() {
     if (hasAmountError || hasNameError) {
       return;
     }
+    setHadError(false);
+    wasSubmitting.current = true;
     dispatch(
       createTransaction({
         transactionType: entryTypeToTxnType(entryType),
@@ -108,10 +136,9 @@ export default function AddTransactionNew() {
         description: name.trim(),
       })
     );
-    router.replace('/(logged-in)/(tabs)/transactions');
   };
 
-  const amountColor = amountError ? '#E8322A' : entryType === 'income' ? '#0FB46B' : '#2B2F2A';
+  const amountColor = amountError ? '#E8322A' : entryType === 'income' ? '#0FB46B' : isDark ? '#E2E9E0' : '#2B2F2A';
 
   return (
     <ScrollView className="flex-1 bg-bg-app dark:bg-bg-app-dark" contentContainerStyle={{ paddingTop: 56, paddingHorizontal: 20, paddingBottom: 40 }}>
@@ -140,11 +167,11 @@ export default function AddTransactionNew() {
         className="flex-row items-center mt-6 rounded-2xl px-3 py-3"
         style={{
           borderWidth: 1,
-          borderColor: nameError ? '#E8322A' : '#E5E5E0',
-          backgroundColor: nameError ? '#FFF5F5' : undefined,
+          borderColor: nameError ? '#E8322A' : isDark ? '#263024' : '#E5E5E0',
+          backgroundColor: nameError ? (isDark ? '#2A1A1A' : '#FFF5F5') : undefined,
         }}
       >
-        <Pencil color="#9AA096" size={18} />
+        <Pencil color={isDark ? '#7E8E7C' : '#9AA096'} size={18} />
         <TextInput
           testID="transaction-name-input"
           value={name}
@@ -154,13 +181,13 @@ export default function AddTransactionNew() {
           }}
           placeholder="Name"
           placeholderTextColor="#9AA096"
-          style={{ marginLeft: 8, flex: 1, color: '#2B2F2A', borderColor: nameError ? '#E8322A' : 'transparent', borderWidth: 1 }}
+          style={{ marginLeft: 8, flex: 1, color: isDark ? '#E2E9E0' : '#2B2F2A', borderColor: nameError ? '#E8322A' : 'transparent', borderWidth: 1 }}
         />
       </View>
 
-      <View className="flex-row items-center mt-4 rounded-2xl px-3 py-3" style={{ borderWidth: 1, borderColor: '#E5E5E0' }}>
-        <CalendarDays color="#9AA096" size={18} />
-        <Text style={{ marginLeft: 8, color: '#2B2F2A' }}>{format(date, 'MMMM dd, yyyy')}</Text>
+      <View className="flex-row items-center mt-4 rounded-2xl px-3 py-3" style={{ borderWidth: 1, borderColor: isDark ? '#263024' : '#E5E5E0' }}>
+        <CalendarDays color={isDark ? '#7E8E7C' : '#9AA096'} size={18} />
+        <Text style={{ marginLeft: 8, color: isDark ? '#E2E9E0' : '#2B2F2A' }}>{format(date, 'MMMM dd, yyyy')}</Text>
       </View>
 
       <View className="mt-6">
@@ -199,6 +226,12 @@ export default function AddTransactionNew() {
           {entryType === 'income' ? 'Add income' : 'Add expense'}
         </Text>
       </Pressable>
+
+      {hadError ? (
+        <Text className="text-center mt-3" style={{ color: '#E8322A', fontSize: 13, fontWeight: '600' }}>
+          {SAVE_ERROR_MESSAGE}
+        </Text>
+      ) : null}
     </ScrollView>
   );
 }

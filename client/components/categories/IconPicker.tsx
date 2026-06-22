@@ -1,6 +1,7 @@
 import React from 'react';
 import { Pressable, View } from 'react-native';
 import type { LucideIcon } from 'lucide-react-native';
+import { useTheme } from '@/contexts/ThemeContext';
 
 type IconOption = { key: string; Icon: LucideIcon };
 
@@ -11,6 +12,7 @@ type IconPickerProps = {
 };
 
 export default function IconPicker({ icons, selected, onSelect }: IconPickerProps) {
+  const { isDark } = useTheme();
   return (
     <View className="flex-row flex-wrap" style={{ gap: 10 }}>
       {icons.map(({ key, Icon }) => {
@@ -24,7 +26,7 @@ export default function IconPicker({ icons, selected, onSelect }: IconPickerProp
               active ? 'bg-brand-green' : 'bg-bg-close dark:bg-bg-close-dark'
             }`}
           >
-            <Icon color={active ? '#FFFFFF' : '#2B2F2A'} size={20} />
+            <Icon color={active ? '#FFFFFF' : isDark ? '#E2E9E0' : '#2B2F2A'} size={20} />
           </Pressable>
         );
       })}
