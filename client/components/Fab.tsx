@@ -15,7 +15,7 @@ export default function Fab() {
   return (
     <Pressable
       onPress={() => router.push('/addTransactionNew')}
-      style={{ position: 'absolute', right: 18, bottom: 24 }}
+      style={{ position: 'absolute', right: 18, bottom: 90 }}
     >
       <LinearGradient
         colors={['#13C076', '#0A9E5E']}

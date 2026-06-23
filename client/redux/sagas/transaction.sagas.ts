@@ -2,15 +2,15 @@ import { call, put, takeLatest, select } from "redux-saga/effects";
 import { getAllTransactionsService, createTransactionService, updateTransactionService, deleteTransactionService } from '../services/transaction.service'
 import { userSelector } from "../store/selectors";
 import { GET_TRANSACTIONS_REQUEST, CREATE_TRANSACTION_REQUEST, UPDATE_TRANSACTION_REQUEST, DELETE_TRANSACTION_REQUEST } from "../actions/action.types";
-import { getAllTransactionsSuccess, createTransactionSuccess, createTransactionFailure, updateTransactionSuccess, updateTransactionFailure, deleteTransactionSuccess, deleteTransactionFailure } from '../actions/transaction.actions'
+import { getAllTransactionsSuccess, getAllTransactionsFailure, createTransactionSuccess, createTransactionFailure, updateTransactionSuccess, updateTransactionFailure, deleteTransactionSuccess, deleteTransactionFailure } from '../actions/transaction.actions'
 
-function* getAllTransactionsSaga() {
+export function* getAllTransactionsSaga() {
     try {
         const {token} = yield select(userSelector);
-        const {data} = yield getAllTransactionsService(token)
+        const {data} = yield call(getAllTransactionsService, token)
         yield put(getAllTransactionsSuccess(data));
     } catch (err) {
-        console.log('get all transactions saga failed', err);
+        yield put(getAllTransactionsFailure(err));
     }
 }
 

@@ -1,5 +1,6 @@
 import {
   GET_TRANSACTIONS_SUCCESS,
+  GET_TRANSACTIONS_FAILURE,
   CREATE_TRANSACTION_REQUEST,
   CREATE_TRANSACTION_SUCCESS,
   CREATE_TRANSACTION_FAILURE,
@@ -13,6 +14,7 @@ import {
 
 const initialState = {
   transactions: [] as any[],
+  getTransactionsError: null as any,
   createError: null as any,
   updateError: null as any,
   deleteError: null as any,
@@ -24,7 +26,9 @@ const initialState = {
 const transactionReducer = (state = initialState, action: any) => {
   switch (action.type) {
     case GET_TRANSACTIONS_SUCCESS:
-      return { ...state, transactions: action.payload };
+      return { ...state, transactions: action.payload, getTransactionsError: null };
+    case GET_TRANSACTIONS_FAILURE:
+      return { ...state, getTransactionsError: action.payload };
     case CREATE_TRANSACTION_REQUEST:
       return { ...state, createPending: true, createError: null };
     case CREATE_TRANSACTION_SUCCESS:

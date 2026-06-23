@@ -7,16 +7,12 @@ import type { CreateTransactionPayload, UpdateTransactionPayload } from '../acti
 const API_BASE_URL = Constants.expoConfig?.extra?.API_BASE_URL ?? '';
 
 export const getAllTransactionsService = async (token: string) => {
-    try {
-        const {status, data} = await axios.get(`${API_BASE_URL}/transaction/user`, {
-            headers: {
-                'authorization': `Bearer ${token}`,
-            },
-        });
-        return {status, data};
-    } catch (err) {
-        console.log('error fetching transactions', err);
-    }
+    const {status, data} = await axios.get(`${API_BASE_URL}/transaction/user`, {
+        headers: {
+            'authorization': `Bearer ${token}`,
+        },
+    });
+    return {status, data};
 }
 
 export const createTransactionService = async (token: string, payload: CreateTransactionPayload) => {

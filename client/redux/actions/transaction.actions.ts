@@ -1,6 +1,7 @@
 import {
   GET_TRANSACTIONS_REQUEST,
   GET_TRANSACTIONS_SUCCESS,
+  GET_TRANSACTIONS_FAILURE,
   CREATE_TRANSACTION_REQUEST,
   CREATE_TRANSACTION_SUCCESS,
   CREATE_TRANSACTION_FAILURE,
@@ -16,6 +17,11 @@ export const getAllTransactions = () => ({ type: GET_TRANSACTIONS_REQUEST });
 export const getAllTransactionsSuccess = (data: any) => ({
   type: GET_TRANSACTIONS_SUCCESS,
   payload: data,
+});
+
+export const getAllTransactionsFailure = (error: any) => ({
+  type: GET_TRANSACTIONS_FAILURE,
+  payload: error,
 });
 
 export type CreateTransactionPayload = {
