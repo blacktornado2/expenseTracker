@@ -28,9 +28,12 @@ import { resolveSaveOutcome, SAVE_ERROR_MESSAGE } from '@/utils/savingsCalcs';
 
 type EntryType = 'expense' | 'income';
 
-const ENTRY_OPTIONS: readonly [{ value: EntryType; label: string }, { value: EntryType; label: string }] = [
-  { value: 'expense', label: 'Expense' },
-  { value: 'income', label: 'Income' },
+const ENTRY_OPTIONS: readonly [
+  { value: EntryType; label: string; activeColor: string },
+  { value: EntryType; label: string; activeColor: string },
+] = [
+  { value: 'expense', label: 'Expense', activeColor: '#E8322A' },
+  { value: 'income', label: 'Income', activeColor: '#0FB46B' },
 ];
 
 export default function AddTransactionNew() {

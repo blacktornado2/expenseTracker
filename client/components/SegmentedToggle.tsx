@@ -4,6 +4,7 @@ import { Pressable, Text, View } from 'react-native';
 type Option<T extends string> = {
   value: T;
   label: string;
+  activeColor?: string;
 };
 
 type SegmentedToggleProps<T extends string> = {
@@ -23,7 +24,10 @@ export default function SegmentedToggle<T extends string>({
         const active = option.value === value;
         return (
           <Pressable key={option.value} onPress={() => onChange(option.value)}>
-            <View className={`px-3 py-1.5 rounded-full ${active ? 'bg-brand-green' : ''}`}>
+            <View
+              className={`px-3 py-1.5 rounded-full ${active && !option.activeColor ? 'bg-brand-green' : ''}`}
+              style={active && option.activeColor ? { backgroundColor: option.activeColor } : undefined}
+            >
               <Text
                 className={
                   active

@@ -20,8 +20,8 @@ import { useTheme } from '@/contexts/ThemeContext';
 type EntryType = 'expense' | 'income';
 
 const ENTRY_OPTIONS = [
-  { value: 'expense' as EntryType, label: 'Expense' },
-  { value: 'income' as EntryType, label: 'Income' },
+  { value: 'expense' as EntryType, label: 'Expense', activeColor: '#E8322A' },
+  { value: 'income' as EntryType, label: 'Income', activeColor: '#0FB46B' },
 ] as const;
 
 type Props = {

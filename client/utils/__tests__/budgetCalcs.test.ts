@@ -77,4 +77,12 @@ describe('totalConsumedStats', () => {
     expect(totalSpent).toBe(0);
     expect(segments).toHaveLength(0);
   });
+  it('matches spend to a budget category regardless of case or stray whitespace', () => {
+    const { segments } = totalConsumedStats(
+      [{ cat: 'Entertainment', limit: 1000 }],
+      [{ label: ' entertainment ', value: 250 }],
+      getColor
+    );
+    expect(segments[0].spent).toBe(250);
+  });
 });

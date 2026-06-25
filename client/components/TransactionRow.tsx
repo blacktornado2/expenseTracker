@@ -43,7 +43,7 @@ export default function TransactionRow({
           {name}
         </Text>
         <Text className="text-tx-tertiary dark:text-tx-tertiary-dark font-semibold text-[12.5px]">
-          {category} · {format(date, 'MMM d')}
+          <Text style={{ color: iconColor }}>{category}</Text> · {format(date, 'MMM d')}
         </Text>
       </View>
       <Text style={{ color: amountColor }} className="font-extrabold">

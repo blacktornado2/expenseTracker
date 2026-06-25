@@ -25,7 +25,7 @@ export function totalConsumedStats(
   const spendMap = new Map(spendByCategory.map((s) => [s.label.trim().toLowerCase(), s.value]));
   const totalLimit = budgets.reduce((sum, b) => sum + b.limit, 0);
   const segments: BudgetSegment[] = budgets.map((b) => {
-    const spent = spendMap.get(b.cat) ?? 0;
+    const spent = spendMap.get(b.cat.trim().toLowerCase()) ?? 0;
     const percent = totalLimit > 0 ? (b.limit / totalLimit) * 100 : 0;
     return { label: b.cat, color: getCategoryColor(b.cat), spent, limit: b.limit, percent };
   });

@@ -32,12 +32,11 @@ function TrendBar({
   return (
     <Pressable testID={testID} onPress={onPress} style={{ flex: 1, alignItems: 'center' }}>
       <Animated.View
-        className={active ? '' : 'bg-close dark:bg-close-dark'}
         style={{
-          width: 18,
+          width: 32,
           height: animatedHeight,
           borderRadius: 6,
-          backgroundColor: active ? '#0FB46B' : undefined,
+          backgroundColor: active ? '#0FB46B' : 'rgba(15, 180, 107, 0.4)',
         }}
       />
     </Pressable>
@@ -46,12 +45,14 @@ function TrendBar({
 
 export default function TrendBars({ data, selectedIndex, onSelect, maxBarHeight = 74 }: TrendBarsProps) {
   const maxSpent = Math.max(1, ...data.map((d) => d.spent));
+  // `data` is chronological (oldest first); display latest month on the left.
+  const reversed = data.map((d, index) => ({ ...d, index })).reverse();
 
   return (
     <Animated.View className="flex-row items-end justify-between" style={{ height: maxBarHeight }}>
-      {data.map((d, index) => {
+      {reversed.map(({ spent, index }) => {
         const active = index === selectedIndex;
-        const height = Math.max(4, (d.spent / maxSpent) * maxBarHeight);
+        const height = Math.max(4, (spent / maxSpent) * maxBarHeight);
         return (
           <TrendBar
             key={index}

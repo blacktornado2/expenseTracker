@@ -107,7 +107,7 @@ export default function BudgetsScreen() {
             {/* Budget grid — 2 columns with 13px gap */}
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 13 }}>
               {budgets.map((budget) => {
-                const spent = spendMap.get(budget.cat) ?? 0;
+                const spent = spendMap.get(budget.cat.trim().toLowerCase()) ?? 0;
                 const pct = ringPercent(spent, budget.limit);
                 const over = isOverBudget(spent, budget.limit);
                 const meta = getCategoryMeta(budget.cat);
