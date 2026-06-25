@@ -87,7 +87,7 @@ export default function SavingsScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-bg-app dark:bg-bg-app-dark">
-      <ScrollView contentContainerStyle={{ paddingTop: 54, paddingHorizontal: 18, paddingBottom: 26 }}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingTop: 20, paddingHorizontal: 18, paddingBottom: 26 }}>
         <View className="flex-row items-center justify-between mb-5">
           <Pressable onPress={() => router.back()}>
             <Text style={{ color: GREEN }} className="font-bold text-base">‹ Home</Text>

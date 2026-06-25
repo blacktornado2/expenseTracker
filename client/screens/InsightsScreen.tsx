@@ -24,7 +24,8 @@ export default function InsightsScreen() {
   return (
     <SafeAreaView className="flex-1 bg-bg-app dark:bg-bg-app-dark">
       <ScrollView
-        contentContainerStyle={{ paddingTop: 54, paddingHorizontal: 18, paddingBottom: 26 }}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingTop: 20, paddingHorizontal: 18, paddingBottom: 26 }}
       >
         <Text
           style={{ fontFamily: 'BricolageGrotesque_800ExtraBold', fontSize: 30 }}

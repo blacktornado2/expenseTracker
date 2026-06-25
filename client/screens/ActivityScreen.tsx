@@ -43,7 +43,8 @@ export default function ActivityScreen() {
       <FlatList
         data={sorted}
         keyExtractor={(item: any) => item._id}
-        contentContainerStyle={{ paddingTop: 54, paddingHorizontal: 18, paddingBottom: 26 }}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingTop: 20, paddingHorizontal: 18, paddingBottom: 26 }}
         ListHeaderComponent={
           <View>
             <Text
