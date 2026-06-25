@@ -12,7 +12,7 @@ type StackedBarProps = {
   height?: number;
 };
 
-export default function StackedBar({ data, height = 14 }: StackedBarProps) {
+export default function StackedBar({ data, height = 12 }: StackedBarProps) {
   const total = data.reduce((sum, segment) => sum + segment.value, 0);
   const growth = useRef(new Animated.Value(0)).current;
 
@@ -25,26 +25,38 @@ export default function StackedBar({ data, height = 14 }: StackedBarProps) {
     return (
       <View
         className="bg-bg-subtle dark:bg-bg-subtle-dark"
-        style={{ height, borderRadius: height / 2 }}
+        style={{ height, borderRadius: height / 2, alignSelf: 'center' }}
       />
     );
   }
 
+  const radius = height / 2;
+  const segments = data.filter((segment) => segment.value > 0);
+
   return (
     <Animated.View
-      className="flex-row overflow-hidden"
+      className="flex-row"
       style={{
         height,
-        borderRadius: height / 2,
+        width: '100%',
+        alignSelf: 'center',
         transform: [{ scaleX: growth }],
         transformOrigin: 'left',
       }}
     >
-      {data
-        .filter((segment) => segment.value > 0)
-        .map((segment) => (
-          <View key={segment.label} style={{ flex: segment.value / total, backgroundColor: segment.color }} />
-        ))}
+      {segments.map((segment, index) => (
+        <View
+          key={segment.label}
+          style={{
+            flex: segment.value / total,
+            backgroundColor: segment.color,
+            borderTopLeftRadius: index === 0 ? radius : 0,
+            borderBottomLeftRadius: index === 0 ? radius : 0,
+            borderTopRightRadius: index === segments.length - 1 ? radius : 0,
+            borderBottomRightRadius: index === segments.length - 1 ? radius : 0,
+          }}
+        />
+      ))}
     </Animated.View>
   );
 }

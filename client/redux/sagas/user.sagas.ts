@@ -28,15 +28,18 @@ type LoginAction = { type: string; payload: LoginPayload };
 type RegisterUserPayload = { name: string; email: string; password: string };
 type RegisterUserAction = { type: string; payload: RegisterUserPayload };
 
-const setLoginToken = async (token: string) => {
-  await AsyncStorage.setItem('JWT_TOKEN', token);
+const persistSession = async (token: string, user: unknown) => {
+  await AsyncStorage.multiSet([
+    ['JWT_TOKEN', token],
+    ['USER', JSON.stringify(user ?? null)],
+  ]);
 };
 
 function* loginUserSaga(action: LoginAction) {
   try {
     const { email, password } = action.payload;
     const { token, user } = yield loginUserService({ email, password });
-    yield setLoginToken(token);
+    yield persistSession(token, user);
     yield put(loginUserSuccess(user, token));
   } catch (error: any) {
     yield put(loginUserFailure(error));
@@ -78,7 +81,7 @@ export function* updateUserSaga(action: any) {
 
 export function* logoutUserSaga() {
   try {
-    yield call([AsyncStorage, 'removeItem'], 'JWT_TOKEN');
+    yield call([AsyncStorage, 'multiRemove'], ['JWT_TOKEN', 'USER']);
   } catch (error) {
     console.log("logout cleanup failed", error);
   }

@@ -12,7 +12,7 @@ const Login = () => {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const { user } = useSelector(userSelector);
+  const { user, error } = useSelector(userSelector);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -23,7 +23,13 @@ const Login = () => {
       router.replace('/');
     }
   }, [user])
-  
+
+  useEffect(() => {
+    if (error) {
+      setIsLoginDisabled(false);
+    }
+  }, [error])
+
 
   const resetForm = () => {
     setEmail('');
@@ -73,7 +79,12 @@ const Login = () => {
                 secureTextEntry
               />
             </View>
-            <TouchableOpacity onPress={loginUser} className='bg-green-600 flex items-center py-3 rounded-xl'>
+            {!!error && (
+              <Text className='text-center text-red-600 mb-3'>
+                Invalid email or password. Please try again.
+              </Text>
+            )}
+            <TouchableOpacity disabled={isLoginDisabled} onPress={loginUser} className='bg-green-600 flex items-center py-3 rounded-xl'>
               <Text className='text-white text-lg  tracking-wide font-bold'>Login</Text>
             </TouchableOpacity>
             <Text className='text-center text-lg font-bold mt-2'>

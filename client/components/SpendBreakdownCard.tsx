@@ -14,6 +14,7 @@ type ChartMode = 'bar' | 'pie';
 export default function SpendBreakdownCard({ data }: SpendBreakdownCardProps) {
   const [mode, setMode] = useState<ChartMode>('bar');
   const hasData = data.some((segment) => segment.value > 0);
+  const total = data.reduce((sum, segment) => sum + segment.value, 0);
 
   return (
     <Card radius={26} className="p-5 mt-4">
@@ -47,7 +48,9 @@ export default function SpendBreakdownCard({ data }: SpendBreakdownCardProps) {
             <View key={segment.label} className="flex-row items-center" style={{ gap: 6 }}>
               <View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: segment.color }} />
               <Text className="text-tx-secondary dark:text-tx-secondary-dark text-xs font-semibold">
-                {segment.label}
+                {mode === 'pie' && total > 0
+                  ? `${segment.label} (${((segment.value / total) * 100).toFixed(1)}%)`
+                  : segment.label}
               </Text>
             </View>
           ))}

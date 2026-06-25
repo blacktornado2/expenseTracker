@@ -2,7 +2,7 @@ import { call, put, select } from 'redux-saga/effects';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 jest.mock('@react-native-async-storage/async-storage', () => ({
-  removeItem: jest.fn(),
+  multiRemove: jest.fn(),
 }));
 
 import { updateUserSaga, logoutUserSaga, fetchUserSaga } from '../user.sagas';
@@ -67,9 +67,9 @@ describe('fetchUserSaga', () => {
 });
 
 describe('logoutUserSaga', () => {
-  it('removes the token from AsyncStorage and puts logout success', () => {
+  it('clears the persisted session from AsyncStorage and puts logout success', () => {
     const gen = logoutUserSaga();
-    expect(gen.next().value).toEqual(call([AsyncStorage, 'removeItem'], 'JWT_TOKEN'));
+    expect(gen.next().value).toEqual(call([AsyncStorage, 'multiRemove'], ['JWT_TOKEN', 'USER']));
     expect(gen.next().value).toEqual(put(logoutUserSuccess()));
     expect(gen.next().done).toBe(true);
   });

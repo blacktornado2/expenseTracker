@@ -6,14 +6,10 @@ import type { UpdateUserPayload } from '@/utils/profileMappings';
 const API_BASE_URL = Constants.expoConfig?.extra?.API_BASE_URL ?? '';
 
 export const loginUserService = async ({ email, password }: { email: string, password: string }) => {
-    try {
-        const { data } = await axios.post(`${API_BASE_URL}/user/login`, {
-            email, password
-        });
-        return data;
-    } catch (error: any) {
-        console.log(error.message);
-    }
+    const { data } = await axios.post(`${API_BASE_URL}/user/login`, {
+        email: email.trim().toLowerCase(), password
+    });
+    return data;
 }
 
 export const registerUserService = async ({ name, email, password }: { name: string, email: string, password: string }) => {

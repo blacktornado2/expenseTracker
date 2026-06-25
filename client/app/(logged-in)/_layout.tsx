@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { userSelector } from '@/redux/store/selectors';
 import { getBudgets } from '@/redux/actions/budget.actions';
 import { getSavingsGoal } from '@/redux/actions/savingsGoal.actions';
+import { loginUserSuccess } from '@/redux/actions/user.actions';
+import { getAllTransactions } from '@/redux/actions/transaction.actions';
 import { createBudgetService } from '@/redux/services/budget.service';
 import { setSavingsGoalService } from '@/redux/services/savingsGoal.service';
 import { runDataMigration } from '@/utils/dataMigration';
@@ -20,11 +22,20 @@ export default function AuthLayout() {
     useEffect(() => {
         const checkAuth = async () => {
             try {
-                const token = await AsyncStorage.getItem('JWT_TOKEN');
-                console.log("token", token);
-                if (!token) {
+                const storedToken = await AsyncStorage.getItem('JWT_TOKEN');
+                if (!storedToken) {
                     router.replace('/login');
+                    return;
                 }
+                // Redux state is in-memory and resets on every reload. Rehydrate the
+                // session from storage so authed sagas (which read the token from redux)
+                // can fetch data, then kick off the initial loads.
+                const userRaw = await AsyncStorage.getItem('USER');
+                const storedUser = userRaw ? JSON.parse(userRaw) : null;
+                dispatch(loginUserSuccess(storedUser, storedToken));
+                dispatch(getAllTransactions());
+                dispatch(getBudgets());
+                dispatch(getSavingsGoal());
             } catch (error) {
                 console.error(error);
                 router.replace('/login');
