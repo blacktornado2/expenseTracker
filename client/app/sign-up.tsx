@@ -42,7 +42,7 @@ const SignUp = () => {
   return (
     <SafeAreaView className='flex-1 bg-bg-app dark:bg-bg-app-dark' edges={['top']}>
       <ScrollView className='flex-1' keyboardShouldPersistTaps='handled' contentContainerStyle={{ flexGrow: 1 }}>
-        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} className='flex-1'>
+        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
           {/* Hero header */}
           <LinearGradient
             colors={['#13C076', '#0A9E5E']}
@@ -55,7 +55,7 @@ const SignUp = () => {
               <View className='h-16 w-16 rounded-full bg-white/20 items-center justify-center mb-4'>
                 <FontAwesome5 name="rupee-sign" size={28} color="#FFFFFF" />
               </View>
-              <Text style={{ fontFamily: 'BricolageGrotesque_800ExtraBold' }} className='text-white text-3xl tracking-wide'>
+              <Text style={{ fontFamily: 'Outfit_700Bold' }} className='text-white text-3xl tracking-wide'>
                 Create account
               </Text>
               <Text className='text-white/80 text-base font-semibold mt-1'>
@@ -66,7 +66,7 @@ const SignUp = () => {
 
           {/* Sign-Up Form */}
           <View
-            className='flex-1 bg-bg-card dark:bg-bg-card-dark mx-5 px-6 pt-8 pb-6'
+            className='bg-bg-card dark:bg-bg-card-dark mx-5 px-6 pt-8 pb-6'
             style={[{ borderRadius: 30, marginTop: -40 }, SHADOW_HERO]}
           >
             <View className='mb-5'>

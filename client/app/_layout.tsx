@@ -3,17 +3,16 @@ import { DarkTheme, DefaultTheme, ThemeProvider as NavigationThemeProvider } fro
 import { Provider } from 'react-redux';
 import { useFonts } from 'expo-font';
 import {
-  PlusJakartaSans_400Regular,
-  PlusJakartaSans_500Medium,
-  PlusJakartaSans_600SemiBold,
-  PlusJakartaSans_700Bold,
-  PlusJakartaSans_800ExtraBold,
-} from '@expo-google-fonts/plus-jakarta-sans';
+  Manrope_400Regular,
+  Manrope_500Medium,
+  Manrope_600SemiBold,
+  Manrope_700Bold,
+  Manrope_800ExtraBold,
+} from '@expo-google-fonts/manrope';
 import {
-  BricolageGrotesque_600SemiBold,
-  BricolageGrotesque_700Bold,
-  BricolageGrotesque_800ExtraBold,
-} from '@expo-google-fonts/bricolage-grotesque';
+  Outfit_600SemiBold,
+  Outfit_700Bold,
+} from '@expo-google-fonts/outfit';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
@@ -38,14 +37,13 @@ function NavigationThemeBridge({ children }: { children: React.ReactNode }) {
 
 export default function RootLayout() {
   const [loaded] = useFonts({
-    PlusJakartaSans_400Regular,
-    PlusJakartaSans_500Medium,
-    PlusJakartaSans_600SemiBold,
-    PlusJakartaSans_700Bold,
-    PlusJakartaSans_800ExtraBold,
-    BricolageGrotesque_600SemiBold,
-    BricolageGrotesque_700Bold,
-    BricolageGrotesque_800ExtraBold,
+    Manrope_400Regular,
+    Manrope_500Medium,
+    Manrope_600SemiBold,
+    Manrope_700Bold,
+    Manrope_800ExtraBold,
+    Outfit_600SemiBold,
+    Outfit_700Bold,
   });
 
   useEffect(() => {

@@ -3,17 +3,18 @@ import { SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-na
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { format } from 'date-fns';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Moon, Sun, Sunset, ArrowUpRight, PiggyBank } from 'lucide-react-native';
 
 import EditTransactionSheet from '@/components/sheets/EditTransactionSheet';
 import { txnTypeToEntryType, type RawStoreTxn } from '@/utils/transactionMappings';
-import Card from '@/components/Card';
 import IconTile from '@/components/IconTile';
 import Avatar from '@/components/Avatar';
 import TransactionRow from '@/components/TransactionRow';
 import HeroCard from '@/components/HeroCard';
 import SpendBreakdownCard from '@/components/SpendBreakdownCard';
 import { getCategoryMeta } from '@/constants/categoryMeta';
+import { shadowForGradientCard } from '@/constants/shadows';
 import { getAllTransactions } from '@/redux/actions/transaction.actions';
 import {
   transactionSelector,
@@ -120,31 +121,41 @@ export default function Dashboard() {
         />
 
         <View className="flex-row mt-4" style={{ gap: 12 }}>
-          <TouchableOpacity className="flex-1" onPress={() => router.push('/income-list')}>
-            <Card radius={22} className="p-4">
-              <IconTile backgroundColor="#E6F6EC">
-                <ArrowUpRight size={18} color="#16A34A" />
+          <TouchableOpacity className="flex-1" onPress={() => router.push('/income-list')} style={{ borderRadius: 22, ...shadowForGradientCard('#22C55E') }}>
+            <LinearGradient
+              colors={['#4ADE80', '#22C55E']}
+              style={{ borderRadius: 22, padding: 16, overflow: 'hidden' }}
+            >
+              <View
+                pointerEvents="none"
+                style={{ position: 'absolute', top: -24, right: -24, width: 80, height: 80, borderRadius: 40, backgroundColor: 'rgba(255,255,255,0.10)' }}
+              />
+              <IconTile backgroundColor="rgba(255,255,255,0.22)">
+                <ArrowUpRight size={18} color="#FFFFFF" />
               </IconTile>
-              <Text className="text-tx-tertiary dark:text-tx-tertiary-dark text-xs font-semibold mt-3">
-                Income
-              </Text>
-              <Text className="text-tx-primary dark:text-tx-primary-dark text-lg font-extrabold">
+              <Text className="text-white/80 text-xs font-semibold mt-3">Income</Text>
+              <Text className="text-white text-lg font-extrabold">
                 ₹{monthIncome.toLocaleString('en-IN')}
               </Text>
-            </Card>
+            </LinearGradient>
           </TouchableOpacity>
-          <TouchableOpacity className="flex-1" onPress={() => router.push('/savings')}>
-            <Card radius={22} className="p-4">
-              <IconTile backgroundColor="#EFEAFE">
-                <PiggyBank size={18} color="#7C5CFC" />
+          <TouchableOpacity className="flex-1" onPress={() => router.push('/savings')} style={{ borderRadius: 22, ...shadowForGradientCard('#7C5CFC') }}>
+            <LinearGradient
+              colors={['#A78BFA', '#7C5CFC']}
+              style={{ borderRadius: 22, padding: 16, overflow: 'hidden' }}
+            >
+              <View
+                pointerEvents="none"
+                style={{ position: 'absolute', top: -24, right: -24, width: 80, height: 80, borderRadius: 40, backgroundColor: 'rgba(255,255,255,0.10)' }}
+              />
+              <IconTile backgroundColor="rgba(255,255,255,0.22)">
+                <PiggyBank size={18} color="#FFFFFF" />
               </IconTile>
-              <Text className="text-tx-tertiary dark:text-tx-tertiary-dark text-xs font-semibold mt-3">
-                Saved
-              </Text>
-              <Text className="text-tx-primary dark:text-tx-primary-dark text-lg font-extrabold">
+              <Text className="text-white/80 text-xs font-semibold mt-3">Saved</Text>
+              <Text className="text-white text-lg font-extrabold">
                 ₹{saved.toLocaleString('en-IN')}
               </Text>
-            </Card>
+            </LinearGradient>
           </TouchableOpacity>
         </View>
 

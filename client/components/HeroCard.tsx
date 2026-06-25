@@ -55,7 +55,7 @@ export default function HeroCard({ label, subtitle, amount, progressPct, footerL
       <Text
         style={{
           color: '#FFFFFF',
-          fontFamily: 'BricolageGrotesque_800ExtraBold',
+          fontFamily: 'Outfit_700Bold',
           fontSize: 44,
           marginTop: 8,
         }}

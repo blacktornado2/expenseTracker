@@ -24,6 +24,17 @@ export const SHADOW_HERO: ViewStyle = {
   elevation: 10,
 };
 
+// Tinted shadow for small gradient cards (Income, Saved) — glows in the card's own color.
+export function shadowForGradientCard(color: string): ViewStyle {
+  return {
+    shadowColor: color,
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.25,
+    shadowRadius: 20,
+    elevation: 6,
+  };
+}
+
 // Numpad key — subtle in light, deepened in dark (spec dark token table).
 export const SHADOW_KEY: ViewStyle = {
   shadowColor: '#000',

@@ -73,7 +73,7 @@ export default function BudgetRing({ percent, color, over, size = 66 }: BudgetRi
           fontSize: 13,
           fontWeight: '800',
           color: barColor,
-          fontFamily: 'PlusJakartaSans_800ExtraBold',
+          fontFamily: 'Manrope_800ExtraBold',
         }}
       >
         {Math.round(percent)}%

@@ -58,7 +58,7 @@ export default function GoalRing({ percent, size = 88, color = '#0FB46B' }: Goal
       </Svg>
       <Text
         testID="goal-ring-percent"
-        style={{ fontSize: 16, fontWeight: '800', color, fontFamily: 'PlusJakartaSans_800ExtraBold' }}
+        style={{ fontSize: 16, fontWeight: '800', color, fontFamily: 'Manrope_800ExtraBold' }}
       >
         {Math.round(clamped)}%
       </Text>

@@ -165,7 +165,7 @@ export default function ProfileScreen() {
             <Text style={{ color: GREEN }} className="font-semibold text-xs mt-2">Tap avatar to change</Text>
           ) : null}
           <Text
-            style={{ fontFamily: 'BricolageGrotesque_800ExtraBold', fontSize: 20 }}
+            style={{ fontFamily: 'Outfit_700Bold', fontSize: 20 }}
             className="text-tx-primary dark:text-tx-primary-dark mt-3"
           >
             {fullName}

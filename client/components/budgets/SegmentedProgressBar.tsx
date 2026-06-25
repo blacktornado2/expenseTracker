@@ -50,7 +50,7 @@ export default function SegmentedProgressBar({ segments }: SegmentedProgressBarP
                 fontSize: 11,
                 fontWeight: '600',
                 color: isDark ? '#7E8E7C' : '#9AA096',
-                fontFamily: 'PlusJakartaSans_600SemiBold',
+                fontFamily: 'Manrope_600SemiBold',
               }}
             >
               {seg.label.charAt(0).toUpperCase() + seg.label.slice(1)}

@@ -158,7 +158,7 @@ export default function BudgetSheet({ mode, editBudget, onClose }: BudgetSheetPr
     <BottomSheet visible={!!mode} onClose={onClose}>
       {/* Title */}
       <Text
-        style={{ fontFamily: 'BricolageGrotesque_800ExtraBold', fontSize: 22, marginBottom: 20 }}
+        style={{ fontFamily: 'Outfit_700Bold', fontSize: 22, marginBottom: 20 }}
         className="text-tx-primary dark:text-tx-primary-dark"
       >
         {mode === 'add' ? 'New Budget' : 'Edit Budget'}
@@ -167,7 +167,7 @@ export default function BudgetSheet({ mode, editBudget, onClose }: BudgetSheetPr
       {/* Category section */}
       <Text
         className="text-tx-primary dark:text-tx-primary-dark font-bold mb-3"
-        style={{ fontFamily: 'PlusJakartaSans_700Bold' }}
+        style={{ fontFamily: 'Manrope_700Bold' }}
       >
         Category
       </Text>
@@ -188,7 +188,7 @@ export default function BudgetSheet({ mode, editBudget, onClose }: BudgetSheetPr
               color: lockedMeta.color,
               marginLeft: 6,
               fontWeight: '700',
-              fontFamily: 'PlusJakartaSans_700Bold',
+              fontFamily: 'Manrope_700Bold',
             }}
           >
             {lockedLabel}
@@ -197,7 +197,7 @@ export default function BudgetSheet({ mode, editBudget, onClose }: BudgetSheetPr
       ) : availableCategories.length === 0 ? (
         <Text
           className="text-tx-tertiary dark:text-tx-tertiary-dark mb-4"
-          style={{ fontFamily: 'PlusJakartaSans_400Regular', fontSize: 14 }}
+          style={{ fontFamily: 'Manrope_400Regular', fontSize: 14 }}
         >
           All categories already have a budget.
         </Text>
@@ -217,7 +217,7 @@ export default function BudgetSheet({ mode, editBudget, onClose }: BudgetSheetPr
       {/* Monthly limit input */}
       <Text
         className="text-tx-primary dark:text-tx-primary-dark font-bold mb-2"
-        style={{ fontFamily: 'PlusJakartaSans_700Bold' }}
+        style={{ fontFamily: 'Manrope_700Bold' }}
       >
         Monthly limit
       </Text>
@@ -234,7 +234,7 @@ export default function BudgetSheet({ mode, editBudget, onClose }: BudgetSheetPr
             color: isDark ? '#7E8E7C' : '#9AA096',
             marginRight: 2,
             fontWeight: '600',
-            fontFamily: 'PlusJakartaSans_600SemiBold',
+            fontFamily: 'Manrope_600SemiBold',
           }}
         >
           ₹
@@ -251,7 +251,7 @@ export default function BudgetSheet({ mode, editBudget, onClose }: BudgetSheetPr
           style={{
             flex: 1,
             color: isDark ? '#E2E9E0' : '#2B2F2A',
-            fontFamily: 'PlusJakartaSans_600SemiBold',
+            fontFamily: 'Manrope_600SemiBold',
             fontSize: 16,
           }}
         />
@@ -271,7 +271,7 @@ export default function BudgetSheet({ mode, editBudget, onClose }: BudgetSheetPr
               color: '#FFFFFF',
               fontWeight: '800',
               fontSize: 15,
-              fontFamily: 'PlusJakartaSans_800ExtraBold',
+              fontFamily: 'Manrope_800ExtraBold',
             }}
           >
             Save budget
@@ -302,7 +302,7 @@ export default function BudgetSheet({ mode, editBudget, onClose }: BudgetSheetPr
               color: '#E8322A',
               fontWeight: '800',
               fontSize: 15,
-              fontFamily: 'PlusJakartaSans_800ExtraBold',
+              fontFamily: 'Manrope_800ExtraBold',
             }}
           >
             Delete budget

@@ -29,7 +29,7 @@ export default function Settings() {
     <SafeAreaView className="flex-1 bg-bg-app dark:bg-bg-app-dark">
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingTop: 20, paddingHorizontal: 18, paddingBottom: 26 }}>
         <Text
-          style={{ fontFamily: 'BricolageGrotesque_800ExtraBold', fontSize: 30 }}
+          style={{ fontFamily: 'Outfit_700Bold', fontSize: 30 }}
           className="text-tx-primary dark:text-tx-primary-dark mb-4"
         >
           Settings

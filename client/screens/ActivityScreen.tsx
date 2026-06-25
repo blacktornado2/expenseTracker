@@ -48,7 +48,7 @@ export default function ActivityScreen() {
         ListHeaderComponent={
           <View>
             <Text
-              style={{ fontFamily: 'BricolageGrotesque_800ExtraBold', fontSize: 30 }}
+              style={{ fontFamily: 'Outfit_700Bold', fontSize: 30 }}
               className="text-tx-primary dark:text-tx-primary-dark mb-4"
             >
               Activity

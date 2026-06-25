@@ -45,7 +45,7 @@ export default function AuthLayout() {
             }
         }
         checkAuth();
-    }, [isLoading]);
+    }, []);
 
     useEffect(() => {
         if (!token) return;

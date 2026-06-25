@@ -28,7 +28,7 @@ export default function InsightsScreen() {
         contentContainerStyle={{ paddingTop: 20, paddingHorizontal: 18, paddingBottom: 26 }}
       >
         <Text
-          style={{ fontFamily: 'BricolageGrotesque_800ExtraBold', fontSize: 30 }}
+          style={{ fontFamily: 'Outfit_700Bold', fontSize: 30 }}
           className="text-tx-primary dark:text-tx-primary-dark mb-4"
         >
           Insights

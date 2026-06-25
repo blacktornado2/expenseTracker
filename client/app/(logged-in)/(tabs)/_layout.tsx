@@ -14,6 +14,8 @@ const TAB_ACCENTS = {
   settings: '#F5A623',
 };
 
+const TAB_ICON_SIZE = 20;
+
 const INACTIVE_LIGHT = '#B4B9B0';
 const INACTIVE_DARK = '#607060';
 
@@ -22,6 +24,7 @@ export function getTabBarStyle(isDark: boolean): ViewStyle {
   return {
     backgroundColor: isDark ? '#192218' : '#FFFFFF',
     borderTopColor: isDark ? '#252E23' : '#F3F2EB', // border-row(-dark)
+    paddingHorizontal: 16,
     ...(isDark ? SHADOW_TAB_DARK : SHADOW_TAB),
   };
 }
@@ -32,14 +35,19 @@ export default function TabLayout() {
 
   return (
     <>
-      <Tabs screenOptions={{ headerShown: false, tabBarStyle: getTabBarStyle(isDark) }}>
+      <Tabs
+        screenOptions={{
+          headerShown: false,
+          tabBarStyle: getTabBarStyle(isDark),
+        }}
+      >
         <Tabs.Screen
           name="index"
           options={{
             title: 'Home',
             tabBarActiveTintColor: TAB_ACCENTS.home,
             tabBarInactiveTintColor: inactiveColor,
-            tabBarIcon: ({ color, size }) => <Home color={color} size={size} />,
+            tabBarIcon: ({ color }) => <Home color={color} size={TAB_ICON_SIZE} />,
           }}
         />
         <Tabs.Screen
@@ -48,7 +56,7 @@ export default function TabLayout() {
             title: 'Activity',
             tabBarActiveTintColor: TAB_ACCENTS.activity,
             tabBarInactiveTintColor: inactiveColor,
-            tabBarIcon: ({ color, size }) => <AlignJustify color={color} size={size} />,
+            tabBarIcon: ({ color }) => <AlignJustify color={color} size={TAB_ICON_SIZE} />,
           }}
         />
         <Tabs.Screen
@@ -57,7 +65,7 @@ export default function TabLayout() {
             title: 'Budgets',
             tabBarActiveTintColor: TAB_ACCENTS.budgets,
             tabBarInactiveTintColor: inactiveColor,
-            tabBarIcon: ({ color, size }) => <PieChart color={color} size={size} />,
+            tabBarIcon: ({ color }) => <PieChart color={color} size={TAB_ICON_SIZE} />,
           }}
         />
         <Tabs.Screen
@@ -66,7 +74,7 @@ export default function TabLayout() {
             title: 'Insights',
             tabBarActiveTintColor: TAB_ACCENTS.insights,
             tabBarInactiveTintColor: inactiveColor,
-            tabBarIcon: ({ color, size }) => <BarChart2 color={color} size={size} />,
+            tabBarIcon: ({ color }) => <BarChart2 color={color} size={TAB_ICON_SIZE} />,
           }}
         />
         <Tabs.Screen
@@ -75,7 +83,7 @@ export default function TabLayout() {
             title: 'Settings',
             tabBarActiveTintColor: TAB_ACCENTS.settings,
             tabBarInactiveTintColor: inactiveColor,
-            tabBarIcon: ({ color, size }) => <Settings color={color} size={size} />,
+            tabBarIcon: ({ color }) => <Settings color={color} size={TAB_ICON_SIZE} />,
           }}
         />
       </Tabs>

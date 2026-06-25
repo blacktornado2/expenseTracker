@@ -51,7 +51,7 @@ export default function BudgetsScreen() {
         {/* Header */}
         <View className="flex-row items-center justify-between mb-5">
           <Text
-            style={{ fontFamily: 'BricolageGrotesque_800ExtraBold', fontSize: 30 }}
+            style={{ fontFamily: 'Outfit_700Bold', fontSize: 30 }}
             className="text-tx-primary dark:text-tx-primary-dark"
           >
             Budgets
@@ -74,13 +74,13 @@ export default function BudgetsScreen() {
           <View className="items-center" style={{ marginTop: 80, gap: 8 }}>
             <Text
               className="text-tx-primary dark:text-tx-primary-dark font-bold"
-              style={{ fontFamily: 'PlusJakartaSans_700Bold', fontSize: 16 }}
+              style={{ fontFamily: 'Manrope_700Bold', fontSize: 16 }}
             >
               No budgets yet
             </Text>
             <Text
               className="text-tx-tertiary dark:text-tx-tertiary-dark text-center"
-              style={{ fontFamily: 'PlusJakartaSans_400Regular', fontSize: 14 }}
+              style={{ fontFamily: 'Manrope_400Regular', fontSize: 14 }}
             >
               Tap + to set a monthly spend limit for a category
             </Text>
@@ -91,13 +91,13 @@ export default function BudgetsScreen() {
             <Card radius={22} className="p-4 mb-5">
               <Text
                 className="text-tx-tertiary dark:text-tx-tertiary-dark font-semibold mb-1"
-                style={{ fontFamily: 'PlusJakartaSans_600SemiBold', fontSize: 12 }}
+                style={{ fontFamily: 'Manrope_600SemiBold', fontSize: 12 }}
               >
                 Total consumed
               </Text>
               <Text
                 className="text-tx-primary dark:text-tx-primary-dark font-extrabold mb-3"
-                style={{ fontFamily: 'PlusJakartaSans_800ExtraBold', fontSize: 18 }}
+                style={{ fontFamily: 'Manrope_800ExtraBold', fontSize: 18 }}
               >
                 ₹{stats.totalSpent.toLocaleString('en-IN')} / ₹{stats.totalLimit.toLocaleString('en-IN')}
               </Text>
@@ -124,13 +124,13 @@ export default function BudgetsScreen() {
                       <BudgetRing percent={pct} color={meta.color} over={over} />
                       <Text
                         className="text-tx-primary dark:text-tx-primary-dark font-bold"
-                        style={{ fontFamily: 'PlusJakartaSans_700Bold', fontSize: 14 }}
+                        style={{ fontFamily: 'Manrope_700Bold', fontSize: 14 }}
                       >
                         {label}
                       </Text>
                       <Text
                         className="text-tx-tertiary dark:text-tx-tertiary-dark font-semibold"
-                        style={{ fontFamily: 'PlusJakartaSans_600SemiBold', fontSize: 12 }}
+                        style={{ fontFamily: 'Manrope_600SemiBold', fontSize: 12 }}
                       >
                         ₹{spent.toLocaleString('en-IN')} / ₹{budget.limit.toLocaleString('en-IN')}
                       </Text>

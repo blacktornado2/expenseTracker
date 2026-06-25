@@ -158,7 +158,7 @@ export default function AddTransactionNew() {
 
       <View className="items-center mt-8">
         <Text className="text-tx-secondary dark:text-tx-secondary-dark text-sm">Amount</Text>
-        <Text testID="amount-display" style={{ color: amountColor, fontFamily: 'BricolageGrotesque_800ExtraBold', fontSize: 58 }}>
+        <Text testID="amount-display" style={{ color: amountColor, fontFamily: 'Outfit_700Bold', fontSize: 58 }}>
           {`₹${amountStr || '0'}`}
         </Text>
       </View>

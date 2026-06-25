@@ -7,7 +7,7 @@ module.exports = {
     extend: {
       colors: {
         // Surfaces
-        "bg-app": "#FBFAF7",
+        "bg-app": "#EFEDE4",
         "bg-app-dark": "#111810",
         "bg-card": "#FFFFFF",
         "bg-card-dark": "#192218",
