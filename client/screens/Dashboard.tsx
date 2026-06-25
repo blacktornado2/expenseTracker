@@ -81,7 +81,7 @@ export default function Dashboard() {
 
   return (
     <SafeAreaView className="flex-1 bg-bg-app dark:bg-bg-app-dark">
-      <ScrollView contentContainerStyle={{ paddingTop: 54, paddingHorizontal: 18, paddingBottom: 26 }}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingTop: 20, paddingHorizontal: 18, paddingBottom: 26 }}>
         <View className="flex-row items-center justify-between mb-5">
           <View className="flex-row items-center" style={{ gap: 10 }}>
             <View

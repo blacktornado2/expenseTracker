@@ -41,8 +41,9 @@ export default function BudgetsScreen() {
   return (
     <SafeAreaView className="flex-1 bg-bg-app dark:bg-bg-app-dark">
       <ScrollView
+        showsVerticalScrollIndicator={false}
         contentContainerStyle={{
-          paddingTop: 54,
+          paddingTop: 20,
           paddingHorizontal: 18,
           paddingBottom: 26,
         }}
