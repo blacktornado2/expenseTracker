@@ -36,7 +36,7 @@ export default function Settings() {
         </Text>
 
         {/* Profile card → Profile screen */}
-        <Pressable onPress={() => router.push('/profile')}>
+        <Pressable onPress={() => router.push('/profile-details')}>
           <LinearGradient
             colors={['#13C076', '#0A9E5E']}
             style={{ borderRadius: 26, padding: 18, marginBottom: 20, flexDirection: 'row', alignItems: 'center', gap: 14 }}

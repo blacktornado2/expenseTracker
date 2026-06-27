@@ -4,6 +4,7 @@ import {
   Pressable,
   SafeAreaView,
   ScrollView,
+  StyleSheet,
   Text,
   TextInput,
   View,
@@ -11,9 +12,17 @@ import {
 import { useRouter } from 'expo-router';
 import { useDispatch, useSelector } from 'react-redux';
 import * as ImagePicker from 'expo-image-picker';
-import { User as UserIcon, Phone, Mail, Cake, Wallet, Coins, Globe } from 'lucide-react-native';
+import {
+  User as UserIcon,
+  Phone,
+  Mail,
+  Calendar,
+  DollarSign,
+  Coins,
+  Globe,
+  Image as ImageIcon,
+} from 'lucide-react-native';
 
-import Avatar from '@/components/Avatar';
 import IconTile from '@/components/IconTile';
 import Card from '@/components/Card';
 import { userSelector } from '@/redux/store/selectors';
@@ -22,6 +31,9 @@ import { userToProfileDraft, profileDraftToUpdatePayload, type ProfileDraft } fr
 import { ageFromDob } from '@/utils/profileCalcs';
 
 const GREEN = '#0FB46B';
+const PHOTO_BG = '#5FB97E';
+const PHOTO_FG = '#2F8F57';
+const DIVIDER = 'rgba(127,127,127,0.16)';
 
 type RowProps = {
   icon: React.ReactNode;
@@ -33,16 +45,41 @@ type RowProps = {
   keyboardType?: 'default' | 'numeric' | 'phone-pad' | 'email-address';
   editable?: boolean;
   placeholder?: string;
+  divider?: boolean;
 };
 
-function Row({ icon, tileBg, label, value, editing, onChangeText, keyboardType = 'default', editable = true, placeholder }: RowProps) {
+function Row({
+  icon,
+  tileBg,
+  label,
+  value,
+  editing,
+  onChangeText,
+  keyboardType = 'default',
+  editable = true,
+  placeholder,
+  divider = true,
+}: Readonly<RowProps>) {
   return (
-    <View className="flex-row items-center py-3" style={{ gap: 12 }}>
+    <View
+      className="flex-row items-center"
+      style={{
+        gap: 12,
+        paddingVertical: 13,
+        borderBottomWidth: divider ? StyleSheet.hairlineWidth : 0,
+        borderBottomColor: DIVIDER,
+      }}
+    >
       <IconTile backgroundColor={tileBg} size={38} radius={12}>
         {icon}
       </IconTile>
       <View className="flex-1">
-        <Text className="text-tx-tertiary dark:text-tx-tertiary-dark text-xs font-semibold">{label}</Text>
+        <Text
+          className="text-tx-tertiary dark:text-tx-tertiary-dark"
+          style={{ fontSize: 11, fontWeight: '700', letterSpacing: 0.7, textTransform: 'uppercase' }}
+        >
+          {label}
+        </Text>
         {editing && editable ? (
           <TextInput
             value={value}
@@ -51,15 +88,26 @@ function Row({ icon, tileBg, label, value, editing, onChangeText, keyboardType =
             placeholder={placeholder}
             placeholderTextColor="#9AA096"
             className="text-tx-primary dark:text-tx-primary-dark"
-            style={{ fontSize: 15, fontWeight: '700', paddingVertical: 2 }}
+            style={{ fontSize: 16, fontWeight: '700', paddingVertical: 2 }}
           />
         ) : (
-          <Text className="text-tx-primary dark:text-tx-primary-dark font-bold" style={{ fontSize: 15 }}>
+          <Text className="text-tx-primary dark:text-tx-primary-dark font-bold" style={{ fontSize: 16, marginTop: 1 }}>
             {value || '—'}
           </Text>
         )}
       </View>
     </View>
+  );
+}
+
+function SectionLabel({ children }: Readonly<{ children: string }>) {
+  return (
+    <Text
+      className="text-tx-tertiary dark:text-tx-tertiary-dark"
+      style={{ fontSize: 12, fontWeight: '700', letterSpacing: 0.8, textTransform: 'uppercase', marginBottom: 8, marginLeft: 4 }}
+    >
+      {children}
+    </Text>
   );
 }
 
@@ -108,7 +156,10 @@ export default function ProfileScreen() {
     const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!perm.granted) return; // permission denied → keep the fallback avatar, no crash
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ['images'],
+      allowsEditing: true, // shows a crop + "Choose" confirm step and dismisses the picker
+      allowsMultipleSelection: false,
+      aspect: [1, 1], // square crop for the circular avatar
       quality: 0.5,
     });
     if (!result.canceled && result.assets?.[0]) {
@@ -130,20 +181,24 @@ export default function ProfileScreen() {
 
   const fullName = `${draft.firstName} ${draft.lastName}`.trim() || user?.firstName || 'You';
   const age = ageFromDob(draft.dob);
-  const dobDisplay = draft.dob ? new Date(draft.dob).toLocaleDateString('en-IN') : '';
+  const dobLabel = age === null ? 'Date of birth' : `Date of birth · Age ${age}`;
+  const dobDisplay = draft.dob
+    ? new Date(draft.dob).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+    : '';
+  const incomeDisplay = draft.monthlyIncome ? `₹${Number(draft.monthlyIncome).toLocaleString('en-IN')}` : '';
 
   return (
     <SafeAreaView className="flex-1 bg-bg-app dark:bg-bg-app-dark">
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingTop: 20, paddingHorizontal: 18, paddingBottom: 26 }}>
         {/* Header */}
         <View className="flex-row items-center justify-between mb-5">
-          <Pressable onPress={() => router.back()}>
+          <Pressable onPress={() => router.back()} hitSlop={8}>
             <Text style={{ color: GREEN }} className="font-bold text-base">‹ Settings</Text>
           </Pressable>
           <Text className="text-tx-primary dark:text-tx-primary-dark font-extrabold text-base">Profile</Text>
           <Pressable
             onPress={onToggle}
-            style={{ backgroundColor: GREEN, borderRadius: 14, paddingHorizontal: 16, paddingVertical: 8 }}
+            style={{ backgroundColor: GREEN, borderRadius: 16, paddingHorizontal: 18, paddingVertical: 8 }}
           >
             <Text style={{ color: '#FFFFFF' }} className="font-bold text-sm">{editing ? 'Save' : 'Edit'}</Text>
           </Pressable>
@@ -155,40 +210,55 @@ export default function ProfileScreen() {
             {draft.profilePicture ? (
               <Image
                 source={{ uri: draft.profilePicture }}
-                style={{ width: 88, height: 88, borderRadius: 44, backgroundColor: '#13C076' }}
+                style={{ width: 96, height: 96, borderRadius: 48, backgroundColor: PHOTO_BG }}
               />
             ) : (
-              <Avatar initial={(draft.firstName || user?.firstName || 'U')[0]} size={88} radius={44} />
+              <View
+                style={{
+                  width: 96,
+                  height: 96,
+                  borderRadius: 48,
+                  backgroundColor: PHOTO_BG,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderWidth: 2,
+                  borderColor: 'rgba(255,255,255,0.55)',
+                  borderStyle: 'dashed',
+                }}
+              >
+                <ImageIcon size={26} color={PHOTO_FG} />
+                <Text style={{ color: PHOTO_FG, fontWeight: '700', fontSize: 13, marginTop: 3 }}>Photo</Text>
+              </View>
             )}
           </Pressable>
           {editing ? (
             <Text style={{ color: GREEN }} className="font-semibold text-xs mt-2">Tap avatar to change</Text>
           ) : null}
           <Text
-            style={{ fontFamily: 'Outfit_700Bold', fontSize: 20 }}
+            style={{ fontFamily: 'Outfit_700Bold', fontSize: 22 }}
             className="text-tx-primary dark:text-tx-primary-dark mt-3"
           >
             {fullName}
           </Text>
-          <Text className="text-tx-tertiary dark:text-tx-tertiary-dark text-sm">{user?.email ?? ''}</Text>
+          <Text className="text-tx-tertiary dark:text-tx-tertiary-dark text-sm mt-0.5">{user?.email ?? ''}</Text>
         </View>
 
         {/* Personal */}
-        <Text className="text-tx-secondary dark:text-tx-secondary-dark font-bold text-sm mb-1">Personal</Text>
-        <Card radius={20} className="px-4 py-1 mb-5">
+        <SectionLabel>Personal</SectionLabel>
+        <Card radius={20} className="px-4 mb-6">
           <Row editing={editing} tileBg="#E6F6EC" icon={<UserIcon size={18} color="#16A34A" />} label="First name" value={draft.firstName} onChangeText={setField('firstName')} />
-          <Row editing={editing} tileBg="#EFEAFE" icon={<UserIcon size={18} color="#7C5CFC" />} label="Last name" value={draft.lastName} onChangeText={setField('lastName')} />
-          <Row editing={editing} tileBg="#FFF1E6" icon={<Cake size={18} color="#E8703A" />} label="Date of birth" value={editing ? draft.dob : `${dobDisplay}${age !== null ? `  ·  Age ${age}` : ''}`} onChangeText={setField('dob')} placeholder="YYYY-MM-DD" />
-          <Row editing={editing} tileBg="#E6F0FF" icon={<Phone size={18} color="#2563EB" />} label="Mobile" value={draft.mobile} onChangeText={setField('mobile')} keyboardType="phone-pad" />
-          <Row editing={false} tileBg="#FDE8E8" icon={<Mail size={18} color="#DC2626" />} label="Email" value={user?.email ?? ''} editable={false} />
+          <Row editing={editing} tileBg="#E6F6EC" icon={<UserIcon size={18} color="#16A34A" />} label="Last name" value={draft.lastName} onChangeText={setField('lastName')} />
+          <Row editing={editing} tileBg="#E6F0FF" icon={<Calendar size={18} color="#3B82F6" />} label={editing ? 'Date of birth' : dobLabel} value={editing ? draft.dob : dobDisplay} onChangeText={setField('dob')} placeholder="YYYY-MM-DD" />
+          <Row editing={editing} tileBg="#FFE6F0" icon={<Phone size={18} color="#EC4899" />} label="Mobile" value={draft.mobile} onChangeText={setField('mobile')} keyboardType="phone-pad" />
+          <Row editing={false} tileBg="#FFEAEA" icon={<Mail size={18} color="#F87171" />} label="Email" value={user?.email ?? ''} editable={false} divider={false} />
         </Card>
 
         {/* Financial */}
-        <Text className="text-tx-secondary dark:text-tx-secondary-dark font-bold text-sm mb-1">Financial</Text>
-        <Card radius={20} className="px-4 py-1 mb-5">
-          <Row editing={editing} tileBg="#E6F6EC" icon={<Wallet size={18} color="#16A34A" />} label="Monthly income" value={editing ? draft.monthlyIncome : (draft.monthlyIncome ? `₹${Number(draft.monthlyIncome).toLocaleString('en-IN')}` : '')} onChangeText={setField('monthlyIncome')} keyboardType="numeric" />
+        <SectionLabel>Financial</SectionLabel>
+        <Card radius={20} className="px-4 mb-5">
+          <Row editing={editing} tileBg="#E6F6EC" icon={<DollarSign size={18} color="#16A34A" />} label="Monthly income" value={editing ? draft.monthlyIncome : incomeDisplay} onChangeText={setField('monthlyIncome')} keyboardType="numeric" />
           <Row editing={editing} tileBg="#FFF7E6" icon={<Coins size={18} color="#D97706" />} label="Currency" value={draft.currency} onChangeText={setField('currency')} />
-          <Row editing={editing} tileBg="#E6F6F6" icon={<Globe size={18} color="#0D9488" />} label="Country" value={draft.country} onChangeText={setField('country')} />
+          <Row editing={editing} tileBg="#EFEAFE" icon={<Globe size={18} color="#7C5CFC" />} label="Country" value={draft.country} onChangeText={setField('country')} divider={false} />
         </Card>
 
         {hadError && error ? (
