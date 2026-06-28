@@ -3,6 +3,8 @@ import { KeyboardAvoidingView, Platform, Pressable, SafeAreaView, ScrollView, Te
 import { useRouter } from 'expo-router';
 import { useSelector } from 'react-redux';
 import { format } from 'date-fns';
+import { LinearGradient } from 'expo-linear-gradient';
+import { GRADIENT_BRAND_BUTTON, GRADIENT_DIAGONAL } from '@/constants/gradients';
 
 import Card from '@/components/Card';
 import HeroCard from '@/components/HeroCard';
@@ -186,8 +188,15 @@ export default function SavingsScreen() {
                   style={{ flex: 1, color: isDark ? '#E2E9E0' : '#2B2F2A' }}
                 />
               </View>
-              <Pressable onPress={onSetGoal} style={{ backgroundColor: GREEN, borderRadius: 16, paddingHorizontal: 18, paddingVertical: 12 }}>
-                <Text style={{ color: '#FFFFFF' }} className="font-bold text-sm">Set</Text>
+              <Pressable onPress={onSetGoal} style={{ borderRadius: 16, overflow: 'hidden' }}>
+                <LinearGradient
+                  colors={GRADIENT_BRAND_BUTTON}
+                  start={GRADIENT_DIAGONAL.start}
+                  end={GRADIENT_DIAGONAL.end}
+                  style={{ paddingHorizontal: 18, paddingVertical: 12 }}
+                >
+                  <Text style={{ color: '#FFFFFF' }} className="font-bold text-sm">Set</Text>
+                </LinearGradient>
               </Pressable>
             </View>
           ) : null}

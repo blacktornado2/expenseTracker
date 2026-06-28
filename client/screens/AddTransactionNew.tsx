@@ -3,12 +3,15 @@ import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, TextInput,
 import { useRouter } from 'expo-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { CalendarDays, Pencil } from 'lucide-react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { format } from 'date-fns';
+import { GRADIENT_INCOME, GRADIENT_RED, GRADIENT_DIAGONAL } from '@/constants/gradients';
 
 import SegmentedToggle from '@/components/SegmentedToggle';
 import Numpad from '@/components/numpad/Numpad';
 import CategoryChips, { type CategoryOption } from '@/components/categories/CategoryChips';
 import CategoryEditor, { type NewCategoryDraft } from '@/components/categories/CategoryEditor';
+import PressableScale from '@/components/PressableScale';
 import { applyNumpadKey, parseAmount, type NumpadKeyValue } from '@/utils/amountInput';
 import { BUILT_IN_CATEGORIES, getIconByKey } from '@/constants/categoryPalette';
 import { getCategoryMeta } from '@/constants/categoryMeta';
@@ -250,16 +253,23 @@ export default function AddTransactionNew() {
         <Numpad onKey={onNumpadKey} />
       </View>
 
-      <Pressable
+      <PressableScale
         testID="submit-transaction"
         onPress={onSubmit}
-        className="mt-6 rounded-2xl items-center justify-center"
-        style={{ height: 56, backgroundColor: entryType === 'income' ? '#0FB46B' : '#E8322A' }}
+        containerStyle={{ marginTop: 24 }}
+        style={{ borderRadius: 16, overflow: 'hidden' }}
       >
-        <Text className="text-white font-extrabold text-base">
-          {entryType === 'income' ? 'Add income' : 'Add expense'}
-        </Text>
-      </Pressable>
+        <LinearGradient
+          colors={entryType === 'income' ? GRADIENT_INCOME : GRADIENT_RED}
+          start={GRADIENT_DIAGONAL.start}
+          end={GRADIENT_DIAGONAL.end}
+          style={{ height: 56, alignItems: 'center', justifyContent: 'center' }}
+        >
+          <Text className="text-white font-extrabold text-base">
+            {entryType === 'income' ? 'Add income' : 'Add expense'}
+          </Text>
+        </LinearGradient>
+      </PressableScale>
 
       {hadError ? (
         <Text className="text-center mt-3" style={{ color: '#E8322A', fontSize: 13, fontWeight: '600' }}>

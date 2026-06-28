@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Link2, Bell, Coins, LogOut, Moon } from 'lucide-react-native';
+import { GRADIENT_BRAND, GRADIENT_DIAGONAL } from '@/constants/gradients';
 
 import Avatar from '@/components/Avatar';
 import SettingRow from '@/components/settings/SettingRow';
@@ -38,7 +39,9 @@ export default function Settings() {
         {/* Profile card → Profile screen */}
         <Pressable onPress={() => router.push('/profile-details')}>
           <LinearGradient
-            colors={['#13C076', '#0A9E5E']}
+            colors={GRADIENT_BRAND}
+            start={GRADIENT_DIAGONAL.start}
+            end={GRADIENT_DIAGONAL.end}
             style={{ borderRadius: 26, padding: 18, marginBottom: 20, flexDirection: 'row', alignItems: 'center', gap: 14 }}
           >
             <Avatar initial={(user?.firstName ?? 'U')[0]} size={52} radius={18} />

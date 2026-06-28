@@ -16,6 +16,7 @@ import { transactionSelector } from '@/redux/store/selectors';
 import { updateTransaction, deleteTransaction } from '@/redux/actions/transaction.actions';
 import { rawToTxDraft, txDraftToUpdatePayload, type RawStoreTxn, type TxDraft } from '@/utils/transactionMappings';
 import { useTheme } from '@/contexts/ThemeContext';
+import { GRADIENT_BRAND_BUTTON, GRADIENT_DIAGONAL } from '@/constants/gradients';
 
 type EntryType = 'expense' | 'income';
 
@@ -207,7 +208,9 @@ export default function EditTransactionSheet({ txn, onClose }: Props) {
             style={{ marginTop: 24, borderRadius: 16, overflow: 'hidden' }}
           >
             <LinearGradient
-              colors={['#13C076', '#0A9E5E']}
+              colors={GRADIENT_BRAND_BUTTON}
+              start={GRADIENT_DIAGONAL.start}
+              end={GRADIENT_DIAGONAL.end}
               style={{ height: 52, alignItems: 'center', justifyContent: 'center' }}
             >
               {isBusy && wasUpdating.current ? (

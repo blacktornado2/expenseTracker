@@ -14,6 +14,8 @@ import {
 import { useRouter } from 'expo-router';
 import { useDispatch, useSelector } from 'react-redux';
 import * as ImagePicker from 'expo-image-picker';
+import { LinearGradient } from 'expo-linear-gradient';
+import { GRADIENT_BRAND_BUTTON, GRADIENT_DIAGONAL } from '@/constants/gradients';
 import {
   User as UserIcon,
   Phone,
@@ -202,11 +204,15 @@ export default function ProfileScreen() {
             <Text style={{ color: GREEN }} className="font-bold text-base">‹ Settings</Text>
           </Pressable>
           <Text className="text-tx-primary dark:text-tx-primary-dark font-extrabold text-base">Profile</Text>
-          <Pressable
-            onPress={onToggle}
-            style={{ backgroundColor: GREEN, borderRadius: 16, paddingHorizontal: 18, paddingVertical: 8 }}
-          >
-            <Text style={{ color: '#FFFFFF' }} className="font-bold text-sm">{editing ? 'Save' : 'Edit'}</Text>
+          <Pressable onPress={onToggle} style={{ borderRadius: 16, overflow: 'hidden' }}>
+            <LinearGradient
+              colors={GRADIENT_BRAND_BUTTON}
+              start={GRADIENT_DIAGONAL.start}
+              end={GRADIENT_DIAGONAL.end}
+              style={{ paddingHorizontal: 18, paddingVertical: 8 }}
+            >
+              <Text style={{ color: '#FFFFFF' }} className="font-bold text-sm">{editing ? 'Save' : 'Edit'}</Text>
+            </LinearGradient>
           </Pressable>
         </View>
 

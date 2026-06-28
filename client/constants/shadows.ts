@@ -18,10 +18,19 @@ export const SHADOW_TX: ViewStyle = {
 
 export const SHADOW_HERO: ViewStyle = {
   shadowColor: '#0FB46B',
-  shadowOffset: { width: 0, height: 18 },
-  shadowOpacity: 0.32,
-  shadowRadius: 38,
-  elevation: 10,
+  shadowOffset: { width: 0, height: 20 },
+  shadowOpacity: 0.38,
+  shadowRadius: 42,
+  elevation: 12,
+};
+
+// Emerald glow for the floating action button.
+export const SHADOW_FAB: ViewStyle = {
+  shadowColor: '#0FB46B',
+  shadowOffset: { width: 0, height: 10 },
+  shadowOpacity: 0.55,
+  shadowRadius: 30,
+  elevation: 8,
 };
 
 // Tinted shadow for small gradient cards (Income, Saved) — glows in the card's own color.

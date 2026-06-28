@@ -1,8 +1,11 @@
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Plus, X, type LucideIcon } from 'lucide-react-native';
-import { withAlpha } from '@/constants/categoryPalette';
+import PressableScale from '@/components/PressableScale';
 import { useTheme } from '@/contexts/ThemeContext';
+import { gradientFor, GRADIENT_DIAGONAL } from '@/constants/gradients';
+import { shadowForGradientCard } from '@/constants/shadows';
 
 export type CategoryOption = {
   key: string;
@@ -37,23 +40,42 @@ export default function CategoryChips({
     <View className="flex-row flex-wrap" style={{ gap: 10 }}>
       {categories.map((category) => {
         const active = category.key === selected;
+        const iconColor = active ? '#FFFFFF' : category.color;
+        const textColor = active ? '#FFFFFF' : primaryText;
+        const content = (
+          <>
+            <category.Icon color={iconColor} size={16} />
+            <Text style={{ color: textColor, marginLeft: 6, fontWeight: '700' }}>{category.label}</Text>
+          </>
+        );
         return (
           <View key={category.key} style={{ position: 'relative' }}>
-            <Pressable
-              testID={`category-chip-${category.key}`}
-              onPress={() => !editMode && onSelect(category.key)}
-              className="flex-row items-center rounded-full px-3 py-2"
-              style={{
-                backgroundColor: active ? withAlpha(category.color) : 'transparent',
-                borderWidth: 1,
-                borderColor: active ? category.color : borderColor,
-              }}
-            >
-              <category.Icon color={category.color} size={16} />
-              <Text style={{ color: active ? category.color : primaryText, marginLeft: 6, fontWeight: '700' }}>
-                {category.label}
-              </Text>
-            </Pressable>
+            {active ? (
+              // Selected: vivid per-category gradient fill with a matching glow.
+              <PressableScale
+                testID={`category-chip-${category.key}`}
+                onPress={() => !editMode && onSelect(category.key)}
+                style={{ borderRadius: 999, overflow: 'hidden', ...shadowForGradientCard(category.color) }}
+              >
+                <LinearGradient
+                  colors={gradientFor(category.color)}
+                  start={GRADIENT_DIAGONAL.start}
+                  end={GRADIENT_DIAGONAL.end}
+                  style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12, paddingVertical: 8 }}
+                >
+                  {content}
+                </LinearGradient>
+              </PressableScale>
+            ) : (
+              <PressableScale
+                testID={`category-chip-${category.key}`}
+                onPress={() => !editMode && onSelect(category.key)}
+                className="flex-row items-center rounded-full px-3 py-2"
+                style={{ borderWidth: 1, borderColor }}
+              >
+                {content}
+              </PressableScale>
+            )}
             {editMode && category.custom ? (
               <Pressable
                 testID={`category-chip-delete-${category.key}`}

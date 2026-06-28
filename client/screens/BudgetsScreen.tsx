@@ -10,6 +10,7 @@ import BudgetSheet from '@/components/sheets/BudgetSheet';
 import { useBudgets, type Budget } from '@/contexts/BudgetsContext';
 import { selectSpendByCategory } from '@/redux/store/selectors';
 import { getCategoryMeta } from '@/constants/categoryMeta';
+import { GRADIENT_BRAND, GRADIENT_DIAGONAL } from '@/constants/gradients';
 import { ringPercent, isOverBudget, totalConsumedStats } from '@/utils/budgetCalcs';
 
 export default function BudgetsScreen() {
@@ -61,7 +62,9 @@ export default function BudgetsScreen() {
             style={{ borderRadius: 13, overflow: 'hidden' }}
           >
             <LinearGradient
-              colors={['#13C076', '#0A9E5E']}
+              colors={GRADIENT_BRAND}
+              start={GRADIENT_DIAGONAL.start}
+              end={GRADIENT_DIAGONAL.end}
               style={{ width: 38, height: 38, alignItems: 'center', justifyContent: 'center' }}
             >
               <Plus color="#FFFFFF" size={20} />

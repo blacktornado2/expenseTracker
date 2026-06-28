@@ -1,8 +1,10 @@
 import React from 'react';
-import { Pressable } from 'react-native';
 import { useRouter, usePathname } from 'expo-router';
 import { Plus } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import PressableScale from '@/components/PressableScale';
+import { GRADIENT_BRAND, GRADIENT_DIAGONAL } from '@/constants/gradients';
+import { SHADOW_FAB } from '@/constants/shadows';
 
 export default function Fab() {
   const router = useRouter();
@@ -13,27 +15,24 @@ export default function Fab() {
   }
 
   return (
-    <Pressable
+    <PressableScale
       onPress={() => router.push('/addTransactionNew')}
-      style={{ position: 'absolute', right: 18, bottom: 90 }}
+      containerStyle={{ position: 'absolute', right: 18, bottom: 90 }}
     >
       <LinearGradient
-        colors={['#13C076', '#0A9E5E']}
-        style={{
+        colors={GRADIENT_BRAND}
+        start={GRADIENT_DIAGONAL.start}
+        end={GRADIENT_DIAGONAL.end}
+        style={[{
           width: 56,
           height: 56,
           borderRadius: 18,
           alignItems: 'center',
           justifyContent: 'center',
-          shadowColor: '#0FB46B',
-          shadowOffset: { width: 0, height: 8 },
-          shadowOpacity: 0.5,
-          shadowRadius: 28,
-          elevation: 6,
-        }}
+        }, SHADOW_FAB]}
       >
         <Plus color="#FFFFFF" size={28} />
       </LinearGradient>
-    </Pressable>
+    </PressableScale>
   );
 }
