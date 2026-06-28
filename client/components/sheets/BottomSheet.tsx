@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Animated, Modal, Pressable, StyleSheet } from 'react-native';
+import { Animated, KeyboardAvoidingView, Modal, Platform, Pressable, StyleSheet } from 'react-native';
 
 type BottomSheetProps = {
   visible: boolean;
@@ -38,12 +38,14 @@ export default function BottomSheet({ visible, onClose, children }: BottomSheetP
     <Modal visible transparent animationType="none" onRequestClose={onClose}>
       <Animated.View style={[styles.overlay, { opacity }]}>
         <Pressable style={StyleSheet.absoluteFillObject} onPress={onClose} />
-        <Animated.View
-          style={[styles.sheet, { transform: [{ translateY }] }]}
-          className="bg-bg-app dark:bg-bg-app-dark"
-        >
-          {children}
-        </Animated.View>
+        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+          <Animated.View
+            style={[styles.sheet, { transform: [{ translateY }] }]}
+            className="bg-bg-app dark:bg-bg-app-dark"
+          >
+            {children}
+          </Animated.View>
+        </KeyboardAvoidingView>
       </Animated.View>
     </Modal>
   );

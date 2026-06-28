@@ -20,9 +20,9 @@ type NumpadProps = {
 export default function Numpad({ onKey }: NumpadProps) {
   const rows = chunk(KEYS, 3);
   return (
-    <View style={{ gap: 12 }}>
+    <View style={{ gap: 14 }}>
       {rows.map((row, rowIndex) => (
-        <View key={rowIndex} className="flex-row justify-between">
+        <View key={rowIndex} className="flex-row" style={{ gap: 14 }}>
           {row.map((key) => (
             <NumpadKey key={key} label={key} onPress={() => onKey(key)} />
           ))}

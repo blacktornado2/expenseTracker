@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { CalendarDays, Pencil } from 'lucide-react-native';
@@ -50,6 +50,7 @@ export default function AddTransactionNew() {
   const [selectedCategory, setSelectedCategory] = useState(BUILT_IN_CATEGORIES[0].key);
   const [editMode, setEditMode] = useState(false);
   const [showEditor, setShowEditor] = useState(false);
+  const [categoriesExpanded, setCategoriesExpanded] = useState(false);
   const [amountError, setAmountError] = useState(false);
   const [nameError, setNameError] = useState(false);
   const [hadError, setHadError] = useState(false);
@@ -94,6 +95,20 @@ export default function AddTransactionNew() {
     }));
     return [...builtIns, ...custom];
   }, [customCategories]);
+
+  // Collapsed by default to keep the "Add" button reachable above the fold.
+  // Edit mode always expands so every chip (and the Add tile) is accessible.
+  const COLLAPSED_COUNT = 4;
+  const showAllCategories = categoriesExpanded || editMode;
+  const visibleCategories = useMemo(() => {
+    if (showAllCategories) return categoryOptions;
+    const head = categoryOptions.slice(0, COLLAPSED_COUNT);
+    // Always keep the selected chip visible, even if it's further down the list.
+    if (head.some((c) => c.key === selectedCategory)) return head;
+    const selected = categoryOptions.find((c) => c.key === selectedCategory);
+    return selected ? [selected, ...head.slice(0, COLLAPSED_COUNT - 1)] : head;
+  }, [categoryOptions, showAllCategories, selectedCategory]);
+  const hasMoreCategories = categoryOptions.length > COLLAPSED_COUNT;
 
   const onNumpadKey = (key: NumpadKeyValue) => {
     setAmountStr((current) => applyNumpadKey(current, key));
@@ -144,7 +159,12 @@ export default function AddTransactionNew() {
   const amountColor = amountError ? '#E8322A' : entryType === 'income' ? '#0FB46B' : isDark ? '#E2E9E0' : '#2B2F2A';
 
   return (
-    <ScrollView className="flex-1 bg-bg-app dark:bg-bg-app-dark" contentContainerStyle={{ paddingTop: 56, paddingHorizontal: 20, paddingBottom: 40 }}>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      className="bg-bg-app dark:bg-bg-app-dark"
+    >
+    <ScrollView className="flex-1 bg-bg-app dark:bg-bg-app-dark" keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingTop: 56, paddingHorizontal: 20, paddingBottom: 40 }}>
       <View className="flex-row items-center justify-between">
         <Pressable onPress={() => router.back()}>
           <Text className="text-brand-green font-bold text-base">Cancel</Text>
@@ -201,13 +221,24 @@ export default function AddTransactionNew() {
           </Pressable>
         </View>
         <CategoryChips
-          categories={categoryOptions}
+          categories={visibleCategories}
           selected={selectedCategory}
           onSelect={setSelectedCategory}
           editMode={editMode}
           onDelete={onDeleteCategory}
           onAdd={() => setShowEditor(true)}
         />
+        {!editMode && hasMoreCategories ? (
+          <Pressable
+            onPress={() => setCategoriesExpanded((value) => !value)}
+            className="mt-3 self-start"
+            hitSlop={8}
+          >
+            <Text className="text-brand-green font-bold">
+              {categoriesExpanded ? 'Show less' : `Show all (${categoryOptions.length})`}
+            </Text>
+          </Pressable>
+        ) : null}
         {showEditor ? (
           <View className="mt-3">
             <CategoryEditor onConfirm={onAddCategory} onCancel={() => setShowEditor(false)} />
@@ -236,5 +267,6 @@ export default function AddTransactionNew() {
         </Text>
       ) : null}
     </ScrollView>
+    </KeyboardAvoidingView>
   );
 }

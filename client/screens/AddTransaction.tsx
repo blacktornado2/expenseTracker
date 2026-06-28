@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, Button, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Button, ScrollView, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -61,7 +61,8 @@ const AddTransactionScreen = () => {
   const [value, setValue] = useState(null);
 
   return (
-      <ScrollView className='px-8 pt-5 bg-gray-100'>
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+      <ScrollView className='px-8 pt-5 bg-gray-100' keyboardShouldPersistTaps='handled'>
         <Text className='text-4xl pb-5 font-bold'>{ADD_TRANSACTION}</Text>
         <View className='my-3'>
           <View className='mb-2 flex flex-row'>
@@ -163,6 +164,7 @@ const AddTransactionScreen = () => {
           onCancel={() => setDatePickerVisibility(false)}
         />
       </ScrollView>
+      </KeyboardAvoidingView>
   )
 }
 

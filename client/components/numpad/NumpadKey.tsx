@@ -17,7 +17,7 @@ export default function NumpadKey({ label, onPress }: NumpadKeyProps) {
       testID={`numpad-key-${label}`}
       onPress={onPress}
       className="bg-white dark:bg-bg-card-dark items-center justify-center"
-      style={[{ width: 58, height: 58, borderRadius: 18 }, isDark ? SHADOW_KEY_DARK : SHADOW_KEY]}
+      style={[{ flex: 1, height: 58, borderRadius: 18 }, isDark ? SHADOW_KEY_DARK : SHADOW_KEY]}
     >
       {label === 'backspace' ? (
         <Delete color={isDark ? '#E2E9E0' : '#2B2F2A'} size={22} />
