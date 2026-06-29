@@ -11,12 +11,14 @@ type SegmentedToggleProps<T extends string> = {
   options: readonly [Option<T>, Option<T>];
   value: T;
   onChange: (value: T) => void;
+  textClassName?: string;
 };
 
 export default function SegmentedToggle<T extends string>({
   options,
   value,
   onChange,
+  textClassName = 'text-xs',
 }: SegmentedToggleProps<T>) {
   return (
     <View className="flex-row bg-bg-close dark:bg-bg-close-dark rounded-full p-1">
@@ -31,8 +33,8 @@ export default function SegmentedToggle<T extends string>({
               <Text
                 className={
                   active
-                    ? 'text-white font-bold text-xs'
-                    : 'text-tx-secondary dark:text-tx-secondary-dark font-bold text-xs'
+                    ? `text-white font-bold ${textClassName}`
+                    : `text-tx-secondary dark:text-tx-secondary-dark font-bold ${textClassName}`
                 }
               >
                 {option.label}

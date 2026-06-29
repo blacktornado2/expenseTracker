@@ -7,6 +7,8 @@ export type StoreRootState = ReturnType<typeof store.getState>;
 
 export const userSelector = (state: StoreRootState): UserStateType => state.user;
 export const transactionSelector = (state: StoreRootState): Transaction => state.transaction;
+export const transactionsRefreshingSelector = (state: StoreRootState): boolean =>
+  !!(state.transaction as any)?.getTransactionsPending;
 
 type RawTransaction = {
   transactionType: 'credit' | 'debit';
@@ -15,6 +17,23 @@ type RawTransaction = {
   category: string;
   description?: string;
 };
+
+// Caches the last (input, output) pair so a selector that builds a new
+// array/object keeps returning the same reference while its input hasn't
+// changed — otherwise useSelector's snapshot check sees a "new" value on
+// every render and warns/rerenders unnecessarily.
+function memoizeByLastInput<TInput, TOutput>(fn: (input: TInput) => TOutput): (input: TInput) => TOutput {
+  let lastInput: TInput;
+  let lastOutput: TOutput;
+  let hasResult = false;
+  return (input: TInput) => {
+    if (hasResult && input === lastInput) return lastOutput;
+    lastOutput = fn(input);
+    lastInput = input;
+    hasResult = true;
+    return lastOutput;
+  };
+}
 
 function isSameMonth(date: string | Date, reference: Date): boolean {
   const d = new Date(date);
@@ -58,8 +77,10 @@ export const selectMonthSpent = (state: StoreRootState): number =>
 export const selectMonthIncome = (state: StoreRootState): number =>
   monthIncomeFromTransactions(((transactionSelector(state) as any).transactions ?? []) as RawTransaction[]);
 
+const memoizedSpendByCategory = memoizeByLastInput(spendByCategoryFromTransactions);
+
 export const selectSpendByCategory = (state: StoreRootState): { label: string; value: number }[] =>
-  spendByCategoryFromTransactions(((transactionSelector(state) as any).transactions ?? []) as RawTransaction[]);
+  memoizedSpendByCategory(((transactionSelector(state) as any).transactions ?? []) as RawTransaction[]);
 
 export function buildMonthlyData(transactions: RawTransaction[], referenceDate: Date = new Date()): MonthlyDatum[] {
   const seed = getSeedMonths(referenceDate);

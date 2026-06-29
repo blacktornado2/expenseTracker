@@ -1,20 +1,25 @@
 import React, { useMemo, useState } from 'react';
-import { Pressable, SafeAreaView, ScrollView, Text, View } from 'react-native';
+import { Pressable, RefreshControl, SafeAreaView, ScrollView, Text, View } from 'react-native';
 import { Plus } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Card from '@/components/Card';
 import BudgetRing from '@/components/budgets/BudgetRing';
 import SegmentedProgressBar from '@/components/budgets/SegmentedProgressBar';
 import BudgetSheet from '@/components/sheets/BudgetSheet';
 import { useBudgets, type Budget } from '@/contexts/BudgetsContext';
-import { selectSpendByCategory } from '@/redux/store/selectors';
+import { getBudgets } from '@/redux/actions/budget.actions';
+import { getAllTransactions } from '@/redux/actions/transaction.actions';
+import { selectSpendByCategory, transactionsRefreshingSelector } from '@/redux/store/selectors';
 import { getCategoryMeta } from '@/constants/categoryMeta';
+import { GRADIENT_BRAND, GRADIENT_DIAGONAL } from '@/constants/gradients';
 import { ringPercent, isOverBudget, totalConsumedStats } from '@/utils/budgetCalcs';
 
 export default function BudgetsScreen() {
+  const dispatch = useDispatch();
   const { budgets } = useBudgets();
   const spendByCategory = useSelector(selectSpendByCategory);
+  const refreshing = useSelector(transactionsRefreshingSelector);
   const [sheetMode, setSheetMode] = useState<'add' | 'edit' | null>(null);
   const [editBudget, setEditBudget] = useState<Budget | undefined>(undefined);
 
@@ -47,6 +52,16 @@ export default function BudgetsScreen() {
           paddingHorizontal: 18,
           paddingBottom: 26,
         }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => {
+              dispatch(getBudgets());
+              dispatch(getAllTransactions());
+            }}
+            tintColor="#0FB46B"
+          />
+        }
       >
         {/* Header */}
         <View className="flex-row items-center justify-between mb-5">
@@ -61,7 +76,9 @@ export default function BudgetsScreen() {
             style={{ borderRadius: 13, overflow: 'hidden' }}
           >
             <LinearGradient
-              colors={['#13C076', '#0A9E5E']}
+              colors={GRADIENT_BRAND}
+              start={GRADIENT_DIAGONAL.start}
+              end={GRADIENT_DIAGONAL.end}
               style={{ width: 38, height: 38, alignItems: 'center', justifyContent: 'center' }}
             >
               <Plus color="#FFFFFF" size={20} />

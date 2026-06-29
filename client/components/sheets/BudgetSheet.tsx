@@ -10,6 +10,7 @@ import { loadCustomCategories, type CustomCategory } from '@/utils/customCategor
 import { useBudgets, type Budget } from '@/contexts/BudgetsContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { resolveSaveOutcome, SAVE_ERROR_MESSAGE } from '@/utils/savingsCalcs';
+import { GRADIENT_BRAND_BUTTON, GRADIENT_DIAGONAL } from '@/constants/gradients';
 
 type BudgetSheetProps = {
   mode: 'add' | 'edit' | null;
@@ -263,7 +264,9 @@ export default function BudgetSheet({ mode, editBudget, onClose }: BudgetSheetPr
         style={{ borderRadius: 16, overflow: 'hidden', marginBottom: 12 }}
       >
         <LinearGradient
-          colors={['#13C076', '#0A9E5E']}
+          colors={GRADIENT_BRAND_BUTTON}
+          start={GRADIENT_DIAGONAL.start}
+          end={GRADIENT_DIAGONAL.end}
           style={{ height: 52, alignItems: 'center', justifyContent: 'center' }}
         >
           <Text

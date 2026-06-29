@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { registerUserRequest } from '@/redux/actions/user.actions';
 import { userSelector } from '@/redux/store/selectors';
 import { SHADOW_HERO } from '@/constants/shadows';
+import { GRADIENT_BRAND, GRADIENT_BRAND_BUTTON, GRADIENT_DIAGONAL } from '@/constants/gradients';
 import AuthPreviewChart from '@/components/AuthPreviewChart';
 
 const SignUp = () => {
@@ -45,7 +46,9 @@ const SignUp = () => {
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
           {/* Hero header */}
           <LinearGradient
-            colors={['#13C076', '#0A9E5E']}
+            colors={GRADIENT_BRAND}
+            start={GRADIENT_DIAGONAL.start}
+            end={GRADIENT_DIAGONAL.end}
             style={{ paddingTop: 36, paddingBottom: 64, paddingHorizontal: 24, overflow: 'hidden' }}
           >
             <View pointerEvents="none" style={{ position: 'absolute', top: -30, right: -30, width: 120, height: 120, borderRadius: 60, backgroundColor: 'rgba(255,255,255,0.08)' }} />
@@ -78,7 +81,8 @@ const SignUp = () => {
                 onChangeText={setName}
                 placeholder='Enter your full name'
                 placeholderTextColor='#9AA096'
-                className='px-4 py-3 text-base rounded-2xl bg-bg-close dark:bg-bg-close-dark text-tx-primary dark:text-tx-primary-dark'
+                className='px-4 rounded-2xl bg-bg-close dark:bg-bg-close-dark text-tx-primary dark:text-tx-primary-dark'
+                style={{ height: 50, fontSize: 16, paddingVertical: 0, textAlignVertical: 'center', includeFontPadding: false }}
                 autoCapitalize="words"
                 keyboardType="default"
               />
@@ -92,7 +96,8 @@ const SignUp = () => {
                 onChangeText={setEmail}
                 placeholder='you@example.com'
                 placeholderTextColor='#9AA096'
-                className='px-4 py-3 text-base rounded-2xl bg-bg-close dark:bg-bg-close-dark text-tx-primary dark:text-tx-primary-dark'
+                className='px-4 rounded-2xl bg-bg-close dark:bg-bg-close-dark text-tx-primary dark:text-tx-primary-dark'
+                style={{ height: 50, fontSize: 16, paddingVertical: 0, textAlignVertical: 'center', includeFontPadding: false }}
                 autoCapitalize="none"
                 keyboardType="email-address"
               />
@@ -107,7 +112,8 @@ const SignUp = () => {
                   onChangeText={setPassword}
                   placeholder='Create a password'
                   placeholderTextColor='#9AA096'
-                  className='flex-1 px-4 py-3 text-base text-tx-primary dark:text-tx-primary-dark'
+                  className='flex-1 px-4 text-tx-primary dark:text-tx-primary-dark'
+                  style={{ height: 50, fontSize: 16, paddingVertical: 0, textAlignVertical: 'center', includeFontPadding: false }}
                   autoCapitalize="none"
                   secureTextEntry={!showPassword}
                 />
@@ -123,9 +129,16 @@ const SignUp = () => {
 
             <TouchableOpacity
               onPress={(e) => handleSubmit(e)}
-              className='bg-brand-green flex items-center py-4 rounded-2xl'
+              style={{ borderRadius: 16, overflow: 'hidden' }}
             >
-              <Text className='text-white text-base tracking-wide font-bold'>Sign Up</Text>
+              <LinearGradient
+                colors={GRADIENT_BRAND_BUTTON}
+                start={GRADIENT_DIAGONAL.start}
+                end={GRADIENT_DIAGONAL.end}
+                style={{ paddingVertical: 16, alignItems: 'center' }}
+              >
+                <Text className='text-white text-base tracking-wide font-bold'>Sign Up</Text>
+              </LinearGradient>
             </TouchableOpacity>
 
             <View className='flex-row justify-center items-center mt-6'>

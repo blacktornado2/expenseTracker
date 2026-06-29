@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { RefreshControl, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { format } from 'date-fns';
@@ -13,11 +13,16 @@ import Avatar from '@/components/Avatar';
 import TransactionRow from '@/components/TransactionRow';
 import HeroCard from '@/components/HeroCard';
 import SpendBreakdownCard from '@/components/SpendBreakdownCard';
+import PressableScale from '@/components/PressableScale';
+import FadeInView from '@/components/FadeInView';
 import { getCategoryMeta } from '@/constants/categoryMeta';
 import { shadowForGradientCard } from '@/constants/shadows';
+import { GRADIENT_INCOME, GRADIENT_VIOLET, GRADIENT_DIAGONAL } from '@/constants/gradients';
 import { getAllTransactions } from '@/redux/actions/transaction.actions';
+import { fetchUserRequest } from '@/redux/actions/user.actions';
 import {
   transactionSelector,
+  transactionsRefreshingSelector,
   userSelector,
   selectMonthSpent,
   selectMonthIncome,
@@ -53,11 +58,15 @@ export default function Dashboard() {
   const monthSpent = useSelector(selectMonthSpent);
   const monthIncome = useSelector(selectMonthIncome);
   const spendByCategory = useSelector(selectSpendByCategory);
+  const refreshing = useSelector(transactionsRefreshingSelector);
 
   useFocusEffect(
     useCallback(() => {
       dispatch(getAllTransactions());
-    }, [dispatch])
+      if (user?.email) {
+        dispatch(fetchUserRequest(user.email));
+      }
+    }, [dispatch, user?.email])
   );
 
   const now = new Date();
@@ -82,7 +91,22 @@ export default function Dashboard() {
 
   return (
     <SafeAreaView className="flex-1 bg-bg-app dark:bg-bg-app-dark">
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingTop: 20, paddingHorizontal: 18, paddingBottom: 26 }}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingTop: 20, paddingHorizontal: 18, paddingBottom: 26 }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => {
+              dispatch(getAllTransactions());
+              if (user?.email) {
+                dispatch(fetchUserRequest(user.email));
+              }
+            }}
+            tintColor="#0FB46B"
+          />
+        }
+      >
         <View className="flex-row items-center justify-between mb-5">
           <View className="flex-row items-center" style={{ gap: 10 }}>
             <View
@@ -107,23 +131,27 @@ export default function Dashboard() {
             </View>
           </View>
           <TouchableOpacity onPress={() => router.push('/profile')}>
-            <Avatar initial={user?.firstName?.[0] ?? 'A'} />
+            <Avatar initial={user?.firstName?.[0] ?? 'A'} uri={user?.profilePicture} />
           </TouchableOpacity>
         </View>
 
-        <HeroCard
-          label={user?.firstName ?? 'You'}
-          subtitle="Spent this month"
-          amount={monthSpent}
-          progressPct={spentPct}
-          footerLeft={`₹${budgetLeft.toLocaleString('en-IN')} left`}
-          footerRight={`of ₹${monthlyBudget.toLocaleString('en-IN')}`}
-        />
+        <FadeInView delay={0}>
+          <HeroCard
+            label={user?.firstName ?? 'You'}
+            subtitle="Spent this month"
+            amount={monthSpent}
+            progressPct={spentPct}
+            footerLeft={`₹${budgetLeft.toLocaleString('en-IN')} left`}
+            footerRight={`of ₹${monthlyBudget.toLocaleString('en-IN')}`}
+          />
+        </FadeInView>
 
-        <View className="flex-row mt-4" style={{ gap: 12 }}>
-          <TouchableOpacity className="flex-1" onPress={() => router.push('/income-list')} style={{ borderRadius: 22, ...shadowForGradientCard('#22C55E') }}>
+        <FadeInView delay={80} style={{ flexDirection: 'row', marginTop: 16, gap: 12 }}>
+          <PressableScale containerStyle={{ flex: 1, borderRadius: 22, ...shadowForGradientCard('#22C55E') }} onPress={() => router.push('/income-list')}>
             <LinearGradient
-              colors={['#4ADE80', '#22C55E']}
+              colors={GRADIENT_INCOME}
+              start={GRADIENT_DIAGONAL.start}
+              end={GRADIENT_DIAGONAL.end}
               style={{ borderRadius: 22, padding: 16, overflow: 'hidden' }}
             >
               <View
@@ -138,10 +166,12 @@ export default function Dashboard() {
                 ₹{monthIncome.toLocaleString('en-IN')}
               </Text>
             </LinearGradient>
-          </TouchableOpacity>
-          <TouchableOpacity className="flex-1" onPress={() => router.push('/savings')} style={{ borderRadius: 22, ...shadowForGradientCard('#7C5CFC') }}>
+          </PressableScale>
+          <PressableScale containerStyle={{ flex: 1, borderRadius: 22, ...shadowForGradientCard('#7C5CFC') }} onPress={() => router.push('/savings')}>
             <LinearGradient
-              colors={['#A78BFA', '#7C5CFC']}
+              colors={GRADIENT_VIOLET}
+              start={GRADIENT_DIAGONAL.start}
+              end={GRADIENT_DIAGONAL.end}
               style={{ borderRadius: 22, padding: 16, overflow: 'hidden' }}
             >
               <View
@@ -156,10 +186,12 @@ export default function Dashboard() {
                 ₹{saved.toLocaleString('en-IN')}
               </Text>
             </LinearGradient>
-          </TouchableOpacity>
-        </View>
+          </PressableScale>
+        </FadeInView>
 
-        <SpendBreakdownCard data={chartData} />
+        <FadeInView delay={160}>
+          <SpendBreakdownCard data={chartData} />
+        </FadeInView>
 
         <View className="flex-row items-center justify-between mt-6 mb-3">
           <Text className="text-tx-primary dark:text-tx-primary-dark text-base font-extrabold">Recent</Text>

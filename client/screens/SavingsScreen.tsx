@@ -1,8 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { KeyboardAvoidingView, Platform, Pressable, SafeAreaView, ScrollView, Text, TextInput, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, Pressable, RefreshControl, SafeAreaView, ScrollView, Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { format } from 'date-fns';
+import { LinearGradient } from 'expo-linear-gradient';
+import { GRADIENT_BRAND_BUTTON, GRADIENT_DIAGONAL } from '@/constants/gradients';
 
 import Card from '@/components/Card';
 import HeroCard from '@/components/HeroCard';
@@ -10,7 +12,8 @@ import TrendBars from '@/components/insights/TrendBars';
 import GoalRing from '@/components/savings/GoalRing';
 import { useSavingsGoal } from '@/contexts/SavingsGoalContext';
 import { useTheme } from '@/contexts/ThemeContext';
-import { selectMonthlyData } from '@/redux/store/selectors';
+import { getAllTransactions } from '@/redux/actions/transaction.actions';
+import { selectMonthlyData, transactionsRefreshingSelector } from '@/redux/store/selectors';
 import { monthFullLabel } from '@/utils/insightsCalcs';
 import {
   savingsAmount,
@@ -29,7 +32,9 @@ const RED = '#E8322A';
 
 export default function SavingsScreen() {
   const router = useRouter();
+  const dispatch = useDispatch();
   const monthlyData = useSelector(selectMonthlyData);
+  const refreshing = useSelector(transactionsRefreshingSelector);
   const { goal, setGoal } = useSavingsGoal();
   const { isDark } = useTheme();
   const trackColor = isDark ? '#202C1E' : '#ECEBE6';
@@ -91,7 +96,14 @@ export default function SavingsScreen() {
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
-      <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingTop: 20, paddingHorizontal: 18, paddingBottom: 26 }}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{ paddingTop: 20, paddingHorizontal: 18, paddingBottom: 26 }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={() => dispatch(getAllTransactions())} tintColor="#0FB46B" />
+        }
+      >
         <View className="flex-row items-center justify-between mb-5">
           <Pressable onPress={() => router.back()}>
             <Text style={{ color: GREEN }} className="font-bold text-base">‹ Home</Text>
@@ -186,8 +198,15 @@ export default function SavingsScreen() {
                   style={{ flex: 1, color: isDark ? '#E2E9E0' : '#2B2F2A' }}
                 />
               </View>
-              <Pressable onPress={onSetGoal} style={{ backgroundColor: GREEN, borderRadius: 16, paddingHorizontal: 18, paddingVertical: 12 }}>
-                <Text style={{ color: '#FFFFFF' }} className="font-bold text-sm">Set</Text>
+              <Pressable onPress={onSetGoal} style={{ borderRadius: 16, overflow: 'hidden' }}>
+                <LinearGradient
+                  colors={GRADIENT_BRAND_BUTTON}
+                  start={GRADIENT_DIAGONAL.start}
+                  end={GRADIENT_DIAGONAL.end}
+                  style={{ paddingHorizontal: 18, paddingVertical: 12 }}
+                >
+                  <Text style={{ color: '#FFFFFF' }} className="font-bold text-sm">Set</Text>
+                </LinearGradient>
               </Pressable>
             </View>
           ) : null}

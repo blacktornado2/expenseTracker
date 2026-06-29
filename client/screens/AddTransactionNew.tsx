@@ -3,12 +3,16 @@ import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, TextInput,
 import { useRouter } from 'expo-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { CalendarDays, Pencil } from 'lucide-react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { format } from 'date-fns';
+import { GRADIENT_INCOME, GRADIENT_RED, GRADIENT_DIAGONAL } from '@/constants/gradients';
 
 import SegmentedToggle from '@/components/SegmentedToggle';
 import Numpad from '@/components/numpad/Numpad';
 import CategoryChips, { type CategoryOption } from '@/components/categories/CategoryChips';
 import CategoryEditor, { type NewCategoryDraft } from '@/components/categories/CategoryEditor';
+import PressableScale from '@/components/PressableScale';
 import { applyNumpadKey, parseAmount, type NumpadKeyValue } from '@/utils/amountInput';
 import { BUILT_IN_CATEGORIES, getIconByKey } from '@/constants/categoryPalette';
 import { getCategoryMeta } from '@/constants/categoryMeta';
@@ -45,7 +49,8 @@ export default function AddTransactionNew() {
   const [entryType, setEntryType] = useState<EntryType>('expense');
   const [amountStr, setAmountStr] = useState('');
   const [name, setName] = useState('');
-  const [date] = useState(() => new Date());
+  const [date, setDate] = useState(() => new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const [customCategories, setCustomCategories] = useState<CustomCategory[]>([]);
   const [selectedCategory, setSelectedCategory] = useState(BUILT_IN_CATEGORIES[0].key);
   const [editMode, setEditMode] = useState(false);
@@ -176,7 +181,7 @@ export default function AddTransactionNew() {
       </View>
 
       <View className="items-center mt-4">
-        <SegmentedToggle options={ENTRY_OPTIONS} value={entryType} onChange={setEntryType} />
+        <SegmentedToggle options={ENTRY_OPTIONS} value={entryType} onChange={setEntryType} textClassName="text-base" />
       </View>
 
       <View className="items-center mt-8">
@@ -191,7 +196,7 @@ export default function AddTransactionNew() {
         style={{
           borderWidth: 1,
           borderColor: nameError ? '#E8322A' : isDark ? '#263024' : '#E5E5E0',
-          backgroundColor: nameError ? (isDark ? '#2A1A1A' : '#FFF5F5') : undefined,
+          backgroundColor: nameError ? (isDark ? '#2A1A1A' : '#FFF5F5') : isDark ? '#121A14' : '#FFFFFF',
         }}
       >
         <Pencil color={isDark ? '#7E8E7C' : '#9AA096'} size={18} />
@@ -208,10 +213,29 @@ export default function AddTransactionNew() {
         />
       </View>
 
-      <View className="flex-row items-center mt-4 rounded-2xl px-3 py-3" style={{ borderWidth: 1, borderColor: isDark ? '#263024' : '#E5E5E0' }}>
+      <Pressable
+        className="flex-row items-center mt-4 rounded-2xl px-3 py-3"
+        style={{
+          borderWidth: 1,
+          borderColor: isDark ? '#263024' : '#E5E5E0',
+          backgroundColor: isDark ? '#121A14' : '#FFFFFF',
+        }}
+        onPress={() => setShowDatePicker(true)}
+      >
         <CalendarDays color={isDark ? '#7E8E7C' : '#9AA096'} size={18} />
         <Text style={{ marginLeft: 8, color: isDark ? '#E2E9E0' : '#2B2F2A' }}>{format(date, 'MMMM dd, yyyy')}</Text>
-      </View>
+      </Pressable>
+
+      <DateTimePickerModal
+        isVisible={showDatePicker}
+        mode="date"
+        date={date}
+        onConfirm={(selected) => {
+          setShowDatePicker(false);
+          setDate(selected);
+        }}
+        onCancel={() => setShowDatePicker(false)}
+      />
 
       <View className="mt-6">
         <View className="flex-row items-center justify-between mb-3">
@@ -250,16 +274,23 @@ export default function AddTransactionNew() {
         <Numpad onKey={onNumpadKey} />
       </View>
 
-      <Pressable
+      <PressableScale
         testID="submit-transaction"
         onPress={onSubmit}
-        className="mt-6 rounded-2xl items-center justify-center"
-        style={{ height: 56, backgroundColor: entryType === 'income' ? '#0FB46B' : '#E8322A' }}
+        containerStyle={{ marginTop: 24 }}
+        style={{ borderRadius: 16, overflow: 'hidden' }}
       >
-        <Text className="text-white font-extrabold text-base">
-          {entryType === 'income' ? 'Add income' : 'Add expense'}
-        </Text>
-      </Pressable>
+        <LinearGradient
+          colors={entryType === 'income' ? GRADIENT_INCOME : GRADIENT_RED}
+          start={GRADIENT_DIAGONAL.start}
+          end={GRADIENT_DIAGONAL.end}
+          style={{ height: 56, alignItems: 'center', justifyContent: 'center' }}
+        >
+          <Text className="text-white font-extrabold text-base">
+            {entryType === 'income' ? 'Add income' : 'Add expense'}
+          </Text>
+        </LinearGradient>
+      </PressableScale>
 
       {hadError ? (
         <Text className="text-center mt-3" style={{ color: '#E8322A', fontSize: 13, fontWeight: '600' }}>

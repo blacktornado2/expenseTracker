@@ -1,20 +1,24 @@
 import { View, Text, ScrollView, TextInput, KeyboardAvoidingView, TouchableOpacity, Platform } from 'react-native'
 import React, { useState, useEffect } from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
+import { StatusBar } from 'expo-status-bar';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { Eye, EyeOff } from 'lucide-react-native';
 
 import { loginUserRequest } from '@/redux/actions/user.actions';
 import { userSelector } from '@/redux/store/selectors';
 import { SHADOW_HERO } from '@/constants/shadows';
+import { GRADIENT_BRAND, GRADIENT_BRAND_BUTTON, GRADIENT_DIAGONAL } from '@/constants/gradients';
 import AuthPreviewChart from '@/components/AuthPreviewChart';
+import SheenOverlay from '@/components/SheenOverlay';
 
 const Login = () => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const insets = useSafeAreaInsets();
 
   const { user, error } = useSelector(userSelector);
 
@@ -47,16 +51,20 @@ const Login = () => {
   };
 
   return (
-    <SafeAreaView className='flex-1 bg-bg-app dark:bg-bg-app-dark' edges={['top']}>
+    <SafeAreaView className='flex-1 bg-bg-app dark:bg-bg-app-dark' edges={['bottom']}>
+      <StatusBar style="light" backgroundColor="transparent" translucent />
       <ScrollView className='flex-1' keyboardShouldPersistTaps='handled' contentContainerStyle={{ flexGrow: 1 }}>
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-          {/* Hero header */}
+          {/* Hero header — bleeds into the status bar so it reads as one green surface */}
           <LinearGradient
-            colors={['#13C076', '#0A9E5E']}
-            style={{ paddingTop: 36, paddingBottom: 64, paddingHorizontal: 24, overflow: 'hidden' }}
+            colors={GRADIENT_BRAND}
+            start={GRADIENT_DIAGONAL.start}
+            end={GRADIENT_DIAGONAL.end}
+            style={{ paddingTop: insets.top + 36, paddingBottom: 64, paddingHorizontal: 24, overflow: 'hidden' }}
           >
             <View pointerEvents="none" style={{ position: 'absolute', top: -30, right: -30, width: 120, height: 120, borderRadius: 60, backgroundColor: 'rgba(255,255,255,0.08)' }} />
             <View pointerEvents="none" style={{ position: 'absolute', bottom: -20, left: -20, width: 90, height: 90, borderRadius: 45, backgroundColor: 'rgba(255,255,255,0.08)' }} />
+            <SheenOverlay />
 
             <View className='items-center'>
               <View className='h-16 w-16 rounded-full bg-white/20 items-center justify-center mb-4'>
@@ -85,7 +93,8 @@ const Login = () => {
                 onChangeText={setEmail}
                 placeholder='you@example.com'
                 placeholderTextColor='#9AA096'
-                className='px-4 py-3 text-base rounded-2xl bg-bg-close dark:bg-bg-close-dark text-tx-primary dark:text-tx-primary-dark'
+                className='px-4 rounded-2xl bg-bg-close dark:bg-bg-close-dark text-tx-primary dark:text-tx-primary-dark'
+                style={{ height: 50, fontSize: 16, paddingVertical: 0, textAlignVertical: 'center', includeFontPadding: false }}
                 autoCapitalize="none"
                 keyboardType="email-address"
               />
@@ -100,7 +109,8 @@ const Login = () => {
                   onChangeText={setPassword}
                   placeholder='Enter your password'
                   placeholderTextColor='#9AA096'
-                  className='flex-1 px-4 py-3 text-base text-tx-primary dark:text-tx-primary-dark'
+                  className='flex-1 px-4 text-tx-primary dark:text-tx-primary-dark'
+                  style={{ height: 50, fontSize: 16, paddingVertical: 0, textAlignVertical: 'center', includeFontPadding: false }}
                   autoCapitalize="none"
                   secureTextEntry={!showPassword}
                 />
@@ -123,10 +133,16 @@ const Login = () => {
             <TouchableOpacity
               disabled={isLoginDisabled}
               onPress={loginUser}
-              className='bg-brand-green flex items-center py-4 rounded-2xl'
-              style={{ opacity: isLoginDisabled ? 0.6 : 1 }}
+              style={{ opacity: isLoginDisabled ? 0.6 : 1, borderRadius: 16, overflow: 'hidden' }}
             >
-              <Text className='text-white text-base tracking-wide font-bold'>Log In</Text>
+              <LinearGradient
+                colors={GRADIENT_BRAND_BUTTON}
+                start={GRADIENT_DIAGONAL.start}
+                end={GRADIENT_DIAGONAL.end}
+                style={{ paddingVertical: 16, alignItems: 'center' }}
+              >
+                <Text className='text-white text-base tracking-wide font-bold'>Log In</Text>
+              </LinearGradient>
             </TouchableOpacity>
 
             <View className='flex-row justify-center items-center mt-6'>

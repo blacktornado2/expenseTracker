@@ -6,15 +6,16 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Surfaces
+        // Surfaces — light stays a warm premium cream; dark deepened to a
+        // near-black emerald for a richer "Emerald Luxe" feel.
         "bg-app": "#EFEDE4",
-        "bg-app-dark": "#111810",
+        "bg-app-dark": "#0A0F0C",
         "bg-card": "#FFFFFF",
-        "bg-card-dark": "#192218",
+        "bg-card-dark": "#121A14",
         "bg-subtle": "#ECEBE6",
-        "bg-subtle-dark": "#202C1E",
+        "bg-subtle-dark": "#18221A",
         "bg-close": "#F0EFE8",
-        "bg-close-dark": "#1E2A1C",
+        "bg-close-dark": "#16201A",
         // Text
         "tx-primary": "#16201A",
         "tx-primary-dark": "#E2E9E0",
@@ -35,10 +36,15 @@ module.exports = {
         "border-chip-dark": "#263024",
         // Brand
         "brand-green": "#0FB46B",
-        "brand-green-start": "#13C076",
+        "brand-green-start": "#1FD17C",
+        "brand-green-mid": "#0FB388",
         "brand-green-end": "#0A9E5E",
         "brand-red": "#E8322A",
+        "brand-red-start": "#FF6A5E",
         "brand-red-end": "#C0241D",
+        // Premium accent — brushed gold for hairline highlights on dark/hero.
+        "accent-gold": "#D9B25F",
+        "accent-gold-soft": "#F0E0B8",
         "over-budget-red": "#E25555",
         "income-green": "#16A34A",
         // Category colors + soft backgrounds
@@ -69,7 +75,7 @@ module.exports = {
         "tab-activity": "#2BB3FF",
         "tab-budgets": "#7C5CFC",
         "tab-insights": "#F59E0B",
-        "tab-settings": "#F5A623",
+        "tab-settings": "#E8322A",
       },
     },
   },
