@@ -75,7 +75,7 @@ module.exports = {
         "tab-activity": "#2BB3FF",
         "tab-budgets": "#7C5CFC",
         "tab-insights": "#F59E0B",
-        "tab-settings": "#F5A623",
+        "tab-settings": "#E8322A",
       },
     },
   },

@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
-import { SafeAreaView, ScrollView, Text, View } from 'react-native';
-import { useSelector } from 'react-redux';
+import { RefreshControl, SafeAreaView, ScrollView, Text, View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Card from '@/components/Card';
 import HeroCard from '@/components/HeroCard';
 import MonthPills from '@/components/insights/MonthPills';
 import TrendBars from '@/components/insights/TrendBars';
 import CategoryBreakdownList from '@/components/insights/CategoryBreakdownList';
-import { selectMonthlyData } from '@/redux/store/selectors';
+import { getAllTransactions } from '@/redux/actions/transaction.actions';
+import { selectMonthlyData, transactionsRefreshingSelector } from '@/redux/store/selectors';
 import { trendDelta, monthFullLabel } from '@/utils/insightsCalcs';
 
 export default function InsightsScreen() {
+  const dispatch = useDispatch();
   const monthlyData = useSelector(selectMonthlyData);
+  const refreshing = useSelector(transactionsRefreshingSelector);
   const [selectedIndex, setSelectedIndex] = useState(monthlyData.length - 1);
 
   const selected = monthlyData[selectedIndex];
@@ -26,6 +29,9 @@ export default function InsightsScreen() {
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingTop: 20, paddingHorizontal: 18, paddingBottom: 26 }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={() => dispatch(getAllTransactions())} tintColor="#0FB46B" />
+        }
       >
         <Text
           style={{ fontFamily: 'Outfit_700Bold', fontSize: 30 }}

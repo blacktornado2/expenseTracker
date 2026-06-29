@@ -11,7 +11,7 @@ const TAB_ACCENTS = {
   activity: '#2BB3FF',
   budgets: '#7C5CFC',
   insights: '#F59E0B',
-  settings: '#F5A623',
+  settings: '#E8322A',
 };
 
 const TAB_ICON_SIZE = 20;

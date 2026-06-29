@@ -4,6 +4,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Pressable,
+  RefreshControl,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -30,7 +31,7 @@ import {
 import IconTile from '@/components/IconTile';
 import Card from '@/components/Card';
 import { userSelector } from '@/redux/store/selectors';
-import { fetchUserRequest, updateUserRequest } from '@/redux/actions/user.actions';
+import { fetchUserRequest, updateUserRequest, logoutUserRequest } from '@/redux/actions/user.actions';
 import { userToProfileDraft, profileDraftToUpdatePayload, type ProfileDraft } from '@/utils/profileMappings';
 import { ageFromDob } from '@/utils/profileCalcs';
 
@@ -141,10 +142,17 @@ export default function ProfileScreen() {
   }, [user]);
 
   // Exit edit mode on a successful save; stay (with an error) on failure.
+  // An expired/invalid token (401) can't be fixed by retrying the save, so
+  // send the user back to log in instead of leaving them stuck on the error.
   useEffect(() => {
     if (wasSaving.current && !isLoading) {
       wasSaving.current = false;
       if (error) {
+        if (error?.response?.status === 401) {
+          dispatch(logoutUserRequest());
+          router.replace('/login');
+          return;
+        }
         setHadError(true);
       } else {
         setEditing(false);
@@ -197,7 +205,18 @@ export default function ProfileScreen() {
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
-      <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingTop: 20, paddingHorizontal: 18, paddingBottom: 26 }}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{ paddingTop: 20, paddingHorizontal: 18, paddingBottom: 26 }}
+        refreshControl={
+          <RefreshControl
+            refreshing={!editing && isLoading}
+            onRefresh={() => !editing && user?.email && dispatch(fetchUserRequest(user.email))}
+            tintColor="#0FB46B"
+          />
+        }
+      >
         {/* Header */}
         <View className="flex-row items-center justify-between mb-5">
           <Pressable onPress={() => router.back()} hitSlop={8}>

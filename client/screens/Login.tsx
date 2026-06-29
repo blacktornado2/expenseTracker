@@ -51,7 +51,8 @@ const Login = () => {
                             <TextInput value={email}
                                 onChangeText={setEmail}
                                 placeholder='Enter your email'
-                                className='pt-2 pb-3 px-4 text-lg flex flex-row items-center bg-gray-100'
+                                className='px-4 bg-gray-100'
+                                style={{ height: 48, fontSize: 18, paddingVertical: 0, textAlignVertical: 'center', includeFontPadding: false }}
                                 autoCapitalize="none"
                                 keyboardType="email-address" />
                         </View>
@@ -62,7 +63,8 @@ const Login = () => {
                             <TextInput value={password}
                                 onChangeText={setPassword}
                                 placeholder='Enter your password'
-                                className='pt-2 pb-3 px-4 text-lg bg-gray-100'
+                                className='px-4 bg-gray-100'
+                                style={{ height: 48, fontSize: 18, paddingVertical: 0, textAlignVertical: 'center', includeFontPadding: false }}
                                 autoCapitalize="none"
                                 secureTextEntry
                             />

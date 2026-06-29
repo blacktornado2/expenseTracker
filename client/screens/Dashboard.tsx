@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { RefreshControl, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { format } from 'date-fns';
@@ -19,8 +19,10 @@ import { getCategoryMeta } from '@/constants/categoryMeta';
 import { shadowForGradientCard } from '@/constants/shadows';
 import { GRADIENT_INCOME, GRADIENT_VIOLET, GRADIENT_DIAGONAL } from '@/constants/gradients';
 import { getAllTransactions } from '@/redux/actions/transaction.actions';
+import { fetchUserRequest } from '@/redux/actions/user.actions';
 import {
   transactionSelector,
+  transactionsRefreshingSelector,
   userSelector,
   selectMonthSpent,
   selectMonthIncome,
@@ -56,11 +58,15 @@ export default function Dashboard() {
   const monthSpent = useSelector(selectMonthSpent);
   const monthIncome = useSelector(selectMonthIncome);
   const spendByCategory = useSelector(selectSpendByCategory);
+  const refreshing = useSelector(transactionsRefreshingSelector);
 
   useFocusEffect(
     useCallback(() => {
       dispatch(getAllTransactions());
-    }, [dispatch])
+      if (user?.email) {
+        dispatch(fetchUserRequest(user.email));
+      }
+    }, [dispatch, user?.email])
   );
 
   const now = new Date();
@@ -85,7 +91,22 @@ export default function Dashboard() {
 
   return (
     <SafeAreaView className="flex-1 bg-bg-app dark:bg-bg-app-dark">
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingTop: 20, paddingHorizontal: 18, paddingBottom: 26 }}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingTop: 20, paddingHorizontal: 18, paddingBottom: 26 }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => {
+              dispatch(getAllTransactions());
+              if (user?.email) {
+                dispatch(fetchUserRequest(user.email));
+              }
+            }}
+            tintColor="#0FB46B"
+          />
+        }
+      >
         <View className="flex-row items-center justify-between mb-5">
           <View className="flex-row items-center" style={{ gap: 10 }}>
             <View
@@ -110,7 +131,7 @@ export default function Dashboard() {
             </View>
           </View>
           <TouchableOpacity onPress={() => router.push('/profile')}>
-            <Avatar initial={user?.firstName?.[0] ?? 'A'} />
+            <Avatar initial={user?.firstName?.[0] ?? 'A'} uri={user?.profilePicture} />
           </TouchableOpacity>
         </View>
 

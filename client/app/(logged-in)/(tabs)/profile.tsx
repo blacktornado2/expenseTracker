@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, SafeAreaView, ScrollView, Text, View } from 'react-native';
+import { Pressable, RefreshControl, SafeAreaView, ScrollView, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -11,13 +11,13 @@ import SettingRow from '@/components/settings/SettingRow';
 import ToggleSwitch from '@/components/settings/ToggleSwitch';
 import { useTheme } from '@/contexts/ThemeContext';
 import { userSelector } from '@/redux/store/selectors';
-import { logoutUserRequest } from '@/redux/actions/user.actions';
+import { logoutUserRequest, fetchUserRequest } from '@/redux/actions/user.actions';
 
 export default function Settings() {
   const router = useRouter();
   const dispatch = useDispatch();
   const { isDark, toggleDark } = useTheme();
-  const { user } = useSelector(userSelector) as any;
+  const { user, isLoading } = useSelector(userSelector) as any;
 
   const name = `${user?.firstName ?? ''} ${user?.lastName ?? ''}`.trim() || 'Your account';
 
@@ -28,7 +28,17 @@ export default function Settings() {
 
   return (
     <SafeAreaView className="flex-1 bg-bg-app dark:bg-bg-app-dark">
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingTop: 20, paddingHorizontal: 18, paddingBottom: 26 }}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingTop: 20, paddingHorizontal: 18, paddingBottom: 26 }}
+        refreshControl={
+          <RefreshControl
+            refreshing={!!isLoading}
+            onRefresh={() => user?.email && dispatch(fetchUserRequest(user.email))}
+            tintColor="#0FB46B"
+          />
+        }
+      >
         <Text
           style={{ fontFamily: 'Outfit_700Bold', fontSize: 30 }}
           className="text-tx-primary dark:text-tx-primary-dark mb-4"
@@ -44,7 +54,7 @@ export default function Settings() {
             end={GRADIENT_DIAGONAL.end}
             style={{ borderRadius: 26, padding: 18, marginBottom: 20, flexDirection: 'row', alignItems: 'center', gap: 14 }}
           >
-            <Avatar initial={(user?.firstName ?? 'U')[0]} size={52} radius={18} />
+            <Avatar initial={(user?.firstName ?? 'U')[0]} size={52} radius={18} uri={user?.profilePicture} />
             <View className="flex-1">
               <Text style={{ color: '#FFFFFF', fontWeight: '800', fontSize: 17 }}>{name}</Text>
               <Text style={{ color: 'rgba(255,255,255,0.85)', fontWeight: '600', fontSize: 13, marginTop: 2 }}>

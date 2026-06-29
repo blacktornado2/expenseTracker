@@ -1,20 +1,23 @@
 import React, { useState } from 'react';
-import { Pressable, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Pressable, RefreshControl, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Card from '@/components/Card';
 import TransactionRow from '@/components/TransactionRow';
 import EditTransactionSheet from '@/components/sheets/EditTransactionSheet';
 import { getCategoryMeta } from '@/constants/categoryMeta';
-import { transactionSelector } from '@/redux/store/selectors';
+import { getAllTransactions } from '@/redux/actions/transaction.actions';
+import { transactionSelector, transactionsRefreshingSelector } from '@/redux/store/selectors';
 import type { RawStoreTxn } from '@/utils/transactionMappings';
 
 const GREEN = '#0FB46B';
 
 export default function IncomeListScreen() {
   const router = useRouter();
+  const dispatch = useDispatch();
   const { transactions } = useSelector(transactionSelector) as any;
+  const refreshing = useSelector(transactionsRefreshingSelector);
   const [selectedTxn, setSelectedTxn] = useState<RawStoreTxn | null>(null);
 
   const incomeTxns: RawStoreTxn[] = (Array.isArray(transactions) ? transactions : [])
@@ -25,7 +28,13 @@ export default function IncomeListScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-bg-app dark:bg-bg-app-dark">
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingTop: 20, paddingHorizontal: 18, paddingBottom: 26 }}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingTop: 20, paddingHorizontal: 18, paddingBottom: 26 }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={() => dispatch(getAllTransactions())} tintColor="#0FB46B" />
+        }
+      >
         <View className="flex-row items-center justify-between mb-5">
           <Pressable onPress={() => router.back()}>
             <Text style={{ color: GREEN }} className="font-bold text-base">← Home</Text>

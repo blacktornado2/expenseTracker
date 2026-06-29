@@ -11,8 +11,11 @@ jest.mock('@react-native-async-storage/async-storage', () => ({
 jest.mock('@/contexts/ThemeContext', () => ({ useTheme: jest.fn(() => ({ isDark: false, toggleDark: jest.fn() })) }));
 
 let mockMonthly: any[] = [{ month: 5, year: 2026, spent: 0, income: 0, cats: [] }];
-jest.mock('react-redux', () => ({ useSelector: (fn: any) => fn() }));
-jest.mock('@/redux/store/selectors', () => ({ selectMonthlyData: () => mockMonthly }));
+jest.mock('react-redux', () => ({ useSelector: (fn: any) => fn(), useDispatch: () => jest.fn() }));
+jest.mock('@/redux/store/selectors', () => ({
+  selectMonthlyData: () => mockMonthly,
+  transactionsRefreshingSelector: () => false,
+}));
 
 import InsightsScreen from '../InsightsScreen';
 

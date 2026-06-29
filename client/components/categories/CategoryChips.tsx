@@ -71,7 +71,7 @@ export default function CategoryChips({
                 testID={`category-chip-${category.key}`}
                 onPress={() => !editMode && onSelect(category.key)}
                 className="flex-row items-center rounded-full px-3 py-2"
-                style={{ borderWidth: 1, borderColor }}
+                style={{ borderWidth: 1, borderColor, backgroundColor: isDark ? '#121A14' : '#FFFFFF' }}
               >
                 {content}
               </PressableScale>

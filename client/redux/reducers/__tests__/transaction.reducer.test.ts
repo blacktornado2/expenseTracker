@@ -1,7 +1,7 @@
 import transactionReducer from '../transaction.reducer';
 import { GET_TRANSACTIONS_SUCCESS, GET_TRANSACTIONS_FAILURE, CREATE_TRANSACTION_REQUEST, CREATE_TRANSACTION_SUCCESS, CREATE_TRANSACTION_FAILURE, UPDATE_TRANSACTION_SUCCESS, UPDATE_TRANSACTION_FAILURE, DELETE_TRANSACTION_SUCCESS, DELETE_TRANSACTION_FAILURE, UPDATE_TRANSACTION_REQUEST, DELETE_TRANSACTION_REQUEST } from '../../actions/action.types';
 
-const emptyBase = { transactions: [] as any[], getTransactionsError: null, createError: null, updateError: null, deleteError: null, createPending: false, updatePending: false, deletePending: false };
+const emptyBase = { transactions: [] as any[], getTransactionsError: null, getTransactionsPending: false, createError: null, updateError: null, deleteError: null, createPending: false, updatePending: false, deletePending: false };
 
 describe('transactionReducer', () => {
   it('replaces transactions and clears getTransactionsError on GET_TRANSACTIONS_SUCCESS', () => {
@@ -55,7 +55,7 @@ describe('transactionReducer', () => {
 });
 
 describe('transactionReducer — update/delete', () => {
-  const base = { transactions: [{ _id: '1', amount: 100 }, { _id: '2', amount: 200 }], getTransactionsError: null, createError: null, updateError: null, deleteError: null, createPending: false, updatePending: false, deletePending: false };
+  const base = { transactions: [{ _id: '1', amount: 100 }, { _id: '2', amount: 200 }], getTransactionsError: null, getTransactionsPending: false, createError: null, updateError: null, deleteError: null, createPending: false, updatePending: false, deletePending: false };
 
   it('sets updatePending=true on UPDATE_TRANSACTION_REQUEST', () => {
     const next = transactionReducer(base, { type: UPDATE_TRANSACTION_REQUEST, payload: {} });

@@ -1,9 +1,10 @@
-import React, { useEffect, useRef } from 'react';
-import { Animated, Text, View } from 'react-native';
+import React from 'react';
+import { Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SHADOW_HERO } from '@/constants/shadows';
 import { GRADIENT_BRAND, GRADIENT_DIAGONAL, ACCENT_GOLD } from '@/constants/gradients';
 import { useCountUp } from '@/hooks/useCountUp';
+import SheenOverlay from './SheenOverlay';
 
 type HeroCardProps = {
   label: string;
@@ -18,23 +19,6 @@ export default function HeroCard({ label, subtitle, amount, progressPct, footerL
   const clampedPct = progressPct === undefined ? undefined : Math.max(0, Math.min(100, progressPct));
   const displayAmount = useCountUp(amount);
   const roundedAmount = new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0 }).format(Math.round(displayAmount));
-
-  // Slow, looping light sweep across the card — a premium "graded" sheen.
-  const sheen = useRef(new Animated.Value(0)).current;
-  useEffect(() => {
-    if (process.env.JEST_WORKER_ID) return; // no looping animation in tests
-    const loop = Animated.loop(
-      Animated.sequence([
-        Animated.delay(900),
-        Animated.timing(sheen, { toValue: 1, duration: 1200, useNativeDriver: true }),
-        Animated.timing(sheen, { toValue: 0, duration: 0, useNativeDriver: true }),
-        Animated.delay(3400),
-      ])
-    );
-    loop.start();
-    return () => loop.stop();
-  }, [sheen]);
-  const sheenX = sheen.interpolate({ inputRange: [0, 1], outputRange: [-220, 460] });
 
   return (
     <LinearGradient
@@ -122,24 +106,7 @@ export default function HeroCard({ label, subtitle, amount, progressPct, footerL
         </View>
       )}
 
-      {/* Animated sheen sweep (sits above content, taps pass through) */}
-      <Animated.View
-        pointerEvents="none"
-        style={{
-          position: 'absolute',
-          top: -30,
-          bottom: -30,
-          width: 90,
-          transform: [{ translateX: sheenX }, { rotate: '18deg' }],
-        }}
-      >
-        <LinearGradient
-          colors={['rgba(255,255,255,0)', 'rgba(255,255,255,0.22)', 'rgba(255,255,255,0)']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          style={{ flex: 1 }}
-        />
-      </Animated.View>
+      <SheenOverlay travel={460} />
     </LinearGradient>
   );
 }

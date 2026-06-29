@@ -81,7 +81,8 @@ const SignUp = () => {
                 onChangeText={setName}
                 placeholder='Enter your full name'
                 placeholderTextColor='#9AA096'
-                className='px-4 py-3 text-base rounded-2xl bg-bg-close dark:bg-bg-close-dark text-tx-primary dark:text-tx-primary-dark'
+                className='px-4 rounded-2xl bg-bg-close dark:bg-bg-close-dark text-tx-primary dark:text-tx-primary-dark'
+                style={{ height: 50, fontSize: 16, paddingVertical: 0, textAlignVertical: 'center', includeFontPadding: false }}
                 autoCapitalize="words"
                 keyboardType="default"
               />
@@ -95,7 +96,8 @@ const SignUp = () => {
                 onChangeText={setEmail}
                 placeholder='you@example.com'
                 placeholderTextColor='#9AA096'
-                className='px-4 py-3 text-base rounded-2xl bg-bg-close dark:bg-bg-close-dark text-tx-primary dark:text-tx-primary-dark'
+                className='px-4 rounded-2xl bg-bg-close dark:bg-bg-close-dark text-tx-primary dark:text-tx-primary-dark'
+                style={{ height: 50, fontSize: 16, paddingVertical: 0, textAlignVertical: 'center', includeFontPadding: false }}
                 autoCapitalize="none"
                 keyboardType="email-address"
               />
@@ -110,7 +112,8 @@ const SignUp = () => {
                   onChangeText={setPassword}
                   placeholder='Create a password'
                   placeholderTextColor='#9AA096'
-                  className='flex-1 px-4 py-3 text-base text-tx-primary dark:text-tx-primary-dark'
+                  className='flex-1 px-4 text-tx-primary dark:text-tx-primary-dark'
+                  style={{ height: 50, fontSize: 16, paddingVertical: 0, textAlignVertical: 'center', includeFontPadding: false }}
                   autoCapitalize="none"
                   secureTextEntry={!showPassword}
                 />

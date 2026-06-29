@@ -1,11 +1,12 @@
 import React, { useMemo, useState } from 'react';
-import { FlatList, Pressable, SafeAreaView, Text, TextInput, View } from 'react-native';
+import { FlatList, Pressable, RefreshControl, SafeAreaView, Text, TextInput, View } from 'react-native';
 import { Search, X } from 'lucide-react-native';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import TransactionRow from '@/components/TransactionRow';
 import EditTransactionSheet from '@/components/sheets/EditTransactionSheet';
-import { transactionSelector } from '@/redux/store/selectors';
+import { getAllTransactions } from '@/redux/actions/transaction.actions';
+import { transactionSelector, transactionsRefreshingSelector } from '@/redux/store/selectors';
 import { getCategoryMeta } from '@/constants/categoryMeta';
 import { filterTransactions, type ActivityFilter } from '@/utils/transactionFilters';
 import { txnTypeToEntryType, type RawStoreTxn } from '@/utils/transactionMappings';
@@ -18,8 +19,10 @@ const FILTER_CHIPS: { label: string; value: ActivityFilter; color: string }[] = 
 ];
 
 export default function ActivityScreen() {
+  const dispatch = useDispatch();
   const storeState = useSelector(transactionSelector as any) as { transactions: RawStoreTxn[] };
   const { transactions } = storeState;
+  const refreshing = useSelector(transactionsRefreshingSelector);
   const { isDark } = useTheme();
   const [searchQuery, setSearchQuery] = useState('');
   const [filter, setFilter] = useState<ActivityFilter>('all');
@@ -45,6 +48,9 @@ export default function ActivityScreen() {
         keyExtractor={(item: any) => item._id}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingTop: 20, paddingHorizontal: 18, paddingBottom: 26 }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={() => dispatch(getAllTransactions())} tintColor="#0FB46B" />
+        }
         ListHeaderComponent={
           <View>
             <Text

@@ -12,7 +12,10 @@ const mockBack = jest.fn();
 jest.mock('expo-router', () => ({ useRouter: () => ({ back: mockBack }) }));
 
 const mockMonthly = [{ month: 5, year: 2026, spent: 4000, income: 10000, cats: [] }];
-jest.mock('@/redux/store/selectors', () => ({ selectMonthlyData: () => mockMonthly }));
+jest.mock('@/redux/store/selectors', () => ({
+  selectMonthlyData: () => mockMonthly,
+  transactionsRefreshingSelector: () => false,
+}));
 
 // Mutable fake redux state so tests can simulate a pending -> resolved
 // transition between renders, the same way real middleware would update

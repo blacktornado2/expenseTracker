@@ -31,6 +31,7 @@ export default function StackedBar({ data, height = 12 }: StackedBarProps) {
   }
 
   const radius = height / 2;
+  const gap = 4;
   const segments = data.filter((segment) => segment.value > 0);
 
   return (
@@ -50,10 +51,8 @@ export default function StackedBar({ data, height = 12 }: StackedBarProps) {
           style={{
             flex: segment.value / total,
             backgroundColor: segment.color,
-            borderTopLeftRadius: index === 0 ? radius : 0,
-            borderBottomLeftRadius: index === 0 ? radius : 0,
-            borderTopRightRadius: index === segments.length - 1 ? radius : 0,
-            borderBottomRightRadius: index === segments.length - 1 ? radius : 0,
+            borderRadius: radius,
+            marginRight: index === segments.length - 1 ? 0 : gap,
           }}
         />
       ))}
